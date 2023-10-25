@@ -1,0 +1,26 @@
+#pragma once
+
+#include <GLFW\glfw3.h>
+#pragma once
+
+namespace OpenGL_Engine {
+
+	class Timer {
+	private:
+		double startTime;
+	public:
+		/**
+		* Constructs an object that acts as a timer
+		*/
+		Timer();
+
+		/**
+		* Resets the timers starting time
+		*/
+		void reset();
+
+		// Getter
+		inline double elapsed() { return glfwGetTime() - startTime; }
+	};
+
+} 
