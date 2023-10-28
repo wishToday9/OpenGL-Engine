@@ -12,7 +12,7 @@ namespace OpenGL_Engine { namespace opengl {
 	class Utility {
 		
 	public:
-		static GLuint loadTextureFromFile(const char *path);
+		static GLuint loadTextureFromFile(const char *path, bool containsTransparencyOnSides = false);
 	};
 
 } }

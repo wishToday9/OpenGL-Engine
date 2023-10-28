@@ -16,6 +16,9 @@ namespace OpenGL_Engine { namespace graphics {
 			glfwDestroyWindow(m_Window);
 			glfwTerminate();
 		}
+
+		memset(m_Keys, 0, sizeof(bool) * MAX_KEYS);
+		memset(m_Buttons, 0, sizeof(bool) * MAX_BUTTONS);
 	}
 
 	Window::~Window() {
@@ -101,7 +104,7 @@ namespace OpenGL_Engine { namespace graphics {
 	}
 
 	void Window::clear() const {
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	}
 
 	bool Window::closed() const {
@@ -119,6 +122,10 @@ namespace OpenGL_Engine { namespace graphics {
 	bool Window::isKeyPressed(unsigned int keycode) const {
 		if (keycode >= MAX_KEYS) {
 			//TODO: LOG THIS
+			//std::cout << "Max Key overflow in window" << std::endl;
+
+			utils::Logger::getInstance().error("logge_files/input_errors.txt", "Input Check",
+				"Key checked is out of bounds(ie not supported)");
 			return false;
 		}
 		else {
@@ -129,6 +136,10 @@ namespace OpenGL_Engine { namespace graphics {
 	bool Window::isMouseButtonPressed(unsigned int code) const {
 		if (code >= MAX_BUTTONS) {
 			//TODO: LOG THIS
+			//std::cout << "Max mouse button overflow in window" << std::endl;
+
+			utils::Logger::getInstance().error("logge_files/input_errors.txt", "Input Check",
+				"Key checked is out of bounds(ie not supported)");
 			return false;
 		}
 		else {
