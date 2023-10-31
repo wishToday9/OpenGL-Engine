@@ -7,6 +7,7 @@
 #include "terrain/Terrain.h"
 #include "graphics/Window.h"
 #include "graphics/MeshFactory.h"
+#include "graphics/Skybox.h"
 
 namespace OpenGL_Engine {
 	
@@ -16,10 +17,11 @@ namespace OpenGL_Engine {
 		graphics::FPSCamera *m_Camera;
 		graphics::Renderer *m_Renderer;
 		terrain::Terrain* m_Terrain;
+		graphics::Skybox* m_Skybox;
 		graphics::MeshFactory m_meshFactory;
 
 		std::vector<graphics::Renderable3D*> m_Renderables;
-		graphics::Shader terrainShader, modelShader, outlineShader;
+		graphics::Shader m_TerrainShader, m_ModelShader, m_OutlineShader;
 
 
 		// Some sort of list of entities (tied to models that are in the Renderer (should this be changed to Renderer3D?))
@@ -34,8 +36,8 @@ namespace OpenGL_Engine {
 
 		void onRender();
 
-		inline graphics::Renderer* getRenderer() { return m_Renderer; }
-		inline graphics::FPSCamera* getCamera() { return m_Camera; }
+		inline graphics::Renderer* getRenderer() const { return m_Renderer; }
+		inline graphics::FPSCamera* getCamera() const { return m_Camera; }
 	private:
 		void init();
 	};

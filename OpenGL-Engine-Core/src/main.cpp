@@ -14,6 +14,9 @@
 
 #include "Scene3D.h"
 
+#include "platform/OpenGL/Framebuffer.h"
+#include "graphics/MeshFactory.h"
+
 
 //#include <ft2build.h>
 //#include <freetype-gl.h>
@@ -24,8 +27,12 @@ int main() {
 	OpenGL_Engine::graphics::FPSCamera camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f);
 	OpenGL_Engine::graphics::Window window("OpenGL_Engine Engine", 1366, 768);
 	OpenGL_Engine::Scene3D scene(&camera, &window);
-
-	glEnable(GL_DEPTH_TEST);
+	
+	OpenGL_Engine::opengl::Framebuffer framebuffer(window.getWidth(), window.getHeight());
+	OpenGL_Engine::graphics::Shader framebufferShader("src/shaders/framebufferColorBuffer.vert",
+		"src/shaders/framebufferColorBuffer.frag");
+	OpenGL_Engine::graphics::MeshFactory meshFactory;
+	OpenGL_Engine::graphics::Mesh* colorBufferMesh = meshFactory.CreateQuad(framebuffer.getColourBufferTexture());
 
 	OpenGL_Engine::Timer fpsTimer;
 	int frames = 0;
@@ -35,7 +42,10 @@ int main() {
 	GLfloat lastX = window.getMouseX();
 	GLfloat lastY = window.getMouseY();
 	while (!window.closed()) {
-		glClearColor(0.5f, 0.5f, 0.0f, 1.0f);
+		//input
+
+
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		window.clear();
 		deltaTime.update();
 
@@ -50,6 +60,8 @@ int main() {
 		camera.processMouseMovement(window.getMouseX() - lastX, lastY - window.getMouseY(), true);
 		lastX = window.getMouseX();
 		lastY = window.getMouseY();
+
+
 		if (window.isKeyPressed(GLFW_KEY_W))
 			camera.processKeyboard(OpenGL_Engine::graphics::FORWARD, deltaTime.getDeltaTime());
 		if (window.isKeyPressed(GLFW_KEY_S))
@@ -62,11 +74,26 @@ int main() {
 			camera.processKeyboard(OpenGL_Engine::graphics::UPWARDS, deltaTime.getDeltaTime());
 		if (window.isKeyPressed(GLFW_KEY_LEFT_CONTROL))
 			camera.processKeyboard(OpenGL_Engine::graphics::DOWNWARDS, deltaTime.getDeltaTime());
+		if (glfwGetKey(window.m_Window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+			glfwSetWindowShouldClose(window.m_Window, true);
+
+
 		camera.processMouseScroll(window.getScrollY() * 6);
 		window.resetScroll();
 
+
+		// Draw the scene to our custom framebuffer
+		framebuffer.bind();
+		window.clear();
 		scene.onUpdate(deltaTime.getDeltaTime());
 		scene.onRender();
+
+		// Draw to the default scene buffer
+		framebuffer.unbind();
+		glClear(GL_COLOR_BUFFER_BIT);
+		framebufferShader.enable();
+		colorBufferMesh->Draw(framebufferShader);
+		framebufferShader.disable();
 
 		window.update();
 		if (fpsTimer.elapsed() >= 1) {

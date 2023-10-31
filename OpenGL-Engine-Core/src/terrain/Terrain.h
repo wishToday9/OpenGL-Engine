@@ -25,7 +25,7 @@ namespace OpenGL_Engine { namespace terrain {
 
 		void Draw(graphics::Shader &shader) const;
 
-		inline glm::vec3 getPosition() {
+		inline const glm::vec3& getPosition() const {
 			return m_Position;
 		}
 	private:

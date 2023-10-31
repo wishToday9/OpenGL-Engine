@@ -25,8 +25,7 @@ namespace OpenGL_Engine {
 
 			if (shouldHaveSpec) {
 				texture.id = opengl::Utility::loadTextureFromFile("res/textures/fullSpec.png");
-			}
-			else {
+			} else {
 				texture.id = opengl::Utility::loadTextureFromFile("res/textures/noSpec.png");
 			}				
 			texture.type = "texture_specular";
@@ -34,5 +33,30 @@ namespace OpenGL_Engine {
 
 			return new Mesh(vertices, indices, textures);
 		}
+
+		OpenGL_Engine::graphics::Mesh* MeshFactory::CreateQuad(int colorBufferid)
+		{
+			std::vector<Vertex> vertices;
+			std::vector<unsigned int> indices;
+			std::vector<Texture> textures;
+
+			vertices.push_back(Vertex(glm::vec3(-1, 1, 0), glm::vec3(0, 0, 0), glm::vec2(0, 1)));
+			vertices.push_back(Vertex(glm::vec3(1, 1, 0), glm::vec3(0, 0, 0), glm::vec2(1, 1)));
+			vertices.push_back(Vertex(glm::vec3(-1, -1, 0), glm::vec3(0, 0, 0), glm::vec2(0, 0)));
+			vertices.push_back(Vertex(glm::vec3(1, -1, 0), glm::vec3(0, 0, 0), glm::vec2(1, 0)));
+
+			// Load indices
+			indices.push_back(1); indices.push_back(0); indices.push_back(2);
+			indices.push_back(3); indices.push_back(1); indices.push_back(2);
+
+			// Load texture
+			Texture texture;
+			texture.id = colorBufferid;
+			texture.type = "texture_diffuse";
+			textures.push_back(texture);
+
+			return new Mesh(vertices, indices, textures);
+		}
+
 	}
 }

@@ -13,12 +13,12 @@ namespace OpenGL_Engine { namespace graphics {
 
 		void draw(Shader &shader) const;
 
-		glm::vec3 getPosition() { return m_Position; }
-		glm::vec3 getScale() { return m_Scale; }
-		glm::vec3 getRotationAxis() { return m_RotationAxis; }
-		float getRadianRotation() { return m_Rotation; }
-		bool getShouldOutline() { return m_ShouldOutline; }
-		bool getTransparent() { return m_Transparent; }
+		const glm::vec3 getPosition() const { return m_Position; }
+		const glm::vec3 getScale() const { return m_Scale; }
+		const glm::vec3 getRotationAxis() const { return m_RotationAxis; }
+		float getRadianRotation() const { return m_Rotation; }
+		bool getShouldOutline() const { return m_ShouldOutline; }
+		bool getTransparent() const { return m_Transparent; }
 
 		void setPosition(glm::vec3& other) { m_Position = other; }
 		void setScale(glm::vec3& other) { m_Scale = other; }

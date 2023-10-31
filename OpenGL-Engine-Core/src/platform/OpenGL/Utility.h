@@ -6,6 +6,8 @@
 
 #include <iostream>
 #include <stb_image.h>
+#include <vector>
+#include "../../utils/Logger.h"
 
 namespace OpenGL_Engine { namespace opengl {
 
@@ -13,6 +15,7 @@ namespace OpenGL_Engine { namespace opengl {
 		
 	public:
 		static GLuint loadTextureFromFile(const char *path, bool containsTransparencyOnSides = false);
+		static GLuint loadCubemapFromFile(const std::vector<const char*>& vec);
 	};
 
 } }

@@ -2,16 +2,28 @@
 
 namespace OpenGL_Engine { namespace opengl {
 
-	Buffer::Buffer(GLfloat *data, GLsizei amount, GLuint componentCount) : m_ComponentCount(componentCount)
+	Buffer::Buffer(GLfloat *data, GLsizei amount, GLuint componentCount) 
 	{
 		glGenBuffers(1, &m_BufferID);
-		glBindBuffer(GL_ARRAY_BUFFER, m_BufferID);
-		glBufferData(GL_ARRAY_BUFFER, amount * sizeof(GL_FLOAT), data, GL_STATIC_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		load(data, amount, componentCount);
+	}
+
+	Buffer::Buffer()
+	{
+		glGenBuffers(1, &m_BufferID);
 	}
 
 	Buffer::~Buffer() {
 		glDeleteBuffers(1, &m_BufferID);
+	}
+
+	void Buffer::load(GLfloat* data, GLsizei amount, GLuint componentCount)
+	{
+		m_ComponentCount = componentCount;
+
+		bind();
+		glBufferData(GL_ARRAY_BUFFER, amount * sizeof(GL_FLOAT), data, GL_STATIC_DRAW);
+		unbind();
 	}
 
 	void Buffer::bind() const {
