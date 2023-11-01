@@ -45,6 +45,8 @@ struct SpotLight {
 	vec3 specular;
 };
 
+#define MAX_POINT_LIGHTS 5
+
 in vec2 TexCoords;
 in vec3 Normal;
 in vec3 FragPos;
@@ -52,8 +54,9 @@ in vec3 FragPos;
 out vec4 color;
 
 
+uniform int numPointLights;
 uniform DirLight dirLight;
-uniform PointLight pointLight;
+uniform PointLight pointLights[MAX_POINT_LIGHTS];
 uniform SpotLight spotLight;
 
 uniform Material material;
@@ -79,12 +82,13 @@ void main() {
 	vec3 bTextureColour = texture(material.texture_diffuse4, tiledCoords).rgb * blendMapColour.b;
 	
 	vec3 terrainColour = (backgroundTextureColour + rTextureColour + gTextureColour + bTextureColour) * 
-						 (CalcDirLight(dirLight, norm, fragToCam) + CalcSpotLight(spotLight, norm, FragPos) + CalcPointLight(pointLight, norm, FragPos, fragToCam));
+						 (CalcDirLight(dirLight, norm, fragToCam) + CalcSpotLight(spotLight, norm, FragPos) + CalcPointLight(pointLights[0], norm, FragPos, fragToCam));
 	
 	
 	// Result
 	color = vec4(terrainColour, 1.0);
 	//color = vec4(Normal, 1.0);
+	//color = vec4(vec3(gl_FragCoord.z), 1.0); //depth buffer display
 }
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 fragToCam) {
@@ -94,7 +98,7 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 fragToCam) {
 
 	vec3 ambient = light.ambient;
 	vec3 diffuse = light.diffuse * diff;
-
+	
 	return ambient + diffuse;
 }
 

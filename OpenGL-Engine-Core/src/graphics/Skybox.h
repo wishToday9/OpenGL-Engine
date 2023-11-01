@@ -8,14 +8,14 @@
 #include "../platform/OpenGL/Utility.h"
 
 #include "Shader.h"
-#include "camera/FPSCamera.h"
+#include "camera/Camera.h"
 #include "Window.h"
 
 namespace OpenGL_Engine {
 	namespace graphics {
 		class Skybox {
 		public:
-			Skybox(const std::vector<const char*>& filePaths, FPSCamera* camera, Window* window);
+			Skybox(const std::vector<const char*>& filePaths, Camera* camera, Window* window);
 
 			void Draw();
 
@@ -24,7 +24,7 @@ namespace OpenGL_Engine {
 			}
 
 		private:
-			FPSCamera* m_Camera;
+			Camera* m_Camera;
 			Window* m_Window;
 			Shader m_SkyboxShader;
 

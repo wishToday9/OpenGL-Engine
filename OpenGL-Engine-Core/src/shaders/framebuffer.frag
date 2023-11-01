@@ -6,20 +6,20 @@ in vec2 TexCoord;
 
 uniform sampler2D texture_diffuse1;
 
-const float readOffset = 1.0 / 400.0f; //sample value
+uniform vec2  readOffset; //sample value
 
 void main() {
-		// Sample the fragments around the current fragment for post processing using kernels (convulution matrices)
+	// Sample the fragments around the current fragment for post processing using kernels (convulution matrices)
 	vec2 readOffsets[9] = vec2[] (
-		vec2(-readOffset, readOffset),
-		vec2(0.0, readOffset),
-		vec2(readOffset, readOffset),
-		vec2(-readOffset, 0.0),
+		vec2(-readOffset.x, readOffset.y),
+		vec2(0.0, readOffset.y),
+		vec2(readOffset.x, readOffset.y),
+		vec2(-readOffset.x, 0.0),
 		vec2(0.0, 0.0),
-		vec2(readOffset, 0.0),
-		vec2(-readOffset, -readOffset),
-		vec2(0.0, -readOffset),
-		vec2(readOffset, -readOffset)
+		vec2(readOffset.x, 0.0),
+		vec2(-readOffset.x, -readOffset.y),
+		vec2(0.0, -readOffset.y),
+		vec2(readOffset.x, -readOffset.y)
 	);
 
 	// Blur kernel

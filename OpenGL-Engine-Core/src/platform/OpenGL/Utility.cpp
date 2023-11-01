@@ -34,18 +34,21 @@ namespace OpenGL_Engine { namespace opengl {
 			}
 
 			// Texture filtering
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			// trilinear filtering
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR); 
+			// Magnification can't use mipmaps so use bilinear filtering
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			
 			//mipmapping
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, 0);
 
-			// Anisotropic filtering
+			//// Anisotropic filtering
+			// opengl error?
 			GLfloat maxAnisotropy;
 			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
 			GLfloat anistropyAmount = glm::min(maxAnisotropy, ANISOTROPIC_FILTERING);
-			glTexParameterf(GL_TEXTURE_2D, GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, anistropyAmount);
+			//glTexParameterf(GL_TEXTURE_2D, GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, maxAnisotropy);
 
 			// Free now that the memory is 
 			stbi_image_free(data);

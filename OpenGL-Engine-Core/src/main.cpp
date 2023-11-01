@@ -7,7 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "utils\Time.h"
-#include "graphics\camera\FPSCamera.h"
+#include "graphics\camera\Camera.h"
 #include "utils\Logger.h"
 #include "graphics\Model.h"
 #include "terrain\Terrain.h"
@@ -24,7 +24,7 @@
 
 
 int main() {
-	OpenGL_Engine::graphics::FPSCamera camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f);
+	OpenGL_Engine::graphics::Camera camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f);
 	OpenGL_Engine::graphics::Window window("OpenGL-Engine ZSY", 1366, 768);
 	OpenGL_Engine::Scene3D scene(&camera, &window);
 	
@@ -41,6 +41,9 @@ int main() {
 
 	OpenGL_Engine::Timer fpsTimer;
 	int frames = 0;
+
+	framebufferShader.enable();
+	framebufferShader.setUniform2f("readOffset", glm::vec2(1.0f / window.getWidth(), 1.0f / window.getHeight()));
 
 
 

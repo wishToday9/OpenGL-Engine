@@ -3,7 +3,7 @@
 namespace OpenGL_Engine {
 	namespace graphics {
 		
-		Skybox::Skybox(const std::vector<const char*>& filePaths, FPSCamera* camera, Window* window)
+		Skybox::Skybox(const std::vector<const char*>& filePaths, Camera* camera, Window* window)
 			: m_SkyboxShader("src/shaders/skybox.vert", "src/shaders/skybox.frag"),
 			m_Camera(camera), m_Window(window)
 		{
