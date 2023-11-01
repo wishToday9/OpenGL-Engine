@@ -16,5 +16,4 @@ namespace OpenGL_Engine { namespace graphics {
 	void Renderable3D::draw(Shader &shader) const {
 		m_Model->Draw(shader);
 	}
-
 } }

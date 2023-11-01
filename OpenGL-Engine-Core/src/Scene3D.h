@@ -21,7 +21,7 @@ namespace OpenGL_Engine {
 		graphics::MeshFactory m_meshFactory;
 
 		std::vector<graphics::Renderable3D*> m_Renderables;
-		graphics::Shader m_TerrainShader, m_ModelShader, m_OutlineShader;
+		graphics::Shader m_TerrainShader, m_ModelShader, m_OutlineShader, m_ModelReflectionShader;
 
 
 		// Some sort of list of entities (tied to models that are in the Renderer (should this be changed to Renderer3D?))

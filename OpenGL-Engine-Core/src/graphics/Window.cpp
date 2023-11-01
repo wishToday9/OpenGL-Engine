@@ -1,7 +1,3 @@
-#define V_SYNC 1
-#define FULLSCREEN_MODE 0
-#define SHOW_MOUSE 0
-
 #include "Window.h"
 
 namespace OpenGL_Engine { namespace graphics {
@@ -30,9 +26,13 @@ namespace OpenGL_Engine { namespace graphics {
 		if (!glfwInit()) {
 			std::cout << "GLFW Failed To Initialize" << std::endl;
 			utils::Logger::getInstance().error("logged_files/window_creation.txt", "Window Initialization", "Could not initialize the GLFW window");
+			return false;
 		}
 		
-
+		//anti-aliasing
+		
+		glfwWindowHint(GLFW_SAMPLES, MSAA_SAMPLE_AMOUNT);
+		
 		// Create the window
 		if (FULLSCREEN_MODE) {
 			setFullscreenResolution();
@@ -45,6 +45,7 @@ namespace OpenGL_Engine { namespace graphics {
 		if (!m_Window) {
 			utils::Logger::getInstance().error("logged_files/window_creation.txt", "Window Initialization", "Could not create the GLFW window");
 			std::cout << "GLFW Window Couldn't Be Created" << std::endl;
+			return false;
 		}
 
 		// Setup the mouse settings

@@ -23,26 +23,25 @@ namespace OpenGL_Engine {
 			};
 			GLuint skyboxIndices[] = {
 				// front
-				0, 1, 2,
-				2, 3, 0,
+				2, 1, 0,
+				0, 3, 2,
 				// top
-				1, 5, 6,
-				6, 2, 1,
+				6, 5, 1,
+				1, 2, 6,
 				// back
-				7, 6, 5,
-				5, 4, 7,
+				5, 6, 7,
+				7, 4, 5,
 				// bottom
-				4, 0, 3,
-				3, 7, 4,
+				3, 0, 4,
+				4, 7, 3,
 				// left
-				4, 5, 1,
-				1, 0, 4,
+				1, 5, 4,
+				4, 0, 1,
 				// right
-				3, 2, 6,
-				6, 7, 3,
+				6, 2, 3,
+				3, 7, 6,
 			};
 
-			//is this correct
 			m_SkyboxVBO.load(skyboxVertices, 8 * 3, 3);
 			m_SkyboxIBO.load(skyboxIndices, 36);
 			m_SkyboxVAO.addBuffer(&m_SkyboxVBO, 0);
@@ -62,7 +61,8 @@ namespace OpenGL_Engine {
 				glm::radians(m_Camera->getFOV()), (float)m_Window->getWidth() / (float)m_Window->getHeight(), 0.1f, 1000.0f));
 			
 
-			glDisable(GL_DEPTH_TEST);
+			// Since the vertex shader is gonna make the depth value 1.0, and the default value in the depth buffer is 1.0 so this is needed to draw the skybox
+			glDepthFunc(GL_LEQUAL);
 			m_SkyboxVAO.bind();
 			m_SkyboxIBO.bind();
 
@@ -70,7 +70,7 @@ namespace OpenGL_Engine {
 			m_SkyboxVAO.unbind();
 			m_SkyboxIBO.unbind();
 
-			glEnable(GL_DEPTH_TEST);
+			glDepthFunc(GL_LESS);
 
 			m_SkyboxShader.disable();
 		}

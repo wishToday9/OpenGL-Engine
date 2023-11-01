@@ -19,6 +19,10 @@ namespace OpenGL_Engine {
 
 			void Draw();
 
+			unsigned int getSkyboxCubemap() {
+				return m_SkyboxCubemap;
+			}
+
 		private:
 			FPSCamera* m_Camera;
 			Window* m_Window;
@@ -27,7 +31,7 @@ namespace OpenGL_Engine {
 			opengl::VertexArray m_SkyboxVAO;
 			opengl::IndexBuffer m_SkyboxIBO;
 			opengl::Buffer m_SkyboxVBO;
-			unsigned int m_SkyboxCubemap; //cubemap texture
+			unsigned int m_SkyboxCubemap; //cubemap
 		};
 	}
 }

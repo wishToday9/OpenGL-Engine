@@ -4,7 +4,8 @@
 #include <GLFW\glfw3.h>
 #include <iostream>
 
-#include "..\utils\Logger.h"
+#include "../utils/Logger.h"
+#include "../Defs.h"
 
 namespace OpenGL_Engine { namespace graphics {
 

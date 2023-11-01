@@ -9,6 +9,7 @@ namespace OpenGL_Engine {
 		: m_TerrainShader("src/shaders/basic.vert", "src/shaders/terrain.frag"),
 		m_ModelShader("src/shaders/basic.vert", "src/shaders/model.frag"),
 		m_OutlineShader("src/shaders/basic.vert", "src/shaders/basic.frag"),
+		m_ModelReflectionShader("src/shaders/basic.vert", "src/shaders/modelReflection.frag"),
 		m_Camera(camera), m_Window(window)
 	{
 		m_Renderer = new graphics::Renderer(camera);
@@ -41,24 +42,16 @@ namespace OpenGL_Engine {
 		m_OutlineShader.setUniformMat4("projection", glm::perspective(glm::radians(m_Camera->getFOV()), 
 			(float)m_Window->getWidth() / (float)m_Window->getHeight(), 0.1f, 1000.0f));
 
-		m_Skybox->Draw();
 
-
-		// terrain
-		glStencilMask(0x00);
-		glDisable(GL_CULL_FACE);
-		m_TerrainShader.enable();
-		m_TerrainShader.setUniform3f("pointLight.position", glm::vec3(200.0f, 200.0f, 100.0f));
-		m_TerrainShader.setUniform3f("spotLight.position", m_Camera->getPosition());
-		m_TerrainShader.setUniform3f("spotLight.direction", m_Camera->getFront());
-		m_TerrainShader.setUniform3f("viewPos", m_Camera->getPosition());
-		glm::mat4 modelMatrix(1);
-		modelMatrix = glm::translate(modelMatrix, m_Terrain->getPosition());
-		m_TerrainShader.setUniformMat4("model", modelMatrix);
-		m_TerrainShader.setUniformMat4("view", m_Camera->getViewMatrix());
-		m_TerrainShader.setUniformMat4("projection", glm::perspective(glm::radians(m_Camera->getFOV()),
+		//reflection shader
+		m_ModelReflectionShader.enable();
+		m_ModelReflectionShader.setUniform3f("cameraPos", m_Camera->getPosition());
+		m_ModelReflectionShader.setUniformMat4("view", m_Camera->getViewMatrix());
+		m_ModelReflectionShader.setUniformMat4("projection", glm::perspective(glm::radians(m_Camera->getFOV()), 
 			(float)m_Window->getWidth() / (float)m_Window->getHeight(), 0.1f, 1000.0f));
-		m_Terrain->Draw(m_TerrainShader);
+
+
+		
 
 		//models
 		m_ModelShader.enable();
@@ -83,12 +76,40 @@ namespace OpenGL_Engine {
 			iter++;
 		}
 
-		m_Renderer->flush(m_ModelShader, m_OutlineShader);		
+		//m_ModelReflectionShader.enable();
+		//m_ModelReflectionShader.setUniform1i("environmentMap", 0);
+		//glBindTexture(GL_TEXTURE_CUBE_MAP, m_Skybox->getSkyboxCubemap());
+		//m_Renderer->flushOpaque(m_ModelReflectionShader, m_OutlineShader);
+
+		m_Renderer->flushOpaque(m_ModelShader, m_OutlineShader);
+
+		// terrain
+		glStencilMask(0x00);
+		glDisable(GL_CULL_FACE);
+		m_TerrainShader.enable();
+		m_TerrainShader.setUniform3f("pointLight.position", glm::vec3(200.0f, 200.0f, 100.0f));
+		m_TerrainShader.setUniform3f("spotLight.position", m_Camera->getPosition());
+		m_TerrainShader.setUniform3f("spotLight.direction", m_Camera->getFront());
+		m_TerrainShader.setUniform3f("viewPos", m_Camera->getPosition());
+		glm::mat4 modelMatrix(1);
+		modelMatrix = glm::translate(modelMatrix, m_Terrain->getPosition());
+		m_TerrainShader.setUniformMat4("model", modelMatrix);
+		m_TerrainShader.setUniformMat4("view", m_Camera->getViewMatrix());
+		m_TerrainShader.setUniformMat4("projection", glm::perspective(glm::radians(m_Camera->getFOV()),
+			(float)m_Window->getWidth() / (float)m_Window->getHeight(), 0.1f, 1000.0f));
+		m_Terrain->Draw(m_TerrainShader);
+
+		m_Skybox->Draw();
+
+		//transparent objects
+		m_ModelShader.enable();
+		m_Renderer->flushTransparent(m_ModelShader, m_OutlineShader);
 	
 	}
 
 	void Scene3D::init()
 	{
+		glEnable(GL_MULTISAMPLE);
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_STENCIL_TEST);
 		glEnable(GL_CULL_FACE);

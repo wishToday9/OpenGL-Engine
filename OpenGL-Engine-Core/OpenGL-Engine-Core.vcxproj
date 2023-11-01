@@ -170,6 +170,7 @@
     <ClCompile Include="src\utils\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Defs.h" />
     <ClInclude Include="src\graphics\camera\FPSCamera.h" />
     <ClInclude Include="src\graphics\Mesh.h" />
     <ClInclude Include="src\graphics\MeshFactory.h" />
@@ -194,9 +195,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\directionalLight.frag" />
-    <None Include="src\shaders\framebufferColorBuffer.frag" />
-    <None Include="src\shaders\framebufferColorBuffer.vert" />
+    <None Include="src\shaders\framebuffer.frag" />
+    <None Include="src\shaders\framebuffer.vert" />
+    <None Include="src\shaders\fxaa.frag" />
+    <None Include="src\shaders\fxaa.vert" />
     <None Include="src\shaders\model.frag" />
+    <None Include="src\shaders\modelReflection.frag" />
+    <None Include="src\shaders\modelRefraction.frag" />
     <None Include="src\shaders\pointlight.frag" />
     <None Include="src\shaders\skybox.frag" />
     <None Include="src\shaders\skybox.vert" />

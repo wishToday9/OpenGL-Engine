@@ -25,17 +25,24 @@
 
 int main() {
 	OpenGL_Engine::graphics::FPSCamera camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f);
-	OpenGL_Engine::graphics::Window window("OpenGL_Engine Engine", 1366, 768);
+	OpenGL_Engine::graphics::Window window("OpenGL-Engine ZSY", 1366, 768);
 	OpenGL_Engine::Scene3D scene(&camera, &window);
 	
 	OpenGL_Engine::opengl::Framebuffer framebuffer(window.getWidth(), window.getHeight());
-	OpenGL_Engine::graphics::Shader framebufferShader("src/shaders/framebufferColorBuffer.vert",
-		"src/shaders/framebufferColorBuffer.frag");
+	OpenGL_Engine::graphics::Shader framebufferShader("src/shaders/framebuffer.vert",
+		"src/shaders/framebuffer.frag");
+
+	OpenGL_Engine::opengl::Framebuffer blitFramebuffer(window.getWidth(), window.getHeight(), false);
+
+
+
 	OpenGL_Engine::graphics::MeshFactory meshFactory;
-	OpenGL_Engine::graphics::Mesh* colorBufferMesh = meshFactory.CreateQuad(framebuffer.getColourBufferTexture());
+	OpenGL_Engine::graphics::Mesh* colorBufferMesh = meshFactory.CreateQuad(blitFramebuffer.getColourBufferTexture());
 
 	OpenGL_Engine::Timer fpsTimer;
 	int frames = 0;
+
+
 
 	OpenGL_Engine::Time deltaTime;
 	bool firstMove = true;
@@ -88,9 +95,18 @@ int main() {
 		scene.onUpdate(deltaTime.getDeltaTime());
 		scene.onRender();
 
+		// Blit the multisampled framebuffer over to a non-multisampled buffer
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer.getFramebuffer());
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, blitFramebuffer.getFramebuffer());
+		glBlitFramebuffer(0, 0, window.getWidth(), window.getHeight(), 0, 0, 
+			window.getWidth(), window.getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+
 		// Draw to the default scene buffer
 		framebuffer.unbind();
-		glClear(GL_COLOR_BUFFER_BIT);
+
+
+		window.clear();
 		framebufferShader.enable();
 		colorBufferMesh->Draw(framebufferShader);
 		framebufferShader.disable();
