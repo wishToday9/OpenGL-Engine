@@ -72,7 +72,6 @@ namespace OpenGL_Engine {
 
 		// terrain
 		glStencilMask(0x00);
-		glDisable(GL_CULL_FACE);
 		m_TerrainShader.enable();
 		m_DynamicLightManager.setupLightingUniforms(m_TerrainShader);
 		m_TerrainShader.setUniform3f("viewPos", m_Camera->getPosition());
@@ -125,12 +124,12 @@ namespace OpenGL_Engine {
 
 		// Terrain shader
 		m_TerrainShader.enable();
-		m_DynamicLightManager.setupLightingUniforms(m_TerrainShader);
+		m_TerrainShader.setUniform1f("material.shininess", 128.0f);
+
 
 		//Model Shader
 		m_ModelShader.enable();
 		m_ModelShader.setUniform1f("material.shininess", 128.0f);
-		m_DynamicLightManager.setupLightingUniforms(m_ModelShader);
 
 		//skybox
 		std::vector<const char*> skyboxFilePaths;

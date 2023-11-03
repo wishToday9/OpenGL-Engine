@@ -19,11 +19,12 @@ namespace OpenGL_Engine {
 		{
 			// Render opaque objects
 			glEnable(GL_CULL_FACE);
+			glEnable(GL_DEPTH_TEST);
+
 			while (!m_OpaqueRenderQueue.empty()) {
 				Renderable3D* current = m_OpaqueRenderQueue.front();
 
 				// Drawing prepration
-				glEnable(GL_DEPTH_TEST);
 				glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
 				glStencilFunc(GL_ALWAYS, 1, 0xFF);
@@ -34,19 +35,9 @@ namespace OpenGL_Engine {
 
 				// Draw the outline
 				if (current->getShouldOutline()) {
-					glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-
-					outlineShader.enable();
-					setupModelMatrix(current, outlineShader, 1.0025);
-					current->draw(outlineShader);
-					outlineShader.disable();
-
-					glEnable(GL_DEPTH_TEST);
-					glStencilMask(0xFF);
+					drawOutline(outlineShader, current);
 
 					shader.enable();
-
-					glClear(GL_STENCIL_BUFFER_BIT);
 				}
 
 				m_OpaqueRenderQueue.pop_front();
@@ -81,19 +72,9 @@ namespace OpenGL_Engine {
 
 				// Draw the outline
 				if (current->getShouldOutline()) {
-					glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-
-					outlineShader.enable();
-					setupModelMatrix(current, shader, 1.0025);
-					current->draw(outlineShader);
-					outlineShader.disable();
-
-					glEnable(GL_DEPTH_TEST);
-					glStencilMask(0xFF);
+					drawOutline(outlineShader, current);
 
 					shader.enable();
-
-					glClear(GL_STENCIL_BUFFER_BIT);
 				}
 
 				glDisable(GL_BLEND);
@@ -101,6 +82,10 @@ namespace OpenGL_Engine {
 				m_TransparentRenderQueue.pop_front();
 			}
 		}
+
+
+		// TODO: Currently only supports two levels in a hierarchical scene graph
+		// Make it work with any number of levels
 
 		void Renderer::setupModelMatrix(Renderable3D* renderable, Shader& shader, float scaleFactor)
 		{
@@ -119,6 +104,21 @@ namespace OpenGL_Engine {
 			}
 
 			shader.setUniformMat4("model", model);
+		}
+
+		void Renderer::drawOutline(Shader& outlineShader, Renderable3D* renderable)
+		{
+			glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+
+			outlineShader.enable();
+			setupModelMatrix(renderable, outlineShader, 1.025);
+			renderable->draw(outlineShader);
+			outlineShader.disable();
+
+			glEnable(GL_DEPTH_TEST);
+			glStencilMask(0xFF);
+
+			glClear(GL_STENCIL_BUFFER_BIT);
 		}
 
 

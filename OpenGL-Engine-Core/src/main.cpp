@@ -14,7 +14,7 @@
 
 #include "Scene3D.h"
 
-#include "platform/OpenGL/Framebuffer.h"
+#include "platform/OpenGL/Framebuffers/Framebuffer.h"
 #include "graphics/MeshFactory.h"
 
 
@@ -29,12 +29,13 @@ int main() {
 	OpenGL_Engine::Scene3D scene(&camera, &window);
 	
 	OpenGL_Engine::opengl::Framebuffer framebuffer(window.getWidth(), window.getHeight());
+	framebuffer.addColorAttachment(true).addDepthStencilRBO(true).createFramebuffer();
+
 	OpenGL_Engine::graphics::Shader framebufferShader("src/shaders/framebuffer.vert",
 		"src/shaders/framebuffer.frag");
 
-	OpenGL_Engine::opengl::Framebuffer blitFramebuffer(window.getWidth(), window.getHeight(), false);
-
-
+	OpenGL_Engine::opengl::Framebuffer blitFramebuffer(window.getWidth(), window.getHeight());
+	blitFramebuffer.addColorAttachment(false).addDepthStencilRBO(false).createFramebuffer();
 
 	OpenGL_Engine::graphics::MeshFactory meshFactory;
 	OpenGL_Engine::graphics::Mesh* colorBufferMesh = meshFactory.CreateQuad(blitFramebuffer.getColourBufferTexture());
@@ -53,8 +54,6 @@ int main() {
 	GLfloat lastY = window.getMouseY();
 	while (!window.closed()) {
 		//input
-
-
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		window.clear();
 		deltaTime.update();

@@ -2,31 +2,43 @@
 
 namespace OpenGL_Engine {
 	namespace opengl {
-		Framebuffer::Framebuffer(int width, int height, bool multisampleBuffers /*= true*/)
+		Framebuffer::Framebuffer(int width, int height)
 			: m_Width(width), m_Height(height)
 		{
 			// Construct the framebuffer
 			glGenFramebuffers(1, &m_FBO);
-			bind();
 
-			// Depth and Stencil buffers
-			glGenRenderbuffers(1, &m_DepthStencilRBO);
-			glBindRenderbuffer(GL_RENDERBUFFER, m_DepthStencilRBO);
-			if (multisampleBuffers)
-				glRenderbufferStorageMultisample(GL_RENDERBUFFER, MSAA_SAMPLE_AMOUNT, GL_DEPTH24_STENCIL8, width, height);
-			else
-				glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+		}
+
+		Framebuffer::~Framebuffer()
+		{
+			glDeleteFramebuffers(1, &m_FBO);
+		}
+
+		void Framebuffer::createFramebuffer()
+		{
+			// Check if the creation failed
+			if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+				utils::Logger::getInstance().error("logged_files/error.txt", "Framebuffer initialization", "Could not initialize the framebuffer");
+				return;
+			}
+
+		}
+
+		OpenGL_Engine::opengl::Framebuffer& Framebuffer::addColorAttachment(bool multisampleBuffers)
+		{
+			bind();
 
 			// Colour buffers
 			glGenTextures(1, &m_ColourTexture);
 			if (multisampleBuffers) {
 				glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_ColourTexture);
-				glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, MSAA_SAMPLE_AMOUNT, GL_RGB, width, height, GL_TRUE);
+				glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, MSAA_SAMPLE_AMOUNT, GL_RGB, m_Width, m_Height, GL_TRUE);
 				glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 			}
 			else {
 				glBindTexture(GL_TEXTURE_2D, m_ColourTexture);
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Width, m_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // Both need to clamp to edge or you might see strange colours around the
@@ -42,21 +54,30 @@ namespace OpenGL_Engine {
 				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColourTexture, 0);
 			}
 
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_DepthStencilRBO);
-			glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-			// Check if the creation failed
-			if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-				utils::Logger::getInstance().error("logged_files/error.txt", "Framebuffer initialization", "Could not initialize the framebuffer");
-				return;
-			}
-
 			unbind();
+			return *this;
+
 		}
 
-		Framebuffer::~Framebuffer()
+		OpenGL_Engine::opengl::Framebuffer& Framebuffer::addDepthStencilRBO(bool multisampleBuffers)
 		{
+			bind();
 
+			// Depth and Stencil buffers
+			glGenRenderbuffers(1, &m_DepthStencilRBO);
+			glBindRenderbuffer(GL_RENDERBUFFER, m_DepthStencilRBO);
+			if (multisampleBuffers) {
+				glRenderbufferStorageMultisample(GL_RENDERBUFFER, MSAA_SAMPLE_AMOUNT, GL_DEPTH24_STENCIL8, m_Width, m_Height);
+
+			}
+			else {
+				glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_Width, m_Height);
+			}
+
+			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_DepthStencilRBO);
+
+			unbind();
+			return *this;
 		}
 
 		void Framebuffer::bind() {

@@ -3,6 +3,7 @@
 namespace OpenGL_Engine {
 	namespace graphics {
 		
+		// add functionality so it can update with an entity's position and orientation
 		DynamicLightManager::DynamicLightManager()
 			: m_DirectionalLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f)),
 			m_SpotLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f),
@@ -43,7 +44,7 @@ namespace OpenGL_Engine {
 			m_DirectionalLight.specular = glm::vec3(0.5f, 0.5f, 0.5f);
 
 			m_SpotLight.isActive = true;
-			m_SpotLight.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
+			m_SpotLight.ambient = glm::vec3(0.05f, 0.05f, 0.05f);
 			m_SpotLight.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
 			m_SpotLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);
 			m_SpotLight.position = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -54,7 +55,7 @@ namespace OpenGL_Engine {
 			m_SpotLight.cutOff = glm::cos(glm::radians(12.5f));
 			m_SpotLight.outerCutOff = glm::cos(glm::radians(15.0f));
 
-			PointLight pointLight(glm::vec3(0.2f, 0.2f, 0.2f),
+			PointLight pointLight(glm::vec3(0.05f, 0.05f, 0.05f),
 				glm::vec3(1.0f, 1.0f, 1.0f),
 				glm::vec3(1.0f, 1.0f, 1.0f),
 				glm::vec3(30.0f, -10.0f, 30.0f),
