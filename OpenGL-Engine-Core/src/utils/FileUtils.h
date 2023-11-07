@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace OpenGL_Engine { 
+namespace arcane { 
 
 	class FileUtils {
 	public:

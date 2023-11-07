@@ -1,6 +1,6 @@
 #include "Timer.h"
 
-namespace OpenGL_Engine {
+namespace arcane {
 
 	Timer::Timer() {
 		startTime = glfwGetTime();

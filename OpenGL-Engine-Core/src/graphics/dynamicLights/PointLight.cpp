@@ -1,16 +1,13 @@
 #include "PointLight.h"
-namespace OpenGL_Engine {
-	namespace graphics {
 
+namespace arcane { namespace graphics {
 
-		PointLight::PointLight(glm::vec3& ambient, glm::vec3& diffuse, glm::vec3& specular, glm::vec3& position, float constant, float linear, float quadratic)
-			:DynamicLight(ambient, diffuse, specular), position(position), constant(constant), linear(linear), quadratic(quadratic)
-		{
+	PointLight::PointLight(glm::vec3 &amb, glm::vec3 &diff, glm::vec3 &spec, glm::vec3 &pos, float cons, float lin, float quad)
+		: DynamicLight(amb, diff, spec), position(pos), constant(cons), linear(lin), quadratic(quad) {}
 
-		}
-
-		void PointLight::setupUniforms(Shader& shader, int currentLightIndex)
-		{
+	// TODO: Assert that the shader is bound in debug
+	void PointLight::setupUniforms(Shader &shader, int currentLightIndex) {
+		if (isActive) {
 			shader.setUniform3f(("pointLights[" + std::to_string(currentLightIndex) + "].ambient").c_str(), ambient);
 			shader.setUniform3f(("pointLights[" + std::to_string(currentLightIndex) + "].diffuse").c_str(), diffuse);
 			shader.setUniform3f(("pointLights[" + std::to_string(currentLightIndex) + "].specular").c_str(), specular);
@@ -19,6 +16,6 @@ namespace OpenGL_Engine {
 			shader.setUniform1f(("pointLights[" + std::to_string(currentLightIndex) + "].linear").c_str(), linear);
 			shader.setUniform1f(("pointLights[" + std::to_string(currentLightIndex) + "].quadratic").c_str(), quadratic);
 		}
-
 	}
-}
+
+} }

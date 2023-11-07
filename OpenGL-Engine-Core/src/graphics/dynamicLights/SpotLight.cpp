@@ -1,16 +1,14 @@
 #include "SpotLight.h"
-namespace OpenGL_Engine {
-	namespace graphics {
 
-		SpotLight::SpotLight(glm::vec3& ambient, glm::vec3& diffuse, glm::vec3& specular, 
-			glm::vec3& position, glm::vec3& direction, float cutOff, float outerCutOff, 
-			float constant, float linear, float quadratic)
-			: DynamicLight(ambient, diffuse, specular), position(position), direction(direction),
-			cutOff(cutOff), outerCutOff(outerCutOff), constant(constant), linear(linear), quadratic(quadratic) {}
+namespace arcane { namespace graphics {
 
+	SpotLight::SpotLight(glm::vec3 &amb, glm::vec3 &diff, glm::vec3 &spec, glm::vec3 &pos, glm::vec3 &dir, float cutOffAngle, float outerCutOffAngle, float cons, float lin, float quad)
+		: DynamicLight(amb, diff, spec), position(pos), direction(dir), cutOff(cutOffAngle), outerCutOff(outerCutOffAngle), constant(cons), linear(lin), quadratic(quad) {}
 
-		void SpotLight::setupUniforms(Shader& shader, int currentLightIndex)
-		{
+	// TODO: Add in multiple spotlight support
+	// TODO: Assert that the shader is bound in debug
+	void SpotLight::setupUniforms(Shader &shader, int currentLightIndex) {
+		if (isActive) {
 			shader.setUniform3f("spotLight.ambient", ambient);
 			shader.setUniform3f("spotLight.diffuse", diffuse);
 			shader.setUniform3f("spotLight.specular", specular);
@@ -22,6 +20,6 @@ namespace OpenGL_Engine {
 			shader.setUniform1f("spotLight.linear", linear);
 			shader.setUniform1f("spotLight.quadratic", quadratic);
 		}
-
 	}
-}
+
+} }

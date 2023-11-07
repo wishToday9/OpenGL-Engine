@@ -1,23 +1,19 @@
-
 #pragma once
 
 #include "DynamicLight.h"
 
-namespace OpenGL_Engine {
-	namespace graphics {
+namespace arcane { namespace graphics {
 
-		class SpotLight : public DynamicLight {
-		public:
-			SpotLight(glm::vec3& ambient, glm::vec3& diffuse, glm::vec3& specular, 
-				glm::vec3& position, glm::vec3& direction, float cutOff, float outerCutOff, 
-				float constant, float linear, float quadratic);
+	struct SpotLight : public DynamicLight {
+	public:
+		SpotLight(glm::vec3 &amb, glm::vec3 &diff, glm::vec3 &spec, glm::vec3 &pos, glm::vec3 &dir, float cutOffAngle, float outerCutOffAngle, float cons, float lin, float quad);
+	
+		virtual void setupUniforms(Shader &shader, int currentLightIndex) override;
 
-			virtual void setupUniforms(Shader& shader, int currentLightIndex) override;
 
-			glm::vec3 position, direction;
-			float cutOff, outerCutOff;
-			float constant, linear, quadratic;
-		};
+		glm::vec3 position, direction;
+		float cutOff, outerCutOff;
+		float constant, linear, quadratic;
+	};
 
-	}
-}
+} }

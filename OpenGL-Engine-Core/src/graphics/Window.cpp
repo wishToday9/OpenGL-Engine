@@ -1,25 +1,35 @@
 #include "Window.h"
 
-namespace OpenGL_Engine { namespace graphics {
+namespace arcane { namespace graphics {
+
+	bool Window::s_Keys[MAX_KEYS];
+	bool Window::s_Buttons[MAX_BUTTONS];
+	int Window::m_Width, Window::m_Height;
+	double Window::s_MouseX, Window::s_MouseY, Window::s_MouseXDelta, Window::s_MouseYDelta;
+	double Window::s_ScrollX, Window::s_ScrollY;
 
 	Window::Window(const char *title, int width, int height) {
 		m_Title = title;
 		m_Width = width;
 		m_Height = height;
+		s_ScrollX = s_ScrollY = 0;
+		s_MouseXDelta = s_MouseYDelta = 0;
 
 		if (!init()) {
 			utils::Logger::getInstance().error("logged_files/window_creation.txt", "Window Initialization", "Could not initialize window class");
 			glfwDestroyWindow(m_Window);
 			glfwTerminate();
 		}
-
-		memset(m_Keys, 0, sizeof(bool) * MAX_KEYS);
-		memset(m_Buttons, 0, sizeof(bool) * MAX_BUTTONS);
+		
+		memset(s_Keys, 0, sizeof(bool) * MAX_KEYS);
+		memset(s_Buttons, 0, sizeof(bool) * MAX_BUTTONS);
 	}
 
 	Window::~Window() {
 		glfwDestroyWindow(m_Window);
 		glfwTerminate();
+		ImGui_ImplGlfwGL3_Shutdown();
+		ImGui::DestroyContext();
 	}
 
 	bool Window::init() {
@@ -28,11 +38,10 @@ namespace OpenGL_Engine { namespace graphics {
 			utils::Logger::getInstance().error("logged_files/window_creation.txt", "Window Initialization", "Could not initialize the GLFW window");
 			return false;
 		}
-		
-		//anti-aliasing
-		
+
+		// Anti-aliasing
 		glfwWindowHint(GLFW_SAMPLES, MSAA_SAMPLE_AMOUNT);
-		
+
 		// Create the window
 		if (FULLSCREEN_MODE) {
 			setFullscreenResolution();
@@ -61,7 +70,8 @@ namespace OpenGL_Engine { namespace graphics {
 		glfwSetMouseButtonCallback(m_Window, mouse_button_callback);
 		glfwSetCursorPosCallback(m_Window, cursor_position_callback);
 		glfwSetScrollCallback(m_Window, scroll_callback);
-
+		glfwSetCharCallback(m_Window, char_callback);
+		glfwGetCursorPos(m_Window, &s_MouseX, &s_MouseY);
 
 		// Check to see if v-sync was enabled and act accordingly
 		if (V_SYNC) {
@@ -72,23 +82,19 @@ namespace OpenGL_Engine { namespace graphics {
 		}
 		
 
-		//// Initialize GLEW (allows us to use newer versions of OpenGL)
-		//if (glewInit() != GLEW_OK) {
-		//	std::cout << "Could not Initialize GLEW" << std::endl;
-		//	utils::Logger::getInstance().error("logged_files/window_creation.txt", "Window Initialization", "Could not initialize the GLEW");
-		//	return 0;
-		//}
-
-		// glad: load all OpenGL function pointers
-// ---------------------------------------
+		// Initialize GLEW (allows us to use newer versions of OpenGL)
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		{
 			std::cout << "Failed to initialize GLAD" << std::endl;
-			utils::Logger::getInstance().error("logged_files/window_creation.txt",
-				"Window Initialization", "Could not initialize the GLAD");
 			return -1;
 		}
+
 		std::cout << "OpenGL " << glGetString(GL_VERSION) << std::endl;
+
+		// Setup ImGui bindings
+		ImGui::CreateContext();
+		ImGui_ImplGlfwGL3_Init(m_Window, false);
+		ImGui::StyleColorsDark();
 		
 		// Everything was successful so return true
 		return 1;
@@ -101,6 +107,7 @@ namespace OpenGL_Engine { namespace graphics {
 		}
 
 		glfwSwapBuffers(m_Window);
+		s_MouseXDelta = s_MouseYDelta = 0;
 		glfwPollEvents();
 	}
 
@@ -119,32 +126,24 @@ namespace OpenGL_Engine { namespace graphics {
 		m_Height = mode->height;
 	}
 
-	/*                   Getters                    */
-	bool Window::isKeyPressed(unsigned int keycode) const {
+	/*                   Static Functions                    */
+	bool Window::isKeyPressed(unsigned int keycode) {
 		if (keycode >= MAX_KEYS) {
-			//TODO: LOG THIS
-			//std::cout << "Max Key overflow in window" << std::endl;
-
-			utils::Logger::getInstance().error("logge_files/input_errors.txt", "Input Check",
-				"Key checked is out of bounds(ie not supported)");
+			utils::Logger::getInstance().error("logged_files/input_errors.txt", "Input Check", "Key checked is out of bounds (ie not supported)");
 			return false;
 		}
 		else {
-			return m_Keys[keycode];
+			return s_Keys[keycode];
 		}
 	}
 
-	bool Window::isMouseButtonPressed(unsigned int code) const {
+	bool Window::isMouseButtonPressed(unsigned int code) {
 		if (code >= MAX_BUTTONS) {
-			//TODO: LOG THIS
-			//std::cout << "Max mouse button overflow in window" << std::endl;
-
-			utils::Logger::getInstance().error("logge_files/input_errors.txt", "Input Check",
-				"Key checked is out of bounds(ie not supported)");
+			utils::Logger::getInstance().error("logged_files/input_errors.txt", "Input Check", "Key checked is out of bounds (ie not supported)");
 			return false;
 		}
 		else {
-			return m_Buttons[code];
+			return s_Buttons[code];
 		}
 	}
 
@@ -163,24 +162,33 @@ namespace OpenGL_Engine { namespace graphics {
 
 	static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {
 		Window* win = (Window*)glfwGetWindowUserPointer(window);
-		win->m_Keys[key] = action != GLFW_RELEASE;
+		win->s_Keys[key] = action != GLFW_RELEASE;
+		ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
 	}
 
 	static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
 		Window* win = (Window*)glfwGetWindowUserPointer(window);
-		win->m_Buttons[button] = action != GLFW_RELEASE;
+		win->s_Buttons[button] = action != GLFW_RELEASE;
+		ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
 	}
 
 	static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
 		Window* win = (Window*)glfwGetWindowUserPointer(window);
-		win->mx = xpos;
-		win->my = ypos;
+		win->s_MouseXDelta = xpos - win->s_MouseX;
+		win->s_MouseYDelta = ypos - win->s_MouseY;
+		win->s_MouseX = xpos;
+		win->s_MouseY = ypos;
 	}
 	
 	static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 		Window* win = (Window*)glfwGetWindowUserPointer(window);
-		win->scrollX = xoffset;
-		win->scrollY = yoffset;
+		win->s_ScrollX = xoffset;
+		win->s_ScrollY = yoffset;
+		ImGui_ImplGlfw_ScrollCallback(window, xoffset, yoffset);
+	}
+
+	static void char_callback(GLFWwindow* window, unsigned int c) {
+		ImGui_ImplGlfw_CharCallback(window, c);
 	}
 
 } }

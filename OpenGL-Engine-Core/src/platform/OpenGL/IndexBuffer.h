@@ -3,23 +3,23 @@
 #include <glad\glad.h>
 #include <GLFW\glfw3.h>
 
-namespace OpenGL_Engine { namespace opengl {
+namespace arcane { namespace opengl {
 
 	class IndexBuffer {
 	private:
-		GLuint m_BufferID;
-		GLsizei m_Count;
+		unsigned int m_BufferID;
+		int m_Count;
 	public:
 		IndexBuffer();
-		IndexBuffer(GLuint *data, GLsizei amount);
+		IndexBuffer(unsigned int *data, int amount);
 		~IndexBuffer();
 
-		void load(GLuint* data, GLsizei amount);
+		void load(unsigned int *data, int amount);
 
 		void bind() const;
 		void unbind() const;
 
-		inline GLsizei getCount() const { return m_Count; }
+		inline int getCount() const { return m_Count; }
 	};
 
 } }

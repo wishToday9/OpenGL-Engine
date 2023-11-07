@@ -2,17 +2,15 @@
 
 #include "Framebuffer.h"
 
-namespace OpenGL_Engine {
-	namespace opengl {
-		class ShadowMap : private Framebuffer {
-		public:
-			ShadowMap(int width, int height);
+namespace arcane { namespace opengl {
 
-			inline GLuint getDepthBufferTexture() {
-				return m_DepthTexture;
-			}
-		private:
-			GLuint m_DepthTexture;
-		};
-	}
-}
+	class ShadowMap : private Framebuffer {
+	public:
+		ShadowMap(int width, int height);
+
+		inline unsigned int getDepthBufferTexture() { return m_DepthTexture; }
+	private:
+		unsigned int m_DepthTexture;
+	};
+
+} }

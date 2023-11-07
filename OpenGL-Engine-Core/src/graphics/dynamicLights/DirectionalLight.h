@@ -2,19 +2,15 @@
 
 #include "DynamicLight.h"
 
-namespace OpenGL_Engine {
-	namespace graphics {
-	
-		class DirectionalLight : public DynamicLight
-		{
-		public:
-			DirectionalLight(glm::vec3& ambient, glm::vec3& diffuse, glm::vec3& specular, glm::vec3& direction);
+namespace arcane { namespace graphics {
 
-			virtual void setupUniforms(Shader& shader, int currentLightIndex) override;
+	struct DirectionalLight : public DynamicLight {
+		DirectionalLight(glm::vec3 &amb, glm::vec3 &diff, glm::vec3 &spec, glm::vec3 &dir);
 
-			glm::vec3 direction;
-		};
-	
-	}
-}
+		virtual void setupUniforms(Shader &shader, int currentLightIndex) override;
 
+
+		glm::vec3 direction;
+	};
+
+} }

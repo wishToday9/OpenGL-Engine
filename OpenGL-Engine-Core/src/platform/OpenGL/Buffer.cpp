@@ -1,29 +1,25 @@
 #include "Buffer.h"
 
-namespace OpenGL_Engine { namespace opengl {
+namespace arcane { namespace opengl {
 
-	Buffer::Buffer(GLfloat *data, GLsizei amount, GLuint componentCount) 
-	{
+	Buffer::Buffer() {
 		glGenBuffers(1, &m_BufferID);
-		load(data, amount, componentCount);
 	}
 
-	Buffer::Buffer()
-	{
+	Buffer::Buffer(float *data, int amount, unsigned int componentCount) {
 		glGenBuffers(1, &m_BufferID);
+		load(data, amount, componentCount);
 	}
 
 	Buffer::~Buffer() {
 		glDeleteBuffers(1, &m_BufferID);
 	}
 
-	void Buffer::load(GLfloat* data, GLsizei amount, GLuint componentCount)
-	{
+	void Buffer::load(float *data, int amount, unsigned int componentCount) {
 		m_ComponentCount = componentCount;
 
 		bind();
-		glBufferData(GL_ARRAY_BUFFER, amount * sizeof(GL_FLOAT), data, GL_STATIC_DRAW);
-		unbind();
+		glBufferData(GL_ARRAY_BUFFER, amount * sizeof(float), data, GL_STATIC_DRAW);
 	}
 
 	void Buffer::bind() const {

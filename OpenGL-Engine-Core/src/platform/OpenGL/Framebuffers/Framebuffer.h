@@ -2,33 +2,31 @@
 
 #include <glad\glad.h>
 #include <GLFW\glfw3.h>
-#include "../../../utils/Logger.h"
+
 #include "../../../Defs.h"
+#include "../../../utils/Logger.h"
 
+namespace arcane { namespace opengl {
 
-namespace OpenGL_Engine {
-	namespace opengl {
+	class Framebuffer {
+	public:
+		Framebuffer(int width, int height);
+		~Framebuffer();
 
-		class Framebuffer {
-		public:
-			Framebuffer(int width, int height);
-			~Framebuffer();
+		void createFramebuffer();
+		Framebuffer& addColorAttachment(bool multisampledBuffer);
+		Framebuffer& addDepthStencilRBO(bool multisampledBuffer);
 
-			void createFramebuffer();
-			Framebuffer& addColorAttachment(bool multiSampledBuffer);
-			Framebuffer& addDepthStencilRBO(bool multiSampledBuffer);
+		void bind();
+		void unbind();
 
-			void bind();
-			void unbind();
+		inline unsigned int getFramebuffer() { return m_FBO; }
+		inline unsigned int getColourBufferTexture() { return m_ColourTexture; }
+	private:
+		unsigned int m_FBO, m_ColourTexture, m_DepthStencilRBO;
+		
+		bool m_Created;
+		unsigned int m_Width, m_Height;
+	};
 
-			inline GLuint getFramebuffer() { return m_FBO; }
-			inline GLuint getColourBufferTexture() { return m_ColourTexture; }
-		private:
-			GLuint m_FBO, m_DepthStencilRBO, m_ColourTexture;
-
-			bool m_Created;
-			unsigned int m_Width, m_Height;
-		};
-
-	}
-}
+} }

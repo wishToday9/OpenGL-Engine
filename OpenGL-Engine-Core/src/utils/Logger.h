@@ -5,7 +5,7 @@
 #include <vector>
 #include "Singleton.h"
 
-namespace OpenGL_Engine { namespace utils {
+namespace arcane { namespace utils {
 
 	class Logger : public Singleton {
 	private:

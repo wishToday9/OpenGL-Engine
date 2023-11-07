@@ -1,13 +1,11 @@
 #include "Utility.h"
 
 #include "../../utils/Logger.h"
-#include <stb_image.h>
 
+namespace arcane { namespace opengl {
 
-namespace OpenGL_Engine { namespace opengl {
-
-	GLuint Utility::loadTextureFromFile(const char *path, bool containsTransparencyOnSides) {
-		GLuint textureID;
+	unsigned int Utility::loadTextureFromFile(const char *path, bool containsTransparencyOnSides) {
+		unsigned int textureID;
 		glGenTextures(1, &textureID);
 
 		int width, height, nrComponents;
@@ -25,6 +23,7 @@ namespace OpenGL_Engine { namespace opengl {
 
 			// Texture wrapping
 			if (containsTransparencyOnSides) {
+				// Can't use GL_REPEAT or interpolation will mess with the transparency
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 			}
@@ -34,21 +33,18 @@ namespace OpenGL_Engine { namespace opengl {
 			}
 
 			// Texture filtering
-			// trilinear filtering
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR); 
-			// Magnification can't use mipmaps so use bilinear filtering
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			
-			//mipmapping
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR); // trilinear filtering
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); // Magnification can't use mipmaps so use bilinear filtering
+
+			// Mipmapping
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, 0);
 
-			//// Anisotropic filtering
-			// opengl error?
-			GLfloat maxAnisotropy;
+			// Anisotropic filtering
+			float maxAnisotropy;
 			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
-			GLfloat anistropyAmount = glm::min(maxAnisotropy, ANISOTROPIC_FILTERING);
-			//glTexParameterf(GL_TEXTURE_2D, GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, maxAnisotropy);
+			float anistropyAmount = glm::min(maxAnisotropy, ANISOTROPIC_FILTERING);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, anistropyAmount);
 
 			// Free now that the memory is 
 			stbi_image_free(data);
@@ -61,22 +57,20 @@ namespace OpenGL_Engine { namespace opengl {
 		return textureID;
 	}
 
-	GLuint Utility::loadCubemapFromFile(const std::vector<const char*>& filePaths)
-	{
-		//size check
+	unsigned int Utility::loadCubemapFromFiles(const std::vector<const char*> &filePaths) {
+		// Size check
 		if (filePaths.size() != 6) {
-			utils::Logger::getInstance().error("logged_files/error.txt", "Cube map initialization",
-				"could not initialize the cubemap since 6 faces were not provided!");
-			return - 1;
+			utils::Logger::getInstance().error("logged_files / error.txt", "Cubemap initialization", "Could not initialize the cubemap since 6 faces were not provided");
+			return -1;
 		}
 
-		GLuint cubemapID;
+		unsigned int cubemapID;
 		glGenTextures(1, &cubemapID);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapID);
 
 		int width, height, nrComponents;
 		for (unsigned int i = 0; i < 6; ++i) {
-			unsigned char* data = stbi_load(filePaths[i], &width, &height, &nrComponents, 0);
+			unsigned char *data = stbi_load(filePaths[i], &width, &height, &nrComponents, 0);
 			if (data) {
 				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 				stbi_image_free(data);
@@ -88,7 +82,6 @@ namespace OpenGL_Engine { namespace opengl {
 			}
 		}
 		
-
 		// Texture filtering
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

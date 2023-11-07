@@ -72,7 +72,7 @@
     <LibraryPath>$(SolutionDir)Dependencies\GLFW\lib-vc2013;$(SolutionDir)Dependencies\GLEW\lib;$(SolutionDir)Dependencies\SOIL\lib;$(SolutionDir)Dependencies\Assimp\lib;$(SolutionDir)Dependencies\FreeType\lib;$(SolutionDir)Dependencies\FreeType-GL\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)ThirdParties\GLFW\include;$(SolutionDir)ThirdParties\glad\include;$(SolutionDir)ThirdParties\GLM\include;$(SolutionDir)ThirdParties\Assimp\include;$(SolutionDir)ThirdParties\FreeType\include;$(SolutionDir)ThirdParties\FreeType-GL\include;$(SolutionDir)ThirdParties\Stbi;$(IncludePath)</IncludePath>
+    <IncludePath>D:\C++project\OpenGLEngine\OpenGL-Engine\OpenGL-Engine-Core;$(SolutionDir)ThirdParties\GLFW\include;$(SolutionDir)ThirdParties\glad\include;$(SolutionDir)ThirdParties\GLM\include;$(SolutionDir)ThirdParties\Assimp\include;$(SolutionDir)ThirdParties\FreeType\include;$(SolutionDir)ThirdParties\FreeType-GL\include;$(SolutionDir)ThirdParties\Stbi;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)ThirdParties\GLFW\lib-vc2019;$(SolutionDir)ThirdParties\GLEW\lib;$(SolutionDir)ThirdParties\Assimp\lib;$(SolutionDir)ThirdParties\FreeType\lib;$(SolutionDir)ThirdParties\FreeType-GL\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -152,10 +152,13 @@
     <ClCompile Include="src\graphics\dynamicLights\DirectionalLight.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\graphics\camera\Camera.cpp" />
-    <ClCompile Include="src\graphics\Material.cpp" />
-    <ClCompile Include="src\graphics\Mesh.cpp" />
-    <ClCompile Include="src\graphics\MeshFactory.cpp" />
-    <ClCompile Include="src\graphics\Model.cpp" />
+    <ClCompile Include="src\graphics\mesh\Material.cpp" />
+    <ClCompile Include="src\graphics\mesh\MeshLoader.cpp" />
+    <ClCompile Include="src\graphics\mesh\Mesh.cpp" />
+    <ClCompile Include="src\graphics\mesh\MeshFactory.cpp" />
+    <ClCompile Include="src\graphics\mesh\Model.cpp" />
+    <ClCompile Include="src\graphics\renderer\GLCache.cpp" />
+    <ClCompile Include="src\graphics\renderer\PostProcessor.cpp" />
     <ClCompile Include="src\graphics\renderer\Renderable3D.cpp" />
     <ClCompile Include="src\graphics\renderer\Renderer.cpp" />
     <ClCompile Include="src\graphics\Shader.cpp" />
@@ -175,6 +178,11 @@
     <ClCompile Include="src\utils\Logger.cpp" />
     <ClCompile Include="src\utils\Time.cpp" />
     <ClCompile Include="src\utils\Timer.cpp" />
+    <ClCompile Include="src\vendor\imgui\imgui.cpp" />
+    <ClCompile Include="src\vendor\imgui\imgui_demo.cpp" />
+    <ClCompile Include="src\vendor\imgui\imgui_draw.cpp" />
+    <ClCompile Include="src\vendor\imgui\imgui_impl_glfw_gl3.cpp" />
+    <ClCompile Include="src\vendor\imgui\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\graphics\dynamicLights\DynamicLightManager.h" />
@@ -184,10 +192,13 @@
     <ClInclude Include="src\graphics\dynamicLights\DirectionalLight.h" />
     <ClInclude Include="src\Defs.h" />
     <ClInclude Include="src\graphics\camera\Camera.h" />
-    <ClInclude Include="src\graphics\Material.h" />
-    <ClInclude Include="src\graphics\Mesh.h" />
-    <ClInclude Include="src\graphics\MeshFactory.h" />
-    <ClInclude Include="src\graphics\Model.h" />
+    <ClInclude Include="src\graphics\mesh\Material.h" />
+    <ClInclude Include="src\graphics\mesh\Mesh.h" />
+    <ClInclude Include="src\graphics\mesh\MeshFactory.h" />
+    <ClInclude Include="src\graphics\mesh\MeshLoader.h" />
+    <ClInclude Include="src\graphics\mesh\Model.h" />
+    <ClInclude Include="src\graphics\renderer\GLCache.h" />
+    <ClInclude Include="src\graphics\renderer\PostProcessor.h" />
     <ClInclude Include="src\graphics\renderer\Renderable3D.h" />
     <ClInclude Include="src\graphics\renderer\Renderer.h" />
     <ClInclude Include="src\graphics\Shader.h" />
@@ -206,11 +217,18 @@
     <ClInclude Include="src\utils\Singleton.h" />
     <ClInclude Include="src\utils\Time.h" />
     <ClInclude Include="src\utils\Timer.h" />
+    <ClInclude Include="src\vendor\imgui\imconfig.h" />
+    <ClInclude Include="src\vendor\imgui\imgui.h" />
+    <ClInclude Include="src\vendor\imgui\imgui_impl_glfw_gl3.h" />
+    <ClInclude Include="src\vendor\imgui\imgui_internal.h" />
+    <ClInclude Include="src\vendor\imgui\stb_rect_pack.h" />
+    <ClInclude Include="src\vendor\imgui\stb_textedit.h" />
+    <ClInclude Include="src\vendor\imgui\stb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\directionalLight.frag" />
-    <None Include="src\shaders\framebuffer.frag" />
-    <None Include="src\shaders\framebuffer.vert" />
+    <None Include="src\shaders\postprocess.frag" />
+    <None Include="src\shaders\postprocess.vert" />
     <None Include="src\shaders\model.frag" />
     <None Include="src\shaders\modelReflection.frag" />
     <None Include="src\shaders\modelRefraction.frag" />

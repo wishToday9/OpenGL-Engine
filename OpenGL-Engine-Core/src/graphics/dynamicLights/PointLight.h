@@ -1,22 +1,20 @@
 #pragma once
 
 #include "DynamicLight.h"
+
 #include <string>
 
-namespace OpenGL_Engine {
-	namespace graphics {
+namespace arcane { namespace graphics {
 
-		class PointLight : public DynamicLight
-		{
-		public:
-			PointLight(glm::vec3& ambient, glm::vec3& diffuse, glm::vec3& specular, 
-				glm::vec3& position, float constant, float linear, float quadratic);
+	struct PointLight : public DynamicLight {
+	public:
+		PointLight(glm::vec3 &amb, glm::vec3 &diff, glm::vec3 &spec, glm::vec3 &pos, float cons, float lin, float quad);
 
-			virtual void setupUniforms(Shader& shader, int currentLightIndex) override;
+		virtual void setupUniforms(Shader &shader, int currentLightIndex) override;
 
-			glm::vec3 position;
-			float constant, linear, quadratic;
-		};
 
-	}
-}
+		glm::vec3 position;
+		float constant, linear, quadratic;
+	};
+
+} }

@@ -1,29 +1,25 @@
 #include "IndexBuffer.h"
 
-namespace OpenGL_Engine { namespace opengl {
+namespace arcane { namespace opengl {
 
-	IndexBuffer::IndexBuffer(GLuint *data, GLsizei amount) 
-	{
+	IndexBuffer::IndexBuffer() {
 		glGenBuffers(1, &m_BufferID);
-		load(data, amount);
 	}
 
-	IndexBuffer::IndexBuffer()
-	{
+	IndexBuffer::IndexBuffer(unsigned int *data, int amount) {
 		glGenBuffers(1, &m_BufferID);
+		load(data, amount);
 	}
 
 	IndexBuffer::~IndexBuffer() {
 		glDeleteBuffers(1, &m_BufferID);
 	}
 
-	void IndexBuffer::load(GLuint* data, GLsizei amount)
-	{
-		m_Count = amount; 
-		bind();
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, amount * sizeof(GLuint), data, GL_STATIC_DRAW);
-		unbind();
+	void IndexBuffer::load(unsigned int *data, int amount) {
+		m_Count = amount;
 
+		bind();
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, amount * sizeof(unsigned int), data, GL_STATIC_DRAW);
 	}
 
 	void IndexBuffer::bind() const {

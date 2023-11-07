@@ -3,7 +3,7 @@
 #include <GLFW\glfw3.h>
 #include <gl\GL.h>
 
-namespace OpenGL_Engine {
+namespace arcane {
 
 	struct Time {
 	private:

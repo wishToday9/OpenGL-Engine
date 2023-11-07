@@ -3,21 +3,19 @@
 #include <string>
 #include <glad\glad.h>
 #include <GLFW\glfw3.h>
-
-#include <iostream>
 #include <stb_image.h>
+#include <iostream>
 #include <vector>
 #include <glm\common.hpp>
 #include "../../utils/Logger.h"
 #include "../../Defs.h"
 
-namespace OpenGL_Engine { namespace opengl {
+namespace arcane { namespace opengl {
 
 	class Utility {
-		
 	public:
-		static GLuint loadTextureFromFile(const char *path, bool containsTransparencyOnSides = false);
-		static GLuint loadCubemapFromFile(const std::vector<const char*>& vec);
+		static unsigned int loadTextureFromFile(const char *path, bool containsTransparencyOnSides = false);
+		static unsigned int loadCubemapFromFiles(const std::vector<const char*> &vec);
 	};
 
 } }

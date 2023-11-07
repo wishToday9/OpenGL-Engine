@@ -1,16 +1,16 @@
-#version 450 core
+#version 430 core
 
-in vec3 Normal;
 in vec3 FragPos;
+in vec3 Normal;
 
-out vec4 color;
+out vec4 colour;
 
 uniform vec3 cameraPos;
 uniform samplerCube environmentMap;
 
-void main(){
+void main() {
 	vec3 fragToCam = normalize(FragPos - cameraPos);
-	vec3 relectionDir = reflect(fragToCam, normalize(Normal));
+	vec3 reflectedDir = reflect(fragToCam, normalize(Normal));
 
-	color = texture(environmentMap, relectionDir);
+	colour = texture(environmentMap, reflectedDir);
 }

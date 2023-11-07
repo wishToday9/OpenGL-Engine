@@ -1,4 +1,4 @@
-#version 450 core
+#version 430 core
 
 // Does AMD support sampler2D in a struct?
 struct Material {

@@ -1,10 +1,11 @@
-#version 450 core
+#version 430 core
 
-out vec4 FragColor;
+out vec4 FragColour;
+
 in vec3 SampleDirection;
 
 uniform samplerCube skyboxCubemap;
 
-void main(){
-	FragColor = texture(skyboxCubemap, SampleDirection);
+void main() {
+	FragColour = texture(skyboxCubemap, SampleDirection);
 }
