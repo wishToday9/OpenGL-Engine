@@ -1,1 +1,1 @@
-(texture load (OpenGL) fail path:): res/3D_Models/Overwatch/Reaper/Tex_1886_0.dds
+(texture load fail - path:): res/textures/fullSpec.png

@@ -7,18 +7,17 @@
 #include "graphics\renderer\GLCache.h"
 #include "terrain\Terrain.h"
 #include "graphics\Window.h"
-#include "graphics\mesh\MeshFactory.h"
 #include "graphics\Skybox.h"
 #include "graphics\DynamicLights\DynamicLightManager.h"
+#include "utils\loaders\TextureLoader.h"
 
-namespace arcane {
+namespace OpenGL_Engine {
 	
 	class Scene3D {
 	private:
 		graphics::Camera *m_Camera;
 		graphics::Renderer *m_Renderer;
 		terrain::Terrain *m_Terrain;
-		graphics::MeshFactory m_meshFactory;
 		graphics::Skybox *m_Skybox;
 		graphics::DynamicLightManager m_DynamicLightManager;
 		graphics::GLCache *m_GLCache;

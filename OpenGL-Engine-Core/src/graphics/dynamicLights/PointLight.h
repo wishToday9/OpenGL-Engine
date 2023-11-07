@@ -4,7 +4,7 @@
 
 #include <string>
 
-namespace arcane { namespace graphics {
+namespace OpenGL_Engine { namespace graphics {
 
 	struct PointLight : public DynamicLight {
 	public:

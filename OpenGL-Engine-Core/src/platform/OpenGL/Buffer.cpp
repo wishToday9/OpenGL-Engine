@@ -1,6 +1,6 @@
 #include "Buffer.h"
 
-namespace arcane { namespace opengl {
+namespace OpenGL_Engine { namespace opengl {
 
 	Buffer::Buffer() {
 		glGenBuffers(1, &m_BufferID);

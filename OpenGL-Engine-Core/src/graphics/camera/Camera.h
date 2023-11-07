@@ -7,7 +7,7 @@
 
 #include "../Window.h"
 
-namespace arcane { namespace graphics {
+namespace OpenGL_Engine { namespace graphics {
 
 	enum Camera_Movement {
 		FORWARD,

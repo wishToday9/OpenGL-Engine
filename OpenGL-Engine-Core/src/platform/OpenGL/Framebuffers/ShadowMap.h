@@ -2,7 +2,7 @@
 
 #include "Framebuffer.h"
 
-namespace arcane { namespace opengl {
+namespace OpenGL_Engine { namespace opengl {
 
 	class ShadowMap : private Framebuffer {
 	public:

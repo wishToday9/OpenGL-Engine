@@ -1,6 +1,6 @@
 #include "ShadowMap.h"
 
-namespace arcane { namespace opengl {
+namespace OpenGL_Engine { namespace opengl {
 
 	ShadowMap::ShadowMap(int width, int height) : Framebuffer(width, height) { 
 		bind();

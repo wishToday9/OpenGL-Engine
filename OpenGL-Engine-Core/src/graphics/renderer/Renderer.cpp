@@ -1,6 +1,6 @@
 #include "Renderer.h"
 
-namespace arcane { namespace graphics {
+namespace OpenGL_Engine { namespace graphics {
 
 		Renderer::Renderer(Camera *camera) : m_Camera(camera)
 		{

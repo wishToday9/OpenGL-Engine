@@ -1,6 +1,6 @@
 #include "Window.h"
 
-namespace arcane { namespace graphics {
+namespace OpenGL_Engine { namespace graphics {
 
 	bool Window::s_Keys[MAX_KEYS];
 	bool Window::s_Buttons[MAX_BUTTONS];

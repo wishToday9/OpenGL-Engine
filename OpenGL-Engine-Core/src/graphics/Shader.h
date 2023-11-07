@@ -7,7 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-namespace arcane { namespace graphics {
+namespace OpenGL_Engine { namespace graphics {
 
 	class Shader {
 	private:

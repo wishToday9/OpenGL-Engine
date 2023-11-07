@@ -11,7 +11,7 @@
 #include "../vendor/imgui/imgui.h"
 #include "../vendor/imgui/imgui_impl_glfw_gl3.h"
 
-namespace arcane { namespace graphics {
+namespace OpenGL_Engine { namespace graphics {
 
 #define MAX_KEYS 1024
 #define MAX_BUTTONS 32

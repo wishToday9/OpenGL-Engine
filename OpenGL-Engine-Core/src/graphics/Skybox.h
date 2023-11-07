@@ -9,7 +9,7 @@
 #include "camera\Camera.h"
 #include "Window.h"
 
-namespace arcane { namespace graphics {
+namespace OpenGL_Engine { namespace graphics {
 
 	class Skybox {
 	public:

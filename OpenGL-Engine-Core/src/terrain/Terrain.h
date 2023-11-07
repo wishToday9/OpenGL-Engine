@@ -12,7 +12,9 @@
 #include "../graphics/mesh/Mesh.h"
 #include "../graphics/mesh/Model.h"
 
-namespace arcane { namespace terrain {
+#include "../utils/loaders/TextureLoader.h"
+
+namespace OpenGL_Engine { namespace terrain {
 
 	class Terrain {
 	public:
@@ -33,7 +35,7 @@ namespace arcane { namespace terrain {
 		glm::mat4 m_ModelMatrix;
 		glm::vec3 m_Position;
 		graphics::Mesh *m_Mesh;
-		std::array<graphics::Texture, 5> m_Textures; // Represents all the textures supported by the terrain's texure splatting (rgba and the default value)
+		std::array<graphics::Texture*, 5> m_Textures; // Represents all the textures supported by the terrain's texure splatting (rgba and the default value)
 	};
 
 } }

@@ -1,6 +1,6 @@
 #include "IndexBuffer.h"
 
-namespace arcane { namespace opengl {
+namespace OpenGL_Engine { namespace opengl {
 
 	IndexBuffer::IndexBuffer() {
 		glGenBuffers(1, &m_BufferID);

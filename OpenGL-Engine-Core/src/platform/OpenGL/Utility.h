@@ -10,11 +10,11 @@
 #include "../../utils/Logger.h"
 #include "../../Defs.h"
 
-namespace arcane { namespace opengl {
+namespace OpenGL_Engine { namespace opengl {
 
 	class Utility {
 	public:
-		static unsigned int loadTextureFromFile(const char *path, bool containsTransparencyOnSides = false);
+		//static unsigned int loadTextureFromFile(const char *path, bool containsTransparencyOnSides = false);
 		static unsigned int loadCubemapFromFiles(const std::vector<const char*> &vec);
 	};
 

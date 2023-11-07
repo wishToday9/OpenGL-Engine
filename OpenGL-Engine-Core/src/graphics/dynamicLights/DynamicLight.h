@@ -4,7 +4,7 @@
 
 #include "../Shader.h"
 
-namespace arcane { namespace graphics {
+namespace OpenGL_Engine { namespace graphics {
 
 	// TODO: Add functionality so it can update with an entitie's position and orientation
 	struct DynamicLight {

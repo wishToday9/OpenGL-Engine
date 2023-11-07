@@ -2,7 +2,7 @@
 
 #include "DynamicLight.h"
 
-namespace arcane { namespace graphics {
+namespace OpenGL_Engine { namespace graphics {
 
 	struct SpotLight : public DynamicLight {
 	public:

@@ -3,7 +3,7 @@
 #include <GLFW\glfw3.h>
 #pragma once
 
-namespace arcane {
+namespace OpenGL_Engine {
 
 	class Timer {
 	private:

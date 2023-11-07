@@ -8,7 +8,7 @@
 #include "Renderable3D.h"
 #include "GLCache.h"
 
-namespace arcane { namespace graphics {
+namespace OpenGL_Engine { namespace graphics {
 	class Renderer {
 	public:
 		Renderer(Camera *camera);

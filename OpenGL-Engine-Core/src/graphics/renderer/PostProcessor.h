@@ -2,7 +2,7 @@
 
 #include <glad\glad.h>
 
-namespace arcane { namespace graphic {
+namespace OpenGL_Engine { namespace graphics {
 
 	class PostProcessor {
 	public:

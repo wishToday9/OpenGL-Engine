@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-namespace arcane { namespace graphics {
+namespace OpenGL_Engine { namespace graphics {
 
 	class GLCache : utils::Singleton {
 	public:

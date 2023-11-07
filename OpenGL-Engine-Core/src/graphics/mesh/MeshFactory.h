@@ -6,7 +6,7 @@
 #include "Model.h"
 #include "../../platform/OpenGL/Utility.h"
 
-namespace arcane { namespace graphics {
+namespace OpenGL_Engine { namespace graphics {
 
 	class MeshFactory {
 	public:

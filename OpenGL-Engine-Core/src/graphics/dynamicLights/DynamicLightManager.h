@@ -6,7 +6,7 @@
 
 #include <vector>
 
-namespace arcane { namespace graphics {
+namespace OpenGL_Engine { namespace graphics {
 
 	class DynamicLightManager {
 	public:

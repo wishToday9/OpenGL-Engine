@@ -1,6 +1,6 @@
 #include "Logger.h"
 
-namespace arcane { namespace utils {
+namespace OpenGL_Engine { namespace utils {
 
 	Logger::Logger() {
 		file = "logged_files/log.txt";

@@ -1,6 +1,6 @@
 #include "VertexArray.h"
 
-namespace arcane { namespace opengl {
+namespace OpenGL_Engine { namespace opengl {
 
 	VertexArray::VertexArray() {
 		glGenVertexArrays(1, &m_VertexArrayID);

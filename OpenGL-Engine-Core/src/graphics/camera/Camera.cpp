@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-namespace arcane {	namespace graphics {
+namespace OpenGL_Engine {	namespace graphics {
 
 	Camera::Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH)
 		: m_Front(glm::vec3(0.0f, 0.0f, -1.0f)), m_MovementSpeed(SPEED), m_MouseSensitivity(SENSITIVITY), m_FOV(FOV)
@@ -32,17 +32,17 @@ namespace arcane {	namespace graphics {
 	void Camera::processInput(float deltaTime) {
 		// Keyboard input
 		if (Window::isKeyPressed(GLFW_KEY_W))
-			processKeyboard(arcane::graphics::FORWARD, deltaTime);
+			processKeyboard(OpenGL_Engine::graphics::FORWARD, deltaTime);
 		if (Window::isKeyPressed(GLFW_KEY_S))
-			processKeyboard(arcane::graphics::BACKWARD, deltaTime);
+			processKeyboard(OpenGL_Engine::graphics::BACKWARD, deltaTime);
 		if (Window::isKeyPressed(GLFW_KEY_A))
-			processKeyboard(arcane::graphics::LEFT, deltaTime);
+			processKeyboard(OpenGL_Engine::graphics::LEFT, deltaTime);
 		if (Window::isKeyPressed(GLFW_KEY_D))
-			processKeyboard(arcane::graphics::RIGHT, deltaTime);
+			processKeyboard(OpenGL_Engine::graphics::RIGHT, deltaTime);
 		if (Window::isKeyPressed(GLFW_KEY_SPACE))
-			processKeyboard(arcane::graphics::UPWARDS, deltaTime);
+			processKeyboard(OpenGL_Engine::graphics::UPWARDS, deltaTime);
 		if (Window::isKeyPressed(GLFW_KEY_LEFT_CONTROL))
-			processKeyboard(arcane::graphics::DOWNWARDS, deltaTime);
+			processKeyboard(OpenGL_Engine::graphics::DOWNWARDS, deltaTime);
 		if (Window::isKeyPressed(GLFW_KEY_LEFT_SHIFT))
 			m_MovementSpeed = SPEED * 4.0f;
 		else

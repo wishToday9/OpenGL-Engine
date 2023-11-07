@@ -1,6 +1,6 @@
 #include "Time.h"
 
-namespace arcane {
+namespace OpenGL_Engine {
 
 	Time::Time() {
 		lastFrame = glfwGetTime();

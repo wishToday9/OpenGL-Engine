@@ -1,6 +1,6 @@
 #pragma once
 
-namespace arcane { namespace utils {
+namespace OpenGL_Engine { namespace utils {
 
 	class Singleton {
 	public:

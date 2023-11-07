@@ -5,7 +5,7 @@
 #include "Buffer.h"
 #include <vector>
 
-namespace arcane { namespace opengl {
+namespace OpenGL_Engine { namespace opengl {
 
 	class VertexArray {
 	private:

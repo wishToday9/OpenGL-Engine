@@ -1,6 +1,6 @@
 #include "Skybox.h"
 
-namespace arcane { namespace graphics {
+namespace OpenGL_Engine { namespace graphics {
 
 	Skybox::Skybox(const std::vector<const char*> &filePaths, Camera *camera) : m_SkyboxShader("src/shaders/skybox.vert", "src/shaders/skybox.frag"), m_Camera(camera)
 	{

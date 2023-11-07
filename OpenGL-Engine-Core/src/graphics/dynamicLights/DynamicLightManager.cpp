@@ -1,6 +1,6 @@
 #include "DynamicLightManager.h"
 
-namespace arcane { namespace graphics {
+namespace OpenGL_Engine { namespace graphics {
 
 	// TODO: Add functionality so it can update with an entity's position and orientation
 	DynamicLightManager::DynamicLightManager() 

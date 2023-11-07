@@ -2,7 +2,7 @@
 
 #include "../utils/Logger.h"
 
-namespace arcane { namespace graphics {
+namespace OpenGL_Engine { namespace graphics {
 
 	Shader::Shader(const char *vertPath, const char *fragPath)
 		: m_VertPath(vertPath), m_FragPath(fragPath), m_GeomPath("")

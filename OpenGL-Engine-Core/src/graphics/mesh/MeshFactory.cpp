@@ -1,6 +1,6 @@
 #include "MeshFactory.h"
 
-namespace arcane { namespace graphics {
+namespace OpenGL_Engine { namespace graphics {
 
 	Mesh* MeshFactory::CreateQuad(const char *path, bool shouldHaveSpec) {
 		std::vector<glm::vec3> positions;

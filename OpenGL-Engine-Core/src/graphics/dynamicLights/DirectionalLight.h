@@ -2,7 +2,7 @@
 
 #include "DynamicLight.h"
 
-namespace arcane { namespace graphics {
+namespace OpenGL_Engine { namespace graphics {
 
 	struct DirectionalLight : public DynamicLight {
 		DirectionalLight(glm::vec3 &amb, glm::vec3 &diff, glm::vec3 &spec, glm::vec3 &dir);

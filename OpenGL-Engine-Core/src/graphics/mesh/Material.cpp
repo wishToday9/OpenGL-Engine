@@ -1,33 +1,46 @@
 #include "Material.h"
 
-namespace arcane { namespace graphics {
+namespace OpenGL_Engine { namespace graphics {
 
-	Material::Material(unsigned int diffuseMap, unsigned int specularMap, unsigned int normalMap, unsigned int emissionMap, float shininess)
+
+
+	Material::Material(Texture* diffuseMap, Texture* specularMap, Texture* normalMap, Texture* emissionMap, float shininess)
 		: m_DiffuseMap(diffuseMap), m_SpecularMap(specularMap), m_NormalMap(normalMap), m_EmissionMap(emissionMap), m_Shininess(shininess) {}
 
 
 	void Material::BindMaterialInformation(Shader &shader) const{
 		int currentTextureUnit = 0;
 
-		if (m_DiffuseMap > 0) {
-			glActiveTexture(GL_TEXTURE0);
-			shader.setUniform1i("material.texture_diffuse", currentTextureUnit++);
-			glBindTexture(GL_TEXTURE_2D, m_DiffuseMap);
+		shader.setUniform1i("material.texture_diffuse", currentTextureUnit);
+		if (m_DiffuseMap) {
+			m_DiffuseMap->Bind(currentTextureUnit++);
 		}
-		if (m_SpecularMap > 0) {
-			glActiveTexture(GL_TEXTURE0 + currentTextureUnit);
-			shader.setUniform1i("material.texture_specular", currentTextureUnit++);
-			glBindTexture(GL_TEXTURE_2D, m_SpecularMap);
+		else {
+			utils::TextureLoader::getDefaultDiffuse()->Bind(currentTextureUnit++);
 		}
-		if (m_NormalMap > 0) {
-			glActiveTexture(GL_TEXTURE0 + currentTextureUnit);
-			shader.setUniform1i("material.texture_normal", currentTextureUnit++);
-			glBindTexture(GL_TEXTURE_2D, m_NormalMap);
+
+		shader.setUniform1i("material.texture_specular", currentTextureUnit);
+		if (m_SpecularMap) {
+			m_SpecularMap->Bind(currentTextureUnit++);
 		}
-		if (m_EmissionMap > 0) {
-			glActiveTexture(GL_TEXTURE0 + currentTextureUnit);
-			shader.setUniform1i("material.texture_emission", currentTextureUnit++);
-			glBindTexture(GL_TEXTURE_2D, m_EmissionMap);
+		else {
+			utils::TextureLoader::getDefaultSpecular()->Bind(currentTextureUnit++);
+		}
+
+		shader.setUniform1i("material.texture_normal", currentTextureUnit);
+		if (m_NormalMap) {
+			m_NormalMap->Bind(currentTextureUnit++);
+		}
+		else {
+			utils::TextureLoader::getDefaultNormal()->Bind(currentTextureUnit++);
+		}
+
+		shader.setUniform1i("material.texture_emission", currentTextureUnit);
+		if (m_EmissionMap) {
+			m_EmissionMap->Bind(currentTextureUnit++);
+		}
+		else {
+			utils::TextureLoader::getDefaultEmission()->Bind(currentTextureUnit++);
 		}
 
 		shader.setUniform1f("material.shininess", m_Shininess);

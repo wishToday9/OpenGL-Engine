@@ -1,6 +1,6 @@
 #include "GLCache.h"
 
-namespace arcane { namespace graphics {
+namespace OpenGL_Engine { namespace graphics {
 
 	GLCache::GLCache() : m_ActiveShaderID(0) {
 

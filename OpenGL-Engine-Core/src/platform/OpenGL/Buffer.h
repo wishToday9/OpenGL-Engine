@@ -3,7 +3,7 @@
 #include <glad\glad.h>
 #include <GLFW\glfw3.h>
 
-namespace arcane { namespace opengl {
+namespace OpenGL_Engine { namespace opengl {
 
 	class Buffer {
 	private:

@@ -1,6 +1,6 @@
 #include "FileUtils.h"
 
-namespace arcane {
+namespace OpenGL_Engine {
 	std::string FileUtils::readFile(const char *filepath) {
 		// Use the C library to read from a file
 		FILE* file = fopen(filepath, "rt");

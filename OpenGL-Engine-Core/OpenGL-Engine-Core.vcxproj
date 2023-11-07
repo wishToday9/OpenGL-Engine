@@ -145,6 +145,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\graphics\mesh\common\Cube.cpp" />
+    <ClCompile Include="src\graphics\mesh\common\Quad.cpp" />
+    <ClCompile Include="src\graphics\mesh\common\Sphere.cpp" />
     <ClCompile Include="src\graphics\dynamicLights\DynamicLightManager.cpp" />
     <ClCompile Include="src\graphics\dynamicLights\DynamicLight.cpp" />
     <ClCompile Include="src\graphics\dynamicLights\PointLight.cpp" />
@@ -153,9 +156,8 @@
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\graphics\camera\Camera.cpp" />
     <ClCompile Include="src\graphics\mesh\Material.cpp" />
-    <ClCompile Include="src\graphics\mesh\MeshLoader.cpp" />
+    <ClCompile Include="src\utils\loaders\MeshLoader.cpp" />
     <ClCompile Include="src\graphics\mesh\Mesh.cpp" />
-    <ClCompile Include="src\graphics\mesh\MeshFactory.cpp" />
     <ClCompile Include="src\graphics\mesh\Model.cpp" />
     <ClCompile Include="src\graphics\renderer\GLCache.cpp" />
     <ClCompile Include="src\graphics\renderer\PostProcessor.cpp" />
@@ -163,6 +165,7 @@
     <ClCompile Include="src\graphics\renderer\Renderer.cpp" />
     <ClCompile Include="src\graphics\Shader.cpp" />
     <ClCompile Include="src\graphics\Skybox.cpp" />
+    <ClCompile Include="src\graphics\textures\Texture.cpp" />
     <ClCompile Include="src\graphics\Window.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\platform\OpenGL\Buffer.cpp" />
@@ -175,6 +178,7 @@
     <ClCompile Include="src\stbi_image.cpp" />
     <ClCompile Include="src\terrain\Terrain.cpp" />
     <ClCompile Include="src\utils\FileUtils.cpp" />
+    <ClCompile Include="src\utils\loaders\TextureLoader.cpp" />
     <ClCompile Include="src\utils\Logger.cpp" />
     <ClCompile Include="src\utils\Time.cpp" />
     <ClCompile Include="src\utils\Timer.cpp" />
@@ -185,6 +189,9 @@
     <ClCompile Include="src\vendor\imgui\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\graphics\mesh\common\Cube.h" />
+    <ClInclude Include="src\graphics\mesh\common\Quad.h" />
+    <ClInclude Include="src\graphics\mesh\common\Sphere.h" />
     <ClInclude Include="src\graphics\dynamicLights\DynamicLightManager.h" />
     <ClInclude Include="src\graphics\dynamicLights\DynamicLight.h" />
     <ClInclude Include="src\graphics\dynamicLights\PointLight.h" />
@@ -194,8 +201,7 @@
     <ClInclude Include="src\graphics\camera\Camera.h" />
     <ClInclude Include="src\graphics\mesh\Material.h" />
     <ClInclude Include="src\graphics\mesh\Mesh.h" />
-    <ClInclude Include="src\graphics\mesh\MeshFactory.h" />
-    <ClInclude Include="src\graphics\mesh\MeshLoader.h" />
+    <ClInclude Include="src\utils\loaders\MeshLoader.h" />
     <ClInclude Include="src\graphics\mesh\Model.h" />
     <ClInclude Include="src\graphics\renderer\GLCache.h" />
     <ClInclude Include="src\graphics\renderer\PostProcessor.h" />
@@ -203,6 +209,7 @@
     <ClInclude Include="src\graphics\renderer\Renderer.h" />
     <ClInclude Include="src\graphics\Shader.h" />
     <ClInclude Include="src\graphics\Skybox.h" />
+    <ClInclude Include="src\graphics\textures\Texture.h" />
     <ClInclude Include="src\graphics\Window.h" />
     <ClInclude Include="src\platform\OpenGL\Buffer.h" />
     <ClInclude Include="src\platform\OpenGL\Framebuffers\Framebuffer.h" />
@@ -213,6 +220,7 @@
     <ClInclude Include="src\Scene3D.h" />
     <ClInclude Include="src\terrain\Terrain.h" />
     <ClInclude Include="src\utils\FileUtils.h" />
+    <ClInclude Include="src\utils\loaders\TextureLoader.h" />
     <ClInclude Include="src\utils\Logger.h" />
     <ClInclude Include="src\utils\Singleton.h" />
     <ClInclude Include="src\utils\Time.h" />
@@ -227,6 +235,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\directionalLight.frag" />
+    <None Include="src\shaders\oldModel.frag" />
+    <None Include="src\shaders\oldBasic.vert" />
     <None Include="src\shaders\postprocess.frag" />
     <None Include="src\shaders\postprocess.vert" />
     <None Include="src\shaders\model.frag" />
