@@ -20,6 +20,7 @@ namespace OpenGL_Engine { namespace graphics {
 	private:
 		const char *m_Title;
 		GLFWwindow *m_Window;
+		bool m_HideCursor;
 		
 		static int m_Width, m_Height;
 		static bool s_Keys[MAX_KEYS];

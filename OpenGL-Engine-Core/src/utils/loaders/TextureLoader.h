@@ -2,6 +2,7 @@
 #include <map>
 #include <stb_image.h>
 #include "../../graphics/textures/Texture.h"
+#include "../../graphics/textures/Cubemap.h"
 
 namespace OpenGL_Engine {
 	namespace utils {
@@ -15,8 +16,11 @@ namespace OpenGL_Engine {
 			};
 
 		public:
-			static void InitializeDefaultTextures();
-			static graphics::Texture* Load2DTexture(std::string& path);
+			static void initializeDefaultTextures();
+			static graphics::Texture* load2DTexture(std::string& path);
+
+			static graphics::Cubemap* loadCubemapTexture(const std::string& right, const std::string& left, 
+				const std::string& top, const std::string& bottom, const std::string& back, const std::string& front);
 			
 
 			inline static graphics::Texture* getDefaultDiffuse() { return m_DefaultTextures.m_DefaultDiffuse; }

@@ -2,7 +2,6 @@
 
 #include <iostream>
 
-#include "../../platform/OpenGL/Utility.h"
 #include "../../utils/Logger.h"
 #include "Mesh.h"
 
@@ -23,9 +22,11 @@ namespace OpenGL_Engine { namespace graphics {
 		m_Meshes = meshes;
 	}
 
-	void Model::Draw(Shader &shader) const {
+	void Model::Draw(Shader &shader, RenderPass pass) const {
 		for (unsigned int i = 0; i < m_Meshes.size(); ++i) {
-			m_Meshes[i].m_Material.BindMaterialInformation(shader);
+			if (pass != RenderPass::ShadowmapPass) {
+				m_Meshes[i].m_Material.BindMaterialInformation(shader);
+			}
 			m_Meshes[i].Draw();
 		}
 	}
@@ -134,7 +135,7 @@ namespace OpenGL_Engine { namespace graphics {
 
 // Assumption made: material stuff is located in the same directory as the model object
 			std::string fileToSearch = (m_Directory + "/" + std::string(str.C_Str())).c_str();
-			return utils::TextureLoader::Load2DTexture(fileToSearch);
+			return utils::TextureLoader::load2DTexture(fileToSearch);
 		}
 
 		return nullptr;

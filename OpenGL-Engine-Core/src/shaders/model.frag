@@ -1,4 +1,4 @@
-#version 450 core
+#version 430 core
 
 // Does AMD support sampler2D in a struct?
 struct Material {
@@ -45,31 +45,35 @@ struct SpotLight {
 
 #define MAX_POINT_LIGHTS 5
 
-
-in vec2 TexCoords;
 in mat3 TBN;
 in vec3 FragPos;
+in vec4 FragPosLightClipSpace;
+in vec2 TexCoords;
+
 out vec4 color;
 
+uniform vec3 viewPos;
+uniform float time;
 
+uniform sampler2D shadowmap;
 uniform int numPointLights;
 uniform DirLight dirLight;
 uniform PointLight pointLights[MAX_POINT_LIGHTS];
 uniform SpotLight spotLight;
-uniform float time;
 
 uniform Material material;
-uniform vec3 viewPos;
 
 // function prototypes
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 fragToCam);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 fragToCam);
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 fragToCam);
+float CalculateShadow(vec3 normal, vec3 fragToDirLight);
 
 void main() {
 	// Check if the fragment is too transparent, and if so just discard it
 	float textureAlpha = texture(material.texture_diffuse, TexCoords).w;
 
+	// Normal mapping code. Opted out of tangent space normal mapping since I would have to convert all of my lights to tangent space
 	vec3 norm = texture(material.texture_normal, TexCoords).rgb;
 	norm = normalize(norm * 2.0f - 1.0f);
 	norm = normalize(TBN * norm);
@@ -87,11 +91,11 @@ void main() {
 }
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 fragToCam) {
-	vec3 lightDirection = normalize(-light.direction);
+	vec3 fragToLight = normalize(-light.direction);
 
-	float diff = max(dot(lightDirection, normal), 0.0);
+	float diff = max(dot(fragToLight, normal), 0.0);
 
-	vec3 halfwayDir = normalize(fragToCam + lightDirection);
+	vec3 halfwayDir = normalize(fragToCam + fragToLight);
 	float spec = pow(max(dot(halfwayDir, normal), 0.0), material.shininess);
 
 	vec3 ambient = light.ambient * texture(material.texture_diffuse, TexCoords).rgb;
@@ -99,7 +103,7 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 fragToCam) {
 	vec3 specular = light.specular * spec * texture(material.texture_specular, TexCoords).rgb;
 	//vec3 emission = texture(material.emission, TexCoords).rgb * clamp((sin(time) * 2) - 1, 0, 1);
 	
-	return (ambient + diffuse + specular);
+	return (ambient + (diffuse + specular) * (1.0 - CalculateShadow(normal, fragToLight)));
 }
 
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 fragToCam) {
@@ -155,4 +159,30 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 fragToCam) {
 	specular *= attenuation * intensity;
 
 	return (ambient + diffuse + specular);
+}
+
+float CalculateShadow(vec3 normal, vec3 fragToDirLight) {
+	vec3 ndcCoords = FragPosLightClipSpace.xyz / FragPosLightClipSpace.w;
+	vec3 depthmapCoords = ndcCoords * 0.5 + 0.5;
+
+	float shadow = 0.0;
+	float currentDepth = depthmapCoords.z;
+
+	// Add shadow bias to avoid shadow acne, and more shadow bias is needed depending on the angle between the normal and light direction
+	// However too much bias can cause peter panning
+	float shadowBias = max(0.01, 0.1 * (1.0 - dot(normal, fragToDirLight)));
+
+	// Perform Percentage Closer Filtering (PCF) in order to produce soft shadows
+	vec2 texelSize = 1.0 / textureSize(shadowmap, 0);
+	for (int y = -1; y <= 1; ++y) {
+		for (int x = -1; x <= 1; ++x) {
+			float sampledDepthPCF = texture(shadowmap, depthmapCoords.xy + (texelSize * vec2(x, y))).r;
+			shadow += currentDepth > sampledDepthPCF + shadowBias ? 1.0 : 0.0;
+		}
+	}
+	shadow /= 9.0;
+
+	if (currentDepth > 1.0)
+		shadow = 0.0;
+	return shadow;
 }

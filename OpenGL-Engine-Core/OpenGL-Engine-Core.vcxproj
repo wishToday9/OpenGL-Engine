@@ -156,6 +156,7 @@
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\graphics\camera\Camera.cpp" />
     <ClCompile Include="src\graphics\mesh\Material.cpp" />
+    <ClCompile Include="src\graphics\textures\Cubemap.cpp" />
     <ClCompile Include="src\utils\loaders\MeshLoader.cpp" />
     <ClCompile Include="src\graphics\mesh\Mesh.cpp" />
     <ClCompile Include="src\graphics\mesh\Model.cpp" />
@@ -169,10 +170,8 @@
     <ClCompile Include="src\graphics\Window.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\platform\OpenGL\Buffer.cpp" />
-    <ClCompile Include="src\platform\OpenGL\Framebuffers\Framebuffer.cpp" />
-    <ClCompile Include="src\platform\OpenGL\Framebuffers\ShadowMap.cpp" />
+    <ClCompile Include="src\platform\OpenGL\Framebuffers\RenderTarget.cpp" />
     <ClCompile Include="src\platform\OpenGL\IndexBuffer.cpp" />
-    <ClCompile Include="src\platform\OpenGL\Utility.cpp" />
     <ClCompile Include="src\platform\OpenGL\VertexArray.cpp" />
     <ClCompile Include="src\Scene3D.cpp" />
     <ClCompile Include="src\stbi_image.cpp" />
@@ -201,6 +200,8 @@
     <ClInclude Include="src\graphics\camera\Camera.h" />
     <ClInclude Include="src\graphics\mesh\Material.h" />
     <ClInclude Include="src\graphics\mesh\Mesh.h" />
+    <ClInclude Include="src\graphics\renderer\RenderPass.h" />
+    <ClInclude Include="src\graphics\textures\Cubemap.h" />
     <ClInclude Include="src\utils\loaders\MeshLoader.h" />
     <ClInclude Include="src\graphics\mesh\Model.h" />
     <ClInclude Include="src\graphics\renderer\GLCache.h" />
@@ -212,10 +213,8 @@
     <ClInclude Include="src\graphics\textures\Texture.h" />
     <ClInclude Include="src\graphics\Window.h" />
     <ClInclude Include="src\platform\OpenGL\Buffer.h" />
-    <ClInclude Include="src\platform\OpenGL\Framebuffers\Framebuffer.h" />
-    <ClInclude Include="src\platform\OpenGL\Framebuffers\ShadowMap.h" />
+    <ClInclude Include="src\platform\OpenGL\Framebuffers\RenderTarget.h" />
     <ClInclude Include="src\platform\OpenGL\IndexBuffer.h" />
-    <ClInclude Include="src\platform\OpenGL\Utility.h" />
     <ClInclude Include="src\platform\OpenGL\VertexArray.h" />
     <ClInclude Include="src\Scene3D.h" />
     <ClInclude Include="src\terrain\Terrain.h" />
@@ -236,7 +235,7 @@
   <ItemGroup>
     <None Include="src\shaders\directionalLight.frag" />
     <None Include="src\shaders\oldModel.frag" />
-    <None Include="src\shaders\oldBasic.vert" />
+    <None Include="src\shaders\basic.vert" />
     <None Include="src\shaders\postprocess.frag" />
     <None Include="src\shaders\postprocess.vert" />
     <None Include="src\shaders\model.frag" />
@@ -248,7 +247,7 @@
     <None Include="src\shaders\skybox.frag" />
     <None Include="src\shaders\skybox.vert" />
     <None Include="src\shaders\spotlight.frag" />
-    <None Include="src\shaders\basic.vert" />
+    <None Include="src\shaders\model.vert" />
     <None Include="src\shaders\basic.frag" />
     <None Include="src\shaders\terrain.frag" />
   </ItemGroup>

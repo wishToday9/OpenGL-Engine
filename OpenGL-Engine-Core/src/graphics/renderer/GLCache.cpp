@@ -3,7 +3,15 @@
 namespace OpenGL_Engine { namespace graphics {
 
 	GLCache::GLCache() : m_ActiveShaderID(0) {
-
+		// Initialize cache values to ensure garbage data doesn't mess with my GL state
+		m_DepthTest = false;
+		m_StencilTest = false;
+		m_Blend = false;
+		m_Cull = false;
+		m_FaceToCull = GL_BACK;
+		m_Multisample = false;;
+		setDepthTest(true);
+		setFaceCull(true);
 	}
 
 	GLCache::~GLCache() {
@@ -45,7 +53,7 @@ namespace OpenGL_Engine { namespace graphics {
 		}
 	}
 
-	void GLCache::setCull(bool choice) {
+	void GLCache::setFaceCull(bool choice) {
 		if (m_Cull != choice) {
 			m_Cull = choice;
 			if (m_Cull)
@@ -101,6 +109,17 @@ namespace OpenGL_Engine { namespace graphics {
 		if (m_FaceToCull != faceToCull) {
 			m_FaceToCull = faceToCull;
 			glCullFace(m_FaceToCull);
+		}
+	}
+
+	void GLCache::setMultisample(bool choice)
+	{
+		if (m_Multisample != choice) {
+			m_Multisample = choice;
+			if (m_Multisample)
+				glEnable(GL_MULTISAMPLE);
+			else
+				glDisable(GL_MULTISAMPLE);
 		}
 	}
 

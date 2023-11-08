@@ -18,7 +18,7 @@ namespace OpenGL_Engine { namespace graphics {
 		void setDepthTest(bool choice);
 		void setStencilTest(bool choice);
 		void setBlend(bool choice);
-		void setCull(bool choice);
+		void setFaceCull(bool choice);
 
 		void setDepthFunc(GLenum depthFunc);
 		void setStencilFunc(GLenum testFunc, int stencilFragValue, unsigned int stencilBitmask);
@@ -26,6 +26,7 @@ namespace OpenGL_Engine { namespace graphics {
 		void setStencilWriteMask(unsigned int bitmask);
 		void setBlendFunc(GLenum src, GLenum dst);
 		void setCullFace(GLenum faceToCull);
+		void setMultisample(bool choice);
 
 		void switchShader(unsigned int shaderID);
 	private:
@@ -34,6 +35,7 @@ namespace OpenGL_Engine { namespace graphics {
 		bool m_StencilTest;
 		bool m_Blend;
 		bool m_Cull;
+		bool m_Multisample;
 
 		// Depth State
 		GLenum m_DepthFunc;

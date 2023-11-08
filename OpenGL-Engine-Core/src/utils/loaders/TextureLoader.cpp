@@ -3,16 +3,31 @@
 namespace OpenGL_Engine { namespace utils {
 		
 	
-	void TextureLoader::InitializeDefaultTextures()
+	void TextureLoader::initializeDefaultTextures()
 	{
-		m_DefaultTextures.m_DefaultDiffuse = Load2DTexture(std::string("res/textures/default/defaultDiffuse.png"));
-		m_DefaultTextures.m_FullSpecular = Load2DTexture(std::string("res/textures/default/fullSpec.png"));
-		m_DefaultTextures.m_NoSpecular = Load2DTexture(std::string("res/textures/default/noSpec.png"));
-		m_DefaultTextures.m_DefaultNormal = Load2DTexture(std::string("res/textures/default/defaultNormal.png"));
-		m_DefaultTextures.m_DefaultEmission = Load2DTexture(std::string("res/textures/default/defaultEmission.png"));
+		m_DefaultTextures.m_DefaultDiffuse = load2DTexture(std::string("res/textures/default/defaultDiffuse.png"));
+		m_DefaultTextures.m_DefaultDiffuse->setAnisotropicFilteringMode(1.0f, true);
+		m_DefaultTextures.m_DefaultDiffuse->setTextureMinFilter(GL_NEAREST);
+		m_DefaultTextures.m_DefaultDiffuse->setTextureMagFilter(GL_NEAREST);
+		m_DefaultTextures.m_FullSpecular = load2DTexture(std::string("res/textures/default/fullSpec.png"));
+		m_DefaultTextures.m_FullSpecular->setAnisotropicFilteringMode(1.0f, true);
+		m_DefaultTextures.m_FullSpecular->setTextureMinFilter(GL_NEAREST);
+		m_DefaultTextures.m_FullSpecular->setTextureMagFilter(GL_NEAREST);
+		m_DefaultTextures.m_NoSpecular = load2DTexture(std::string("res/textures/default/noSpec.png"));
+		m_DefaultTextures.m_NoSpecular->setAnisotropicFilteringMode(1.0f, true);
+		m_DefaultTextures.m_NoSpecular->setTextureMinFilter(GL_NEAREST);
+		m_DefaultTextures.m_NoSpecular->setTextureMagFilter(GL_NEAREST);
+		m_DefaultTextures.m_DefaultNormal = load2DTexture(std::string("res/textures/default/defaultNormal.png"));
+		m_DefaultTextures.m_DefaultNormal->setAnisotropicFilteringMode(1.0f, true);
+		m_DefaultTextures.m_DefaultNormal->setTextureMinFilter(GL_NEAREST);
+		m_DefaultTextures.m_DefaultNormal->setTextureMagFilter(GL_NEAREST);
+		m_DefaultTextures.m_DefaultEmission = load2DTexture(std::string("res/textures/default/defaultEmission.png"));
+		m_DefaultTextures.m_DefaultEmission->setAnisotropicFilteringMode(1.0f, true);
+		m_DefaultTextures.m_DefaultEmission->setTextureMinFilter(GL_NEAREST);
+		m_DefaultTextures.m_DefaultEmission->setTextureMagFilter(GL_NEAREST);
 	}
 
-	OpenGL_Engine::graphics::Texture* TextureLoader::Load2DTexture(std::string& path)
+	OpenGL_Engine::graphics::Texture* TextureLoader::load2DTexture(std::string& path)
 	{
 		//check the cache
 		std::map<std::string, graphics::Texture>::iterator iter = m_TextureCache.find(path);
@@ -38,7 +53,7 @@ namespace OpenGL_Engine { namespace utils {
 		}
 
 		graphics::Texture texture;
-		texture.Generate2DTexture(width, height, format, format, data);
+		texture.generate2DTexture(width, height, format, format, data);
 
 		// Add the texture to the cache (unless the user wants full control over the texture they loaded)
 
@@ -46,6 +61,38 @@ namespace OpenGL_Engine { namespace utils {
 		
 
 		return &m_TextureCache[path];
+	}
+
+	graphics::Cubemap* TextureLoader::loadCubemapTexture(const std::string& right, const std::string& left, const std::string& top, const std::string& bottom, const std::string& back, const std::string& front)
+	{
+		graphics::Cubemap* cubemap = new graphics::Cubemap();
+
+		std::vector<std::string> faces = { right, left, top, bottom, back, front };
+
+		// Load the textures for the cubemap
+		int width, height, numComponents;
+		for (unsigned int i = 0; i < 6; ++i) {
+			unsigned char* data = stbi_load(faces[i].c_str(), &width, &height, &numComponents, 0);
+
+			if (data) {
+				GLenum format;
+				switch (numComponents) {
+				case 1: format = GL_RED;  break;
+				case 3: format = GL_RGB;  break;
+				case 4: format = GL_RGBA; break;
+				}
+
+				cubemap->generateCubemapFace(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, width, height, format, format, data);
+				stbi_image_free(data);
+			}
+			else {
+				utils::Logger::getInstance().error("logged_files/error.txt", "Cubemap initialization", "Couldn't load cubemap using 6 filepaths. Filepath error: " + faces[i]);
+				stbi_image_free(data);
+				return cubemap;
+			}
+		}
+
+		return cubemap;
 	}
 
 	std::map<std::string, OpenGL_Engine::graphics::Texture> TextureLoader::m_TextureCache;

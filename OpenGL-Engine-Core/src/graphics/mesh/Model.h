@@ -9,17 +9,18 @@
 #include "../Shader.h"
 #include "../../utils/loaders/TextureLoader.h"
 #include "Mesh.h"
+#include "../renderer/RenderPass.h"
 
 namespace OpenGL_Engine { namespace graphics {
 
-
+	
 	class Model {
 	public:
 		Model(const char *path);
 		Model(const Mesh& mesh);
 		Model(const std::vector<Mesh> &meshes);
 		
-		void Draw(Shader &shader) const;
+		void Draw(Shader &shader, RenderPass pass) const;
 	private:
 		static std::vector<Texture> m_LoadedTextures; // Used so the same texture doesn't get loaded into memory twice
 		std::vector<Mesh> m_Meshes;

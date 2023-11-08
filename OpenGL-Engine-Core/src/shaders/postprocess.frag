@@ -61,8 +61,5 @@ void main() {
 	for(int i = 0; i < 9; ++i) {
 		colour += texture(material.texture_diffuse, TexCoord + readOffsets[i]).rgb * kernel[i];
 	}
-
-	float gamma = 2.2f;
-	FragColour = vec4(pow(colour, vec3(1.0 / gamma)), 1.0f);
-	//FragColour = vec4(colour, 1.0);
+	FragColour = vec4(colour, 1.0);
 }

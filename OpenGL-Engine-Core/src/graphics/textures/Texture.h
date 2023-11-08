@@ -13,23 +13,23 @@ namespace OpenGL_Engine {namespace graphics {
 		~Texture();
 
 		//generation functions
-		void Generate2DTexture(unsigned int width, unsigned int height, GLenum textureFormat, GLenum dataFormat, const void* data);
-		void Generate2DMultiSampleTexture(unsigned int width, unsigned int height, GLenum textureFormat, int numSamples);
+		void generate2DTexture(unsigned int width, unsigned int height, GLenum textureFormat, GLenum dataFormat, const void* data);
+		void generate2DMultiSampleTexture(unsigned int width, unsigned int height, GLenum textureFormat, int numSamples);
 
-		void Bind(int uint = -1);
-		void Unbind();
+		void bind(int uint = -1);
+		void unbind();
 
 		//textures tuning functions(Works for pre-generation and post-generation)
-		void SetTextureWrapS(GLenum textureWarpMode, bool shouldBind = false);
-		void SetTextureWrapT(GLenum textureWarpMode, bool shouldBind = false);
-		void SetTextureMinFilter(GLenum textureMinFilter, bool shouldBind = false);
-		void SetTextureMagFilter(GLenum textureMagFilter, bool shouldBind = false);
-		void SetAnisotropicFilteringMode(float textureAnisotropyLevel, bool shouldBind = false);
+		void setTextureWrapS(GLenum textureWarpMode, bool shouldBind = false);
+		void setTextureWrapT(GLenum textureWarpMode, bool shouldBind = false);
+		void setTextureMinFilter(GLenum textureMinFilter, bool shouldBind = false);
+		void setTextureMagFilter(GLenum textureMagFilter, bool shouldBind = false);
+		void setAnisotropicFilteringMode(float textureAnisotropyLevel, bool shouldBind = false);
 
 		// Pre-generation controls only
-		void SetMipMode(bool shouldGenMips, int mipBias);
+		void setMipMode(bool shouldGenMips, int mipBias);
 		
-		unsigned int GetTextureId() { return m_TextureId; }
+		unsigned int getTextureId() { return m_TextureId; }
 	private:
 		unsigned int m_TextureId;
 		GLenum m_TextureTarget;

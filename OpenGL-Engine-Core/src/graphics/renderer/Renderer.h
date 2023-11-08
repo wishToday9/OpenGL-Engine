@@ -7,27 +7,30 @@
 #include "../camera/Camera.h"
 #include "Renderable3D.h"
 #include "GLCache.h"
+#include "RenderPass.h"
 
-namespace OpenGL_Engine { namespace graphics {
-	class Renderer {
-	public:
-		Renderer(Camera *camera);
+namespace OpenGL_Engine {
+	namespace graphics {
 
-		void submitOpaque(Renderable3D *renderable);
-		void submitTransparent(Renderable3D *renderable);
-		
-		void flushOpaque(Shader &shader, Shader &outlineShader);
-		void flushTransparent(Shader &shader, Shader &outlineShader);
-	private:
-		void Renderer::setupModelMatrix(Renderable3D *renderable, Shader &shader, float scaleFactor = 1.0f);
-		void drawOutline(Shader &outlineShader, Renderable3D *renderable);
+		class Renderer {
+		public:
+			Renderer(Camera* camera);
 
-		std::deque<Renderable3D*> m_OpaqueRenderQueue;
-		std::deque<Renderable3D*> m_TransparentRenderQueue;
+			void submitOpaque(Renderable3D* renderable);
+			void submitTransparent(Renderable3D* renderable);
 
-		// TODO: ADD QUAD TYPE - GOES HERE CALLE m_NDCPLane
+			void flushOpaque(Shader& shader, RenderPass pass);
+			void flushTransparent(Shader& shader, RenderPass pass);
+		private:
+			void Renderer::setupModelMatrix(Renderable3D* renderable, Shader& shader, RenderPass pass);
 
-		Camera *m_Camera;
-		GLCache *m_GLCache;
-	};
-} }
+			std::deque<Renderable3D*> m_OpaqueRenderQueue;
+			std::deque<Renderable3D*> m_TransparentRenderQueue;
+
+			// TODO: ADD QUAD TYPE - GOES HERE CALLED m_NDCPLane
+
+			Camera* m_Camera;
+			GLCache* m_GLCache;
+		};
+	}
+}

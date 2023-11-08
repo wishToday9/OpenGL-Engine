@@ -9,10 +9,10 @@ namespace OpenGL_Engine {namespace graphics {
 
 	Texture::~Texture()
 	{
-		Unbind();
+		unbind();
 	}
 
-	void Texture::Generate2DTexture(unsigned int width, unsigned int height, GLenum textureFormat, GLenum dataFormat, const void* data)
+	void Texture::generate2DTexture(unsigned int width, unsigned int height, GLenum textureFormat, GLenum dataFormat, const void* data)
 	{
 		m_TextureTarget = GL_TEXTURE_2D;
 		m_Width = width;
@@ -20,7 +20,7 @@ namespace OpenGL_Engine {namespace graphics {
 		m_TextureFormat = textureFormat;
 
 		glGenTextures(1, &m_TextureId);
-		Bind();
+		bind();
 		glTexImage2D(GL_TEXTURE_2D, 0, textureFormat, width, height, 0, dataFormat, GL_UNSIGNED_BYTE, data);
 
 		// Texture wrapping
@@ -43,10 +43,10 @@ namespace OpenGL_Engine {namespace graphics {
 		float anistropyAmount = glm::min(maxAnisotropy, m_TextureAnisotropyLevel);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, anistropyAmount);
 
-		Unbind();
+		unbind();
 	}
 
-	void Texture::Generate2DMultiSampleTexture(unsigned int width, unsigned int height, GLenum textureFormat, int numSamples)
+	void Texture::generate2DMultiSampleTexture(unsigned int width, unsigned int height, GLenum textureFormat, int numSamples)
 	{
 		m_TextureTarget = GL_TEXTURE_2D_MULTISAMPLE;
 		m_Width = width;
@@ -54,14 +54,14 @@ namespace OpenGL_Engine {namespace graphics {
 		m_TextureFormat = textureFormat;
 
 		glGenTextures(1, &m_TextureId);
-		Bind();
+		bind();
 		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, numSamples, textureFormat, m_Width, m_Height, GL_TRUE);
 
-		Unbind();
+		unbind();
 
 	}
 
-	void Texture::Bind(int uint /*= -1*/)
+	void Texture::bind(int uint /*= -1*/)
 	{
 		if (uint >= 0) {
 			glActiveTexture(GL_TEXTURE0 + uint);
@@ -70,51 +70,51 @@ namespace OpenGL_Engine {namespace graphics {
 		
 	}
 
-	void Texture::Unbind()
+	void Texture::unbind()
 	{
 		glBindTexture(m_TextureTarget, 0);
 	}
 
-	void Texture::SetTextureWrapS(GLenum textureWarpMode, bool shouldBind /*= false*/)
+	void Texture::setTextureWrapS(GLenum textureWarpMode, bool shouldBind /*= false*/)
 	{
 		if (m_TextureWrapSMode == textureWarpMode) {
 			return;
 		}
 		m_TextureWrapSMode = textureWarpMode;
 		if (shouldBind) {
-			Bind();
+			bind();
 		}
 		if (m_TextureTarget) {
 			glTexParameteri(m_TextureTarget, GL_TEXTURE_WRAP_S, m_TextureWrapSMode);
 		}
 	}
-	void Texture::SetTextureWrapT(GLenum textureWarpMode, bool shouldBind /*= false*/)
+	void Texture::setTextureWrapT(GLenum textureWarpMode, bool shouldBind /*= false*/)
 	{
 		if (m_TextureWrapTMode == textureWarpMode) {
 			return;
 		}
 		m_TextureWrapTMode = textureWarpMode;
 		if (shouldBind) {
-			Bind();
+			bind();
 		}
 		if (m_TextureTarget) {
 			glTexParameteri(m_TextureTarget, GL_TEXTURE_WRAP_T, m_TextureWrapTMode);
 		}
 	}
 
-	void Texture::SetTextureMinFilter(GLenum textureFilterMode, bool shouldBind) {
+	void Texture::setTextureMinFilter(GLenum textureFilterMode, bool shouldBind) {
 		if (m_TextureMinificationFilterMode == textureFilterMode)
 			return;
 
 		m_TextureMinificationFilterMode = textureFilterMode;
 		if (shouldBind)
-			Bind();
+			bind();
 		if (m_TextureTarget) {
 			glTexParameteri(m_TextureTarget, GL_TEXTURE_MIN_FILTER, m_TextureMinificationFilterMode);
 		}
 	}
 
-	void Texture::SetTextureMagFilter(GLenum textureFilterMode, bool shouldBind) {
+	void Texture::setTextureMagFilter(GLenum textureFilterMode, bool shouldBind) {
 		// If mag filter mode exceeds GL_Linear (bilinear) report an error because it is useless to perform more expensive filtering with magnification
 		if (textureFilterMode > GL_LINEAR)
 			utils::Logger::getInstance().warning("logged_files/textures.txt", "Texture Filter Tuning", "Texture's magnification filter exceeded bilinear filtering which won't result in any visual improvements and will just cost more");
@@ -124,20 +124,20 @@ namespace OpenGL_Engine {namespace graphics {
 
 		m_TextureMagnificationFilterMode = textureFilterMode;
 		if (shouldBind)
-			Bind();
+			bind();
 		if (m_TextureTarget) {
 			glTexParameteri(m_TextureTarget, GL_TEXTURE_MAG_FILTER, m_TextureMagnificationFilterMode);
 		}
 	}
 
-	void Texture::SetAnisotropicFilteringMode(float textureAnisotropyLevel, bool shouldBind /*= false*/)
+	void Texture::setAnisotropicFilteringMode(float textureAnisotropyLevel, bool shouldBind /*= false*/)
 	{
 		if (m_TextureAnisotropyLevel == textureAnisotropyLevel)
 			return;
 
 		m_TextureAnisotropyLevel = textureAnisotropyLevel;
 		if (shouldBind)
-			Bind();
+			bind();
 		if (m_TextureTarget) {
 			float maxAnisotropy;
 			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
@@ -146,7 +146,7 @@ namespace OpenGL_Engine {namespace graphics {
 		}
 	}
 
-	void Texture::SetMipMode(bool shouldGenMips, int mipBias) {
+	void Texture::setMipMode(bool shouldGenMips, int mipBias) {
 		m_HasMips = shouldGenMips;
 		m_MipBias = mipBias;
 	}
