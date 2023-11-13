@@ -30,13 +30,15 @@ namespace OpenGL_Engine {
 			inline unsigned int getHeight() { return m_Height; }
 
 			inline unsigned int getFramebuffer() { return m_FBO; }
-			inline graphics::Texture* getColourBufferTexture() { return m_ColourTexture; }
+			inline unsigned int getColourBufferTexture() { return m_ColourTexture; }
 			inline unsigned int getDepthTexture() { return m_DepthTexture; }
+			inline bool isMultisampledColourBuffer() { return m_IsMultiSampledColorBuffer; }
 		private:
 			unsigned int m_FBO;
 
+			bool m_IsMultiSampledColorBuffer;
 			// Attachments
-			graphics::Texture* m_ColourTexture;
+			unsigned int m_ColourTexture;
 			unsigned int m_DepthStencilRBO;
 			unsigned int m_DepthTexture;
 

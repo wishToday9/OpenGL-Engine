@@ -1,4 +1,4 @@
-#version 430 core
+#version 450 core
 
 // Does AMD support sampler2D in a struct?
 struct Material {
@@ -7,6 +7,11 @@ struct Material {
 	sampler2D texture_diffuse3; // g texture
 	sampler2D texture_diffuse4; // b texture
 	sampler2D texture_diffuse5; // blend map
+	sampler2D texture_normal1; // background texture
+	sampler2D texture_normal2; // r texture
+	sampler2D texture_normal3; // g texture
+	sampler2D texture_normal4; // b texture
+	sampler2D blendmap;
 	float shininess;
 };
 
@@ -73,11 +78,11 @@ void main() {
 	vec3 norm = normalize(Normal);
 	vec3 fragToCam = normalize(viewPos - FragPos);
 
-	vec4 blendMapColour = texture(material.texture_diffuse5, TexCoords);
+	vec4 blendMapColour = texture(material.blendmap, TexCoords);
 	
 	float backTextureAmount = 1 - (blendMapColour.r + blendMapColour.g + blendMapColour.b);
 	
-	vec2 tiledCoords = TexCoords * 128;
+	vec2 tiledCoords = TexCoords * 64;
 	vec3 backgroundTextureColour = texture(material.texture_diffuse1, tiledCoords).rgb * backTextureAmount;
 	vec3 rTextureColour = texture(material.texture_diffuse2, tiledCoords).rgb * blendMapColour.r;
 	vec3 gTextureColour = texture(material.texture_diffuse3, tiledCoords).rgb * blendMapColour.g;

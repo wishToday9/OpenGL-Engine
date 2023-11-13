@@ -157,6 +157,9 @@
     <ClCompile Include="src\graphics\camera\Camera.cpp" />
     <ClCompile Include="src\graphics\mesh\Material.cpp" />
     <ClCompile Include="src\graphics\textures\Cubemap.cpp" />
+    <ClCompile Include="src\ui\DebugPane.cpp" />
+    <ClCompile Include="src\ui\Pane.cpp" />
+    <ClCompile Include="src\ui\RuntimePane.cpp" />
     <ClCompile Include="src\utils\loaders\MeshLoader.cpp" />
     <ClCompile Include="src\graphics\mesh\Mesh.cpp" />
     <ClCompile Include="src\graphics\mesh\Model.cpp" />
@@ -202,6 +205,9 @@
     <ClInclude Include="src\graphics\mesh\Mesh.h" />
     <ClInclude Include="src\graphics\renderer\RenderPass.h" />
     <ClInclude Include="src\graphics\textures\Cubemap.h" />
+    <ClInclude Include="src\ui\DebugPane.h" />
+    <ClInclude Include="src\ui\Pane.h" />
+    <ClInclude Include="src\ui\RuntimePane.h" />
     <ClInclude Include="src\utils\loaders\MeshLoader.h" />
     <ClInclude Include="src\graphics\mesh\Model.h" />
     <ClInclude Include="src\graphics\renderer\GLCache.h" />
@@ -235,7 +241,9 @@
   <ItemGroup>
     <None Include="src\shaders\directionalLight.frag" />
     <None Include="src\shaders\oldModel.frag" />
-    <None Include="src\shaders\basic.vert" />
+    <None Include="src\shaders\terrain.vert" />
+    <None Include="src\shaders\pbr_model.frag" />
+    <None Include="src\shaders\pbr_model.vert" />
     <None Include="src\shaders\postprocess.frag" />
     <None Include="src\shaders\postprocess.vert" />
     <None Include="src\shaders\model.frag" />
@@ -248,7 +256,6 @@
     <None Include="src\shaders\skybox.vert" />
     <None Include="src\shaders\spotlight.frag" />
     <None Include="src\shaders\model.vert" />
-    <None Include="src\shaders\basic.frag" />
     <None Include="src\shaders\terrain.frag" />
   </ItemGroup>
   <ItemGroup>

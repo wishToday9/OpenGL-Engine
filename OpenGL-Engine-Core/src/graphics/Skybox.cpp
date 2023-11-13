@@ -7,7 +7,7 @@ namespace OpenGL_Engine { namespace graphics {
 		: m_SkyboxShader("src/shaders/skybox.vert", "src/shaders/skybox.frag"), m_Camera(camera)
 	{
 		m_SkyboxCubemap = utils::TextureLoader::loadCubemapTexture(filePaths[0], filePaths[1], 
-			filePaths[2], filePaths[3], filePaths[4], filePaths[5]);
+			filePaths[2], filePaths[3], filePaths[4], filePaths[5], true);
 		
 		float skyboxVertices[] = {
 			// Front
@@ -55,7 +55,7 @@ namespace OpenGL_Engine { namespace graphics {
 		m_SkyboxShader.setUniform1i("skyboxCubemap", 0);
 
 		m_SkyboxShader.setUniformMat4("view", m_Camera->getViewMatrix());
-		m_SkyboxShader.setUniformMat4("projection", glm::perspective(glm::radians(m_Camera->getFOV()), (float)Window::getWidth() / (float)Window::getHeight(), 0.1f, 1000.0f));
+		m_SkyboxShader.setUniformMat4("projection", m_Camera->getProjectionMatrix());
 
 		// Since the vertex shader is gonna make the depth value 1.0, and the default value in the depth buffer is 1.0 so this is needed to draw the sky  box
 		glDepthFunc(GL_LEQUAL);

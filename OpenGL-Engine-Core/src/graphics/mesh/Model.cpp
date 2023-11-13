@@ -104,23 +104,20 @@ namespace OpenGL_Engine { namespace graphics {
 		// Process Materials (textures in this case)
 		if (mesh->mMaterialIndex >= 0) {
 			aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
-
-			newMesh.m_Material.setDiffuseMap(loadMaterialTexture(material, aiTextureType_DIFFUSE));
-			newMesh.m_Material.setSpecularMap(loadMaterialTexture(material, aiTextureType_SPECULAR));
-			newMesh.m_Material.setNormalMap(loadMaterialTexture(material, aiTextureType_NORMALS));
-			newMesh.m_Material.setEmissionMap(loadMaterialTexture(material, aiTextureType_EMISSIVE));
-			float shininess = 0.0f;
-			// Assimp scales specular exponent by 4 times since most renderers handle it that way. 
-			// Value defaults to 0 if not specified
-			material->Get(AI_MATKEY_SHININESS, shininess); 
-			newMesh.m_Material.setShininess(shininess);
+			// Only colour data for the renderer is considered sRGB, all other type of non-colour texture data shouldn't be corrected by the hardware
+			newMesh.m_Material.setAlbedoMap(loadMaterialTexture(material, aiTextureType_DIFFUSE, true));
+			newMesh.m_Material.setNormalMap(loadMaterialTexture(material, aiTextureType_NORMALS, false));
+			//newMesh.m_Material.setSpecularMap(loadMaterialTexture(material, aiTextureType_SPECULAR, false));
+			//newMesh.m_Material.setSpecularMap(loadMaterialTexture(material, aiTextureType_SPECULAR, false));
+			newMesh.m_Material.setAmbientOcclusionMap(loadMaterialTexture(material, aiTextureType_AMBIENT, false));
+			newMesh.m_Material.setEmissionMap(loadMaterialTexture(material, aiTextureType_EMISSIVE, true));
 		}
 
 		return newMesh;
 	}
 
 
-	Texture* Model::loadMaterialTexture(aiMaterial* mat, aiTextureType type) {
+	Texture* Model::loadMaterialTexture(aiMaterial* mat, aiTextureType type, bool isSRGB) {
 		// Log material constraints are being violated (1 texture per type for the standard shader)
 		if (mat->GetTextureCount(type) > 1) {
 			utils::Logger::getInstance().error("logged_files/material_creation.txt", "Mesh Loading", 
@@ -135,7 +132,7 @@ namespace OpenGL_Engine { namespace graphics {
 
 // Assumption made: material stuff is located in the same directory as the model object
 			std::string fileToSearch = (m_Directory + "/" + std::string(str.C_Str())).c_str();
-			return utils::TextureLoader::load2DTexture(fileToSearch);
+			return utils::TextureLoader::load2DTexture(fileToSearch, isSRGB);
 		}
 
 		return nullptr;

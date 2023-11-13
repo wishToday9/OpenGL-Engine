@@ -41,7 +41,7 @@ namespace OpenGL_Engine { namespace graphics {
 		}
 
 		// Anti-aliasing
-		glfwWindowHint(GLFW_SAMPLES, MSAA_SAMPLE_AMOUNT);
+		//glfwWindowHint(GLFW_SAMPLES, MSAA_SAMPLE_AMOUNT);
 
 		// Create the window
 		if (FULLSCREEN_MODE) {
@@ -117,7 +117,7 @@ namespace OpenGL_Engine { namespace graphics {
 		glfwPollEvents();
 	}
 
-	void Window::clear() const {
+	void Window::clear() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	}
 

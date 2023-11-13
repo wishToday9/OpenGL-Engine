@@ -8,6 +8,7 @@
 #include "Renderable3D.h"
 #include "GLCache.h"
 #include "RenderPass.h"
+#include "../mesh/common/Quad.h"
 
 namespace OpenGL_Engine {
 	namespace graphics {
@@ -21,6 +22,9 @@ namespace OpenGL_Engine {
 
 			void flushOpaque(Shader& shader, RenderPass pass);
 			void flushTransparent(Shader& shader, RenderPass pass);
+
+		public:
+			Quad NDC_Plane;
 		private:
 			void Renderer::setupModelMatrix(Renderable3D* renderable, Shader& shader, RenderPass pass);
 

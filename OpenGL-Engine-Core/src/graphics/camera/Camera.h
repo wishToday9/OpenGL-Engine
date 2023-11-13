@@ -6,6 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "../Window.h"
+#include "../../ui/DebugPane.h"
 
 namespace OpenGL_Engine { namespace graphics {
 
@@ -21,7 +22,7 @@ namespace OpenGL_Engine { namespace graphics {
 	// Default Camera Values
 	const float YAW = -90.0f;
 	const float PITCH = 0.0f;
-	const float SPEED = 40.0f;
+	const float SPEED = 20.0f;
 	const float SENSITIVITY = 0.10f;
 	const float FOV = 100.0f;
 
@@ -72,6 +73,8 @@ namespace OpenGL_Engine { namespace graphics {
 		* @return returns the view matrix for the camera
 		*/
 		glm::mat4 getViewMatrix();
+
+		glm::mat4 getProjectionMatrix();
 
 		void processInput(float deltaTime);
 

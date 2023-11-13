@@ -21,6 +21,8 @@ namespace OpenGL_Engine { namespace graphics {
 		Model(const std::vector<Mesh> &meshes);
 		
 		void Draw(Shader &shader, RenderPass pass) const;
+
+		std::vector<Mesh>& getMeshes() { return m_Meshes; }
 	private:
 		static std::vector<Texture> m_LoadedTextures; // Used so the same texture doesn't get loaded into memory twice
 		std::vector<Mesh> m_Meshes;
@@ -29,7 +31,7 @@ namespace OpenGL_Engine { namespace graphics {
 		void loadModel(const std::string &path);
 		void processNode(aiNode *node, const aiScene *scene);
 		Mesh processMesh(aiMesh *mesh, const aiScene *scene);
-		Texture* loadMaterialTexture(aiMaterial *mat, aiTextureType type);
+		Texture* loadMaterialTexture(aiMaterial *mat, aiTextureType type, bool isSRGB);
 	};
 
 } }

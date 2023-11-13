@@ -49,7 +49,7 @@ namespace OpenGL_Engine { namespace graphics {
 		/**
 		* Clears the screen using the following masks: GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT
 		*/
-		void clear() const;
+		static void clear();
 
 		/**
 		* @return returns true if the window is closed or being closed

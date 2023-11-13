@@ -4,7 +4,7 @@ namespace OpenGL_Engine {
 	namespace opengl {
 
 		RenderTarget::RenderTarget(unsigned int width, unsigned int height)
-			: m_Width(width), m_Height(height), m_FBO(0), m_ColourTexture(nullptr), m_DepthStencilRBO(0), m_DepthTexture(0)
+			: m_Width(width), m_Height(height), m_FBO(0), m_ColourTexture(0), m_DepthStencilRBO(0), m_DepthTexture(0)
 		{
 			glGenFramebuffers(1, &m_FBO);
 		}
@@ -15,7 +15,7 @@ namespace OpenGL_Engine {
 
 		void RenderTarget::createFramebuffer() {
 			bind();
-			if (m_ColourTexture == nullptr) {
+			if (m_ColourTexture == 0) {
 				// Indicate that there won't be a colour buffer for this FBO
 				glDrawBuffer(GL_NONE);
 				glReadBuffer(GL_NONE);
@@ -30,27 +30,26 @@ namespace OpenGL_Engine {
 		}
 
 		RenderTarget& RenderTarget::addColorAttachment(bool multisampledBuffer) {
+			m_IsMultiSampledColorBuffer = multisampledBuffer;
 			bind();
-			m_ColourTexture = new graphics::Texture();
+			glGenTextures(1, &m_ColourTexture);
 
 			// Generate colour texture attachment
 			if (multisampledBuffer) {
-				m_ColourTexture->generate2DMultiSampleTexture(m_Width, m_Height, GL_RGB, MSAA_SAMPLE_AMOUNT);
-			}
-			else {
-				m_ColourTexture->setTextureMinFilter(GL_LINEAR);
-				m_ColourTexture->setTextureMagFilter(GL_LINEAR);
-				m_ColourTexture->setTextureWrapS(GL_CLAMP_TO_EDGE); // Both need to clamp to edge or you might see strange colours around the
-				m_ColourTexture->setTextureWrapT(GL_CLAMP_TO_EDGE); // border due to interpolation and how it works with GL_REPEAT
-				m_ColourTexture->generate2DTexture(m_Width, m_Height, GL_RGB, GL_RGB, nullptr);
-			}
+				glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_ColourTexture);
+				glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, MSAA_SAMPLE_AMOUNT, GL_RGBA16F, m_Width, m_Height, GL_TRUE);
 
-			// Attach colour attachment
-			if (multisampledBuffer) {
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, m_ColourTexture->getTextureId(), 0);
+				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, m_ColourTexture, 0);
 			}
 			else {
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColourTexture->getTextureId(), 0);
+				glBindTexture(GL_TEXTURE_2D, m_ColourTexture);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, m_Width, m_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColourTexture, 0);
 			}
 
 			unbind();
@@ -77,21 +76,28 @@ namespace OpenGL_Engine {
 
 		RenderTarget& RenderTarget::addDepthAttachment(bool multisampled) {
 			bind();
-
 			// Generate depth attachment
 			glGenTextures(1, &m_DepthTexture);
-			glBindTexture(GL_TEXTURE_2D, m_DepthTexture);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_Width, m_Height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-			float borderColour[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-			glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColour);
-			glBindTexture(GL_TEXTURE_2D, 0);
+			if (multisampled) {
+				glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_DepthTexture);
+				glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, MSAA_SAMPLE_AMOUNT, GL_DEPTH_COMPONENT, m_Width, m_Height, GL_TRUE);
+				glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 
-			// Attach depthmap
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_DepthTexture, 0);
+				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, m_DepthTexture, 0);
+			}
+			else {
+				glBindTexture(GL_TEXTURE_2D, m_DepthTexture);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_Width, m_Height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+				float borderColour[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+				glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColour);
+				glBindTexture(GL_TEXTURE_2D, 0);
+
+				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_DepthTexture, 0);
+			}
 
 			unbind();
 			return *this;

@@ -1,65 +1,51 @@
-#version 430 core
+#version 450 core
 
 out vec4 FragColour;
 
-in vec2 TexCoord;
+in vec2 TexCoords;
 
-struct Material {
-	sampler2D texture_diffuse;
-};
 
-uniform Material material;
-uniform vec2 readOffset;
+uniform float gamma_inverse;
+uniform sampler2D screen_texture;
+uniform vec2 read_offset;
+uniform bool blur_enabled;
 
 void main() {
 	// Sample the fragments around the current fragment for post processing using kernels (convulution matrices)
 	vec2 readOffsets[9] = vec2[] (
-		vec2(-readOffset.x, readOffset.y),
-		vec2(0.0, readOffset.y),
-		vec2(readOffset.x, readOffset.y),
-		vec2(-readOffset.x, 0.0),
+		vec2(-read_offset.x, read_offset.y),
+		vec2(0.0, read_offset.y),
+		vec2(read_offset.x, read_offset.y),
+		vec2(-read_offset.x, 0.0),
 		vec2(0.0, 0.0),
-		vec2(readOffset.x, 0.0),
-		vec2(-readOffset.x, -readOffset.y),
-		vec2(0.0, -readOffset.y),
-		vec2(readOffset.x, -readOffset.y)
-	);
-	
-	// Note: Post processing may cause aliasing since it uses the blitted framebuffer (A non-multisampled buffer)
+		vec2(read_offset.x, 0.0),
+		vec2(-read_offset.x, -read_offset.y),
+		vec2(0.0, -read_offset.y),
+		vec2(read_offset.x, -read_offset.y)
+		);
 
-	// Blur kernel
-	//float kernel[9] = float[] (
-	//	1.0 / 16.0, 2.0 / 16.0, 1.0 / 16.0,
-	//	2.0 / 16.0, 4.0 / 16.0, 2.0 / 16.0,
-	//	1.0 / 16.0, 2.0 / 16.0, 1.0 / 16.0
-	//);
-	
-	// Sharpen kernel
-	//float kernel[9] = float[] (
-	//	-1, -1, -1,
-	//	-1,  9, -1,
-	//	-1, -1, -1
-	//);
+	vec3 hdrColour = vec3(0.0);
+	if (blur_enabled) {
+		// Blur kernel
+		float kernel[9] = float[] (
+			1.0 / 16.0, 2.0 / 16.0, 1.0 / 16.0,
+			2.0 / 16.0, 4.0 / 16.0, 2.0 / 16.0,
+			1.0 / 16.0, 2.0 / 16.0, 1.0 / 16.0
+		);
 
-	// Edge Highlight kernel
-	//float kernel[9] = float[] (
-	//	-2, -2, -2,
-	//	-2, 15, -2,
-	//	-2, -2, -2
-	//);
-
-	// No Post Processing Kernel
-	float kernel[9] = float[] (
-		0, 0, 0,
-		0, 1, 0,
-		0, 0, 0
-	);
-
-	vec3 colour = vec3(0.0);
-
-	// Apply the kernel (post-processing effect)
-	for(int i = 0; i < 9; ++i) {
-		colour += texture(material.texture_diffuse, TexCoord + readOffsets[i]).rgb * kernel[i];
+		// Apply the kernel (post-processing effect)
+		for(int i = 0; i < 9; ++i) {
+			hdrColour += texture(screen_texture, TexCoords + readOffsets[i]).rgb * kernel[i];
+		}
 	}
-	FragColour = vec4(colour, 1.0);
+	else {
+		hdrColour = texture(screen_texture, TexCoords).rgb;
+	}
+
+	
+	// Apply a simple Reinhard tonemapper (HDR -> SDR)
+	vec3 tonemappedColour = hdrColour / (hdrColour + vec3(1.0));
+
+	// Apply gamma correction and tone mapping (for HDR)
+	FragColour = vec4(pow(tonemappedColour, vec3(gamma_inverse)), 1.0);
 }

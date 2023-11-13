@@ -13,6 +13,8 @@ namespace OpenGL_Engine {	namespace graphics {
 		m_Yaw = yaw;
 		m_Pitch = pitch;
 		updateCameraVectors();
+
+		ui::DebugPane::bindCameraPositionValue(&m_Position);
 	}
 
 	Camera::Camera(float xPos, float yPos, float zPos, float xUp, float yUp, float zUp, float yaw = YAW, float pitch = PITCH)
@@ -27,6 +29,10 @@ namespace OpenGL_Engine {	namespace graphics {
 
 	glm::mat4 Camera::getViewMatrix() {
 		return glm::lookAt(m_Position, m_Position + m_Front, m_Up);
+	}
+
+	glm::mat4 Camera::getProjectionMatrix() {
+		return glm::perspective(glm::radians(m_FOV), (float)graphics::Window::getWidth() / (float)graphics::Window::getHeight(), NEAR_PLANE, FAR_PLANE);
 	}
 
 	void Camera::processInput(float deltaTime) {
@@ -45,6 +51,8 @@ namespace OpenGL_Engine {	namespace graphics {
 			processKeyboard(OpenGL_Engine::graphics::DOWNWARDS, deltaTime);
 		if (Window::isKeyPressed(GLFW_KEY_LEFT_SHIFT))
 			m_MovementSpeed = SPEED * 4.0f;
+		else if (Window::isKeyPressed(GLFW_KEY_LEFT_ALT))
+			m_MovementSpeed = SPEED / 4.0f;
 		else
 			m_MovementSpeed = SPEED;
 
