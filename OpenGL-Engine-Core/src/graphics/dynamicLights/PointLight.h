@@ -2,8 +2,6 @@
 
 #include "DynamicLight.h"
 
-#include <string>
-
 namespace OpenGL_Engine { namespace graphics {
 
 	struct PointLight : public DynamicLight {

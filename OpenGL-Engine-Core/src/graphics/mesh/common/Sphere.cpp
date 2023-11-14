@@ -1,6 +1,5 @@
+
 #include "Sphere.h"
-#include <glm/common.hpp>
-#include <vector>
 
 namespace OpenGL_Engine {
 	namespace graphics {

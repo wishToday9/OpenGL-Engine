@@ -1,7 +1,10 @@
+#include <fstream>
+#include <vector>
+#include <iostream>
+
 #include "Logger.h"
 
 namespace OpenGL_Engine { namespace utils {
-
 	Logger::Logger() {
 		file = "logged_files/log.txt";
 	}

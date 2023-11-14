@@ -1,30 +1,24 @@
-#include <iostream>
-#include "graphics\Window.h"
-#include "utils\Timer.h"
-#include "graphics\Shader.h"
-#include <cmath>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include "utils\Time.h"
-#include "graphics\camera\Camera.h"
-#include "utils\Logger.h"
-#include "graphics\mesh\Model.h"
-#include "terrain\Terrain.h"
-#include "Scene3D.h"
-#include "platform\OpenGL\Framebuffers\RenderTarget.h"
-#include "graphics/mesh/common/Quad.h"
-#include "graphics/renderer/GLCache.h"
-#include "graphics/renderer/PostProcessor.h"
-#include "ui/RuntimePane.h"
-#include "ui/DebugPane.h"
 
-#include <stdlib.h>
+#include "Scene3D.h"
+
+#include <graphics/Shader.h>
+#include <graphics/Window.h>
+#include <graphics/camera/FPSCamera.h>
+#include <graphics/mesh/Model.h>
+#include <graphics/mesh/common/Quad.h>
+#include <graphics/renderer/GLCache.h>
+#include <graphics/renderer/PostProcessor.h>
+#include <platform/OpenGL/Framebuffers/RenderTarget.h>
+#include <terrain/Terrain.h>
+#include <ui/DebugPane.h>
+#include <ui/RuntimePane.h>
+#include <utils/Time.h>
+#include <utils/Timer.h>
 
 
 int main() {
 	// Prepare the engine
-	OpenGL_Engine::graphics::Camera camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f);
+	OpenGL_Engine::graphics::FPSCamera camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f);
 	OpenGL_Engine::graphics::Window window("OpenGL_Engine Engine", WINDOW_X_RESOLUTION, WINDOW_Y_RESOLUTION);
 	OpenGL_Engine::Scene3D scene(&camera, &window);
 	OpenGL_Engine::graphics::GLCache* glCache = OpenGL_Engine::graphics::GLCache::getInstance();
@@ -89,7 +83,7 @@ int main() {
 		scene.onUpdate(deltaTime.getDeltaTime());
 		scene.onRender(shadowmap.getDepthTexture());
 
-		// Peform post processing
+		// Perform post processing
 		postProcessor.postLightingPostProcess(&framebuffer);
 
 		// Display panes
@@ -102,8 +96,10 @@ int main() {
 
 		window.resetScroll();
 		window.update();
+
+		if (glfwGetKey(window.getNativeWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
+			glfwSetWindowShouldClose(window.getNativeWindow(), true);
 	}
-	system("pause");
 	return 0;
 }
 //int main() {

@@ -1,3 +1,4 @@
+
 #include "DynamicLight.h"
 
 namespace OpenGL_Engine { namespace graphics {

@@ -42,6 +42,12 @@ out vec4 color;
 
 uniform vec3 viewPos;
 
+
+// IBL
+uniform samplerCube irradianceMap;
+uniform samplerCube prefilterMap;
+uniform sampler2D brdfLUT;
+
 uniform sampler2D shadowmap;
 uniform int numPointLights;
 uniform DirLight dirLight;
@@ -83,21 +89,21 @@ void main() {
 	vec3 baseReflectivity = vec3(0.04);
 	baseReflectivity = mix(baseReflectivity, albedo, metallic);
 
-	vec3 irradiance = vec3(0.0);
+		// Calculate per light radiance for all of the direct lighting
+	vec3 directLightIrradiance = vec3(0.0);
+	directLightIrradiance += CalculateDirectionalLightRadiance(albedo, normal, metallic, roughness, fragToView, baseReflectivity);
+	directLightIrradiance += CalculatePointLightRadiance(albedo, normal, metallic, roughness, fragToView, baseReflectivity);
+	directLightIrradiance += CalculateSpotLightRadiance(albedo, normal, metallic, roughness, fragToView, baseReflectivity);
 
+	//IBL for both diffuse and specular
+	vec3 specularRatio = FresnelSchlick(max(dot(normal, fragToView), 0.0), baseReflectivity);
+	vec3 diffuseRatio = vec3(1.0) - specularRatio;
+	diffuseRatio *= 1.0 - metallic;
+	vec3 indirectIrradiance = texture(irradianceMap, normal).rgb;
+	vec3 indirectDiffuse = indirectIrradiance * albedo;
+	vec3 ambient = (diffuseRatio * indirectDiffuse) * ao;
 
-	// Calculate per light radiance for the directional light
-	irradiance += CalculateDirectionalLightRadiance(albedo, normal, metallic, roughness, fragToView, baseReflectivity);
-
-	// Calculate per light radiance for all point lights
-	irradiance += CalculatePointLightRadiance(albedo, normal, metallic, roughness, fragToView, baseReflectivity);
-
-	// Calculate per light radiance for the spot light
-	irradiance += CalculateSpotLightRadiance(albedo, normal, metallic, roughness, fragToView, baseReflectivity);
-
-	// Finally apply ambient lighting while taking into account the AO map for the material
-	vec3 ambient = vec3(0.03) * albedo * ao;
-	color = vec4(ambient + irradiance, 1.0);
+	color = vec4(ambient + directLightIrradiance, 1.0);
 }
 
 
@@ -224,10 +230,11 @@ float GeometrySchlickGGX(float cosTheta, float roughness) {
 	return numerator / max(denominator, 0.001);
 }
 
-// Calculates the amount of specular (reflected) light. Since diffuse(refraction) and specular(reflection) are mutually exclusive, 
+// Calculates the amount of specular light. Since diffuse(refraction) and specular(reflection) are mutually exclusive, 
 // we can also use this to determine the amount of diffuse light
+// Taken from UE4's implementation which is faster and basically identical to the usual Fresnel calculations: https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
 vec3 FresnelSchlick(float cosTheta, vec3 baseReflectivity) {
-	return max(baseReflectivity + (1.0 - baseReflectivity) * pow(1.0 - cosTheta, 5), 0.0);
+	return max(baseReflectivity + (1.0 - baseReflectivity) * pow(2, (-5.55473 * cosTheta - 6.98316) * cosTheta), 0.0);
 }
 
 float CalculateShadow(vec3 normal, vec3 fragToDirLight) {

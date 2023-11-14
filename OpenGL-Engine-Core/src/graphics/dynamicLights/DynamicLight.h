@@ -1,8 +1,7 @@
 #pragma once
 
-#include <glm\common.hpp>
 
-#include "../Shader.h"
+#include <graphics/Shader.h>
 
 namespace OpenGL_Engine { namespace graphics {
 

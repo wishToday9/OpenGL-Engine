@@ -1,4 +1,8 @@
+
 #include "RenderTarget.h"
+#include <glad/glad.h>
+#include <utils/Logger.h>
+#include "Defs.h"
 
 namespace OpenGL_Engine {
 	namespace opengl {

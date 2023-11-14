@@ -1,3 +1,6 @@
+
+#include <glad/glad.h>
+
 #include "Buffer.h"
 
 namespace OpenGL_Engine { namespace opengl {

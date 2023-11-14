@@ -1,12 +1,10 @@
 #pragma once
 
-#include <iostream>
-#include <glad\glad.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <graphics/Window.h>
+#include <ui/DebugPane.h>
 
-#include "../Window.h"
-#include "../../ui/DebugPane.h"
+#include <glm/common.hpp>
+
 
 namespace OpenGL_Engine { namespace graphics {
 
@@ -22,11 +20,11 @@ namespace OpenGL_Engine { namespace graphics {
 	// Default Camera Values
 	const float YAW = -90.0f;
 	const float PITCH = 0.0f;
-	const float SPEED = 20.0f;
+	const float SPEED = 10.0f;
 	const float SENSITIVITY = 0.10f;
 	const float FOV = 100.0f;
 
-	class Camera {
+	class FPSCamera {
 	private:
 		// Camera Attributes
 		glm::vec3 m_Position, m_Front, m_Up, m_Right, m_WorldUp;
@@ -49,7 +47,7 @@ namespace OpenGL_Engine { namespace graphics {
 		* @param yaw Optional. Initial yaw of the camera. Default is determined by the Camera class
 		* @param pitch Optional. Initial pitch of the camera. Default is determined by the Camera class
 		*/
-		Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch);
+		FPSCamera(glm::vec3 position, glm::vec3 up, float yaw, float pitch);
 
 		/**
 		* Constructs a camera using floats to represent the position and up vectors of the camera
@@ -64,7 +62,7 @@ namespace OpenGL_Engine { namespace graphics {
 		* @param yaw Optional. Initial yaw of the camera. Default is determined by the Camera class
 		* @param pitch Optional. Initial pitch of the camera. Default is determined by the Camera class
 		*/
-		Camera(float xPos, float yPos, float zPos, float xUp, float yUp, float zUp, float yaw, float pitch);
+		FPSCamera(float xPos, float yPos, float zPos, float xUp, float yUp, float zUp, float yaw, float pitch);
 
 
 		/**
@@ -109,7 +107,7 @@ namespace OpenGL_Engine { namespace graphics {
 		* @param yOffset The value that is added to the y-offset
 		* @param constrainPitch Optional. Option to constrain the pitch. Default is true
 		*/
-		void processMouseMovement(float xOffset, float yOffset, GLboolean constrainPitch);
+		void processMouseMovement(double xOffset, double yOffset, GLboolean constrainPitch);
 
 		/**
 		* Changes the camera's Field of View
@@ -117,7 +115,7 @@ namespace OpenGL_Engine { namespace graphics {
 		*
 		* @param offset The value that is added to the Field of View
 		*/
-		void processMouseScroll(float yOffset);
+		void processMouseScroll(double yOffset);
 	};
 
 } }

@@ -1,10 +1,9 @@
 #pragma once
 
-#include <glad\glad.h>
-#include <GLFW\glfw3.h>
-#include "../../utils/Singleton.h"
 
-#include <iostream>
+#include <utils/Singleton.h>
+
+#include <glad/glad.h>
 
 namespace OpenGL_Engine { namespace graphics {
 

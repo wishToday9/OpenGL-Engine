@@ -1,9 +1,8 @@
-#include "Renderer.h"
-
+#include "MeshRenderer.h"
 namespace OpenGL_Engine {
 	namespace graphics {
 
-		Renderer::Renderer(Camera* camera) : m_Camera(camera), NDC_Plane()
+		MeshRenderer::MeshRenderer(FPSCamera* camera) : m_Camera(camera), NDC_Plane()
 		{
 			// Configure and cache OpenGL state
 			m_GLCache = GLCache::getInstance();
@@ -12,15 +11,15 @@ namespace OpenGL_Engine {
 			m_GLCache->setFaceCull(true);
 		}
 
-		void Renderer::submitOpaque(Renderable3D* renderable) {
+		void MeshRenderer::submitOpaque(scene::SceneNode* renderable) {
 			m_OpaqueRenderQueue.push_back(renderable);
 		}
 
-		void Renderer::submitTransparent(Renderable3D* renderable) {
+		void MeshRenderer::submitTransparent(scene::SceneNode* renderable) {
 			m_TransparentRenderQueue.push_back(renderable);
 		}
 
-		void Renderer::flushOpaque(Shader& shader, RenderPass pass) {
+		void MeshRenderer::flushOpaque(Shader& shader, RenderPass pass) {
 			m_GLCache->switchShader(shader.getShaderID());
 			m_GLCache->setDepthTest(true);
 			m_GLCache->setBlend(false);
@@ -30,7 +29,7 @@ namespace OpenGL_Engine {
 
 			// Render opaque objects
 			while (!m_OpaqueRenderQueue.empty()) {
-				Renderable3D* current = m_OpaqueRenderQueue.front();
+				scene::SceneNode* current = m_OpaqueRenderQueue.front();
 
 				setupModelMatrix(current, shader, pass);
 				current->draw(shader, pass);
@@ -39,7 +38,7 @@ namespace OpenGL_Engine {
 			}
 		}
 
-		void Renderer::flushTransparent(Shader& shader, RenderPass pass) {
+		void MeshRenderer::flushTransparent(Shader& shader, RenderPass pass) {
 			m_GLCache->switchShader(shader.getShaderID());
 			m_GLCache->setDepthTest(true);
 			m_GLCache->setBlend(true);
@@ -48,12 +47,12 @@ namespace OpenGL_Engine {
 
 			// Sort then render transparent objects (from back to front, does not account for rotations or scaling)
 			std::sort(m_TransparentRenderQueue.begin(), m_TransparentRenderQueue.end(),
-				[this](Renderable3D* a, Renderable3D* b) -> bool
+				[this](scene::SceneNode* a, scene::SceneNode* b) -> bool
 				{
 					return glm::length2(m_Camera->getPosition() - a->getPosition()) > glm::length2(m_Camera->getPosition() - b->getPosition());
 				});
 			while (!m_TransparentRenderQueue.empty()) {
-				Renderable3D* current = m_TransparentRenderQueue.front();
+				scene::SceneNode* current = m_TransparentRenderQueue.front();
 
 				m_GLCache->setBlend(true);
 				m_GLCache->setBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -67,7 +66,7 @@ namespace OpenGL_Engine {
 
 		// TODO: Currently only supports two levels for hierarchical transformations
 		// Make it work with any number of levels
-		void Renderer::setupModelMatrix(Renderable3D* renderable, Shader& shader, RenderPass pass) {
+		void MeshRenderer::setupModelMatrix(scene::SceneNode* renderable, Shader& shader, RenderPass pass) {
 			glm::mat4 model(1);
 			glm::mat4 translate = glm::translate(glm::mat4(1.0f), renderable->getPosition());
 			glm::mat4 rotate = glm::toMat4(renderable->getOrientation());

@@ -1,16 +1,18 @@
+
 #include "Material.h"
 
 namespace OpenGL_Engine { namespace graphics {
-
-
 
 	Material::Material(Texture* albedoMap, Texture* normalMap, Texture* metallicMap, Texture* roughnessMap, Texture* ambientOcclusionMap, Texture* emissionMap)
 		: m_AlbedoMap(albedoMap), m_NormalMap(normalMap), m_MetallicMap(metallicMap), m_RoughnessMap(roughnessMap),
 		m_AmbientOcclusionMap(ambientOcclusionMap), m_EmissionMap(emissionMap) {}
 
 	void Material::BindMaterialInformation(Shader &shader) const{
-		//texture unit 0 is reserved for the shadow map
-		int currentTextureUnit = 1;
+		// Texture unit 0 is reserved for the shadow map
+		// Texture unit 1 is reserved for the irradianceMap used for indirect diffuse IBL
+		// Texture unit 2 is reserved for the prefilterMap
+		// Texture unit 3 is reserved for the brdfLUT
+		int currentTextureUnit = 4;
 
 		shader.setUniform1i("material.texture_albedo", currentTextureUnit);
 		if (m_AlbedoMap) {

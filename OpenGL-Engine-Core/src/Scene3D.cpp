@@ -1,9 +1,5 @@
 #include "Scene3D.h"
 
-#include <iterator>
-#include <iostream>
-#include <glm/glm.hpp>
-
 #include "graphics/mesh/Mesh.h"
 #include "graphics/mesh/common/Cube.h"
 #include "graphics/mesh/common/Sphere.h"
@@ -11,11 +7,11 @@
 
 namespace OpenGL_Engine {
 
-	Scene3D::Scene3D(graphics::Camera* camera, graphics::Window* window)
+	Scene3D::Scene3D(graphics::FPSCamera* camera, graphics::Window* window)
 		: m_TerrainShader("src/shaders/terrain.vert", "src/shaders/terrain.frag"), m_ModelShader("src/shaders/pbr_model.vert", "src/shaders/pbr_model.frag"), m_Camera(camera),
 		m_ShadowmapShader("src/shaders/shadowmap.vert", "src/shaders/shadowmap.frag"), m_DynamicLightManager()
 	{
-		m_Renderer = new graphics::Renderer(camera);
+		m_MeshRenderer = new graphics::MeshRenderer(camera);
 		m_GLCache = graphics::GLCache::getInstance();
 		m_Terrain = new terrain::Terrain(glm::vec3(0.0f, -20.0f, 0.0f));
 
@@ -42,7 +38,7 @@ namespace OpenGL_Engine {
 
 		// Temp code until I rewrite the model loader
 		graphics::Model* pbrGun = new OpenGL_Engine::graphics::Model("res/3D_Models/Cerberus_Gun/Cerberus_LP.FBX");
-		add(new graphics::Renderable3D(glm::vec3(120.0f, 75.0f, 120.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::radians(-90.0f), pbrGun, nullptr, false));
+		add(new scene::SceneNode(glm::vec3(120.0f, 120.0f, 120.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::radians(-90.0f), pbrGun, nullptr, false));
 		pbrGun->getMeshes()[0].getMaterial().setAlbedoMap(utils::TextureLoader::load2DTexture(std::string("res/3D_Models/Cerberus_Gun/Textures/Cerberus_A.tga"), true));
 		pbrGun->getMeshes()[0].getMaterial().setNormalMap(utils::TextureLoader::load2DTexture(std::string("res/3D_Models/Cerberus_Gun/Textures/Cerberus_N.tga"), false));
 		pbrGun->getMeshes()[0].getMaterial().setMetallicMap(utils::TextureLoader::load2DTexture(std::string("res/3D_Models/Cerberus_Gun/Textures/Cerberus_M.tga"), false));
@@ -51,7 +47,7 @@ namespace OpenGL_Engine {
 
 
 		// Temp testing code
-		/*
+		
 		int nrRows = 2;
 		int nrColumns = 2;
 		float spacing = 2.5;
@@ -64,11 +60,11 @@ namespace OpenGL_Engine {
 				mat.setAmbientOcclusionMap(utils::TextureLoader::load2DTexture(std::string("res/textures/default/white.png"), false));
 				mat.setMetallicMap(utils::TextureLoader::load2DTexture(std::string("res/3D_Models/Sphere/rustediron2_metallic.png"), false));
 				mat.setRoughnessMap(utils::TextureLoader::load2DTexture(std::string("res/3D_Models/Sphere/rustediron2_roughness.png"), false));
-				add(new graphics::Renderable3D(glm::vec3((float)(col - (nrColumns / 2)) * spacing,
+				add(new scene::SceneNode(glm::vec3((float)(col - (nrColumns / 2)) * spacing,
 					(float)(row - (nrRows / 2)) * spacing, 0.0f), glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(1.0f, 0.0f, 0.0f), 0.0f, sphere, nullptr, false));
 			}
 		}
-		*/
+		
 
 
 		// Skybox
@@ -95,8 +91,8 @@ namespace OpenGL_Engine {
 
 		addObjectsToRenderQueue();
 
-		m_Renderer->flushOpaque(m_ShadowmapShader, graphics::RenderPass::ShadowmapPass);
-		m_Renderer->flushTransparent(m_ShadowmapShader, graphics::RenderPass::ShadowmapPass);
+		m_MeshRenderer->flushOpaque(m_ShadowmapShader, graphics::RenderPass::ShadowmapPass);
+		m_MeshRenderer->flushTransparent(m_ShadowmapShader, graphics::RenderPass::ShadowmapPass);
 		m_Terrain->Draw(m_ShadowmapShader, graphics::RenderPass::ShadowmapPass);
 
 		m_GLCache->switchShader(m_TerrainShader.getShaderID());
@@ -134,7 +130,7 @@ namespace OpenGL_Engine {
 		addObjectsToRenderQueue();
 
 		// Opaque objects
-		m_Renderer->flushOpaque(m_ModelShader, graphics::RenderPass::LightingPass);
+		m_MeshRenderer->flushOpaque(m_ModelShader, graphics::RenderPass::LightingPass);
 
 		// Terrain
 		m_GLCache->switchShader(m_TerrainShader.getShaderID());
@@ -159,22 +155,22 @@ namespace OpenGL_Engine {
 
 		// Transparent objects
 		m_GLCache->switchShader(m_ModelShader.getShaderID());
-		m_Renderer->flushTransparent(m_ModelShader, graphics::RenderPass::LightingPass);
+		m_MeshRenderer->flushTransparent(m_ModelShader, graphics::RenderPass::LightingPass);
 	}
 
-	void Scene3D::add(graphics::Renderable3D* renderable) {
+	void Scene3D::add(scene::SceneNode* renderable) {
 		m_Renderables.push_back(renderable);
 	}
 
 	void Scene3D::addObjectsToRenderQueue() {
 		auto iter = m_Renderables.begin();
 		while (iter != m_Renderables.end()) {
-			graphics::Renderable3D* curr = *iter;
+			scene::SceneNode* curr = *iter;
 			if (curr->getTransparent()) {
-				m_Renderer->submitTransparent(curr);
+				m_MeshRenderer->submitTransparent(curr);
 			}
 			else {
-				m_Renderer->submitOpaque(curr);
+				m_MeshRenderer->submitOpaque(curr);
 			}
 			iter++;
 		}

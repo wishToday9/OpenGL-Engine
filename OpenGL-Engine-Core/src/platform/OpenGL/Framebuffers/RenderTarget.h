@@ -1,12 +1,7 @@
 #pragma once
 
-#include <glad\glad.h>
-#include <GLFW\glfw3.h>
-#include <glm/gtc/type_ptr.hpp>
 
-#include "../../../Defs.h"
-#include "../../../utils/Logger.h"
-#include "../../../utils/loaders/TextureLoader.h"
+#include <utils/loaders/TextureLoader.h>
 
 namespace OpenGL_Engine {
 	namespace opengl {

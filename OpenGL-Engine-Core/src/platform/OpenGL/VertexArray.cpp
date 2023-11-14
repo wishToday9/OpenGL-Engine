@@ -1,3 +1,5 @@
+#include <glad/glad.h>
+
 #include "VertexArray.h"
 
 namespace OpenGL_Engine { namespace opengl {

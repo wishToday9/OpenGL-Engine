@@ -1,9 +1,8 @@
 #pragma once
 
-#include <glad\glad.h>
-#include <GLFW\glfw3.h>
-#include "Buffer.h"
 #include <vector>
+#include "Buffer.h"
+
 
 namespace OpenGL_Engine { namespace opengl {
 

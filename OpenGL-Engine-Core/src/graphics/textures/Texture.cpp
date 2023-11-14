@@ -1,4 +1,8 @@
+
 #include "Texture.h"
+
+#include <glm/common.hpp>
+#include <utils/Logger.h>
 
 namespace OpenGL_Engine {namespace graphics {
 		

@@ -1,9 +1,10 @@
 #pragma once
 
-#include <iostream>
-#include <fstream>
-#include <vector>
+
 #include "Singleton.h"
+#include <vector>
+#include <string>
+#include <fstream>
 
 namespace OpenGL_Engine { namespace utils {
 

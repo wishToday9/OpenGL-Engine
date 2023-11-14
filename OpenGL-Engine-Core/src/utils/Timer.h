@@ -1,8 +1,6 @@
 #pragma once
 
-#include <GLFW\glfw3.h>
-#pragma once
-
+#include <GLFW/glfw3.h>
 namespace OpenGL_Engine {
 
 	class Timer {

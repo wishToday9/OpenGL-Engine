@@ -1,18 +1,11 @@
 #pragma once
 
-#include <glad\glad.h>
-#include <GLFW\glfw3.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include "..\graphics\mesh\Mesh.h"
-#include "..\graphics\Shader.h"
-#include <stb_image.h>
+#include <graphics/Shader.h>
+#include <graphics/mesh/Mesh.h>
+#include <graphics/mesh/Model.h>
+#include <utils/loaders/TextureLoader.h>
+
 #include <array>
-
-#include "../graphics/mesh/Mesh.h"
-#include "../graphics/mesh/Model.h"
-
-#include "../utils/loaders/TextureLoader.h"
 
 namespace OpenGL_Engine { namespace terrain {
 
@@ -25,8 +18,8 @@ namespace OpenGL_Engine { namespace terrain {
 
 		inline const glm::vec3& getPosition() const { return m_Position; }
 	private:
-		glm::vec3 calculateNormal(int x, int z, unsigned char *heightMapData);
-		float getVertexHeight(int x, int y, unsigned char *heightMapData);
+		glm::vec3 calculateNormal(unsigned x, unsigned z, unsigned char *heightMapData);
+		float getVertexHeight(unsigned x, unsigned y, unsigned char *heightMapData);
 
 		float m_TerrainSize;
 		unsigned int m_VertexSideCount;

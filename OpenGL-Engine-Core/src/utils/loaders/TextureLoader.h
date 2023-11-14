@@ -4,6 +4,9 @@
 #include "../../graphics/textures/Texture.h"
 #include "../../graphics/textures/Cubemap.h"
 
+#include <string>
+
+
 namespace OpenGL_Engine {
 	namespace utils {
 		class TextureLoader {

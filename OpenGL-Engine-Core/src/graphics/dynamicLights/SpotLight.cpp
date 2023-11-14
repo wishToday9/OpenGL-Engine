@@ -1,3 +1,4 @@
+
 #include "SpotLight.h"
 
 namespace OpenGL_Engine { namespace graphics {

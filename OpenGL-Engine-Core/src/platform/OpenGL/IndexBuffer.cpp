@@ -1,3 +1,4 @@
+#include <glad/glad.h>
 #include "IndexBuffer.h"
 
 namespace OpenGL_Engine { namespace opengl {

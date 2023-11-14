@@ -1,7 +1,5 @@
 #pragma once
-
 #include <string>
-
 namespace OpenGL_Engine { 
 
 	class FileUtils {

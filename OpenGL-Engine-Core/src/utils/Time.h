@@ -1,8 +1,5 @@
 #pragma once
 
-#include <GLFW\glfw3.h>
-#include <gl\GL.h>
-
 namespace OpenGL_Engine {
 
 	struct Time {

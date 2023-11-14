@@ -6,10 +6,10 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "../Shader.h"
-#include "../../utils/loaders/TextureLoader.h"
-#include "Mesh.h"
-#include "../renderer/RenderPass.h"
+#include <graphics/Shader.h>
+#include <graphics/mesh/Mesh.h>
+#include <graphics/renderer/RenderPass.h>
+#include <utils/loaders/TextureLoader.h>
 
 namespace OpenGL_Engine { namespace graphics {
 

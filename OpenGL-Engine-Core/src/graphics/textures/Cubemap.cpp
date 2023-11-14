@@ -1,3 +1,4 @@
+#include <glad/glad.h>
 #include "Cubemap.h"
 namespace OpenGL_Engine { namespace graphics {
 

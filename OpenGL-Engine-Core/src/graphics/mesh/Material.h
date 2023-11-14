@@ -1,11 +1,9 @@
 #pragma once
 
-#include <glad\glad.h>
-#include <GLFW\glfw3.h>
 
-#include "../Shader.h"
-#include "../textures/Texture.h"
-#include "../../utils/loaders/TextureLoader.h"
+#include <graphics/Shader.h>
+#include <graphics/textures/Texture.h>
+#include <utils/loaders/TextureLoader.h>
 
 namespace OpenGL_Engine { namespace graphics {
 

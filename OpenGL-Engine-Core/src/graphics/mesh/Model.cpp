@@ -1,9 +1,8 @@
+
 #include "Model.h"
 
-#include <iostream>
-
-#include "../../utils/Logger.h"
 #include "Mesh.h"
+#include <utils/Logger.h>
 
 namespace OpenGL_Engine { namespace graphics {
 
@@ -107,8 +106,6 @@ namespace OpenGL_Engine { namespace graphics {
 			// Only colour data for the renderer is considered sRGB, all other type of non-colour texture data shouldn't be corrected by the hardware
 			newMesh.m_Material.setAlbedoMap(loadMaterialTexture(material, aiTextureType_DIFFUSE, true));
 			newMesh.m_Material.setNormalMap(loadMaterialTexture(material, aiTextureType_NORMALS, false));
-			//newMesh.m_Material.setSpecularMap(loadMaterialTexture(material, aiTextureType_SPECULAR, false));
-			//newMesh.m_Material.setSpecularMap(loadMaterialTexture(material, aiTextureType_SPECULAR, false));
 			newMesh.m_Material.setAmbientOcclusionMap(loadMaterialTexture(material, aiTextureType_AMBIENT, false));
 			newMesh.m_Material.setEmissionMap(loadMaterialTexture(material, aiTextureType_EMISSIVE, true));
 		}

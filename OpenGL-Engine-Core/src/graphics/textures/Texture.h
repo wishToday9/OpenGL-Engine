@@ -1,11 +1,7 @@
 #pragma once
 
+#include "Defs.h"
 #include <glad/glad.h>
-#include <glm/common.hpp>
-
-#include "../../Defs.h"
-#include "../../utils/Logger.h"
-
 namespace OpenGL_Engine {namespace graphics {
 
 	struct TextureSetting {

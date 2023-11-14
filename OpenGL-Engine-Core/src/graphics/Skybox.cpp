@@ -1,9 +1,10 @@
+
 #include "Skybox.h"
 
 namespace OpenGL_Engine { namespace graphics {
 
 
-	Skybox::Skybox(const std::vector<std::string>& filePaths, Camera* camera)
+	Skybox::Skybox(const std::vector<std::string>& filePaths, FPSCamera* camera)
 		: m_SkyboxShader("src/shaders/skybox.vert", "src/shaders/skybox.frag"), m_Camera(camera)
 	{
 		m_SkyboxCubemap = utils::TextureLoader::loadCubemapTexture(filePaths[0], filePaths[1], 
@@ -45,6 +46,8 @@ namespace OpenGL_Engine { namespace graphics {
 		m_SkyboxVBO.load(skyboxVertices, 8 * 3, 3); 
 		m_SkyboxIBO.load(skyboxIndices, 36);
 		m_SkyboxVAO.addBuffer(&m_SkyboxVBO, 0);
+
+		m_GLCache = GLCache::getInstance();
 	}
 
 	void Skybox::Draw() {
@@ -58,7 +61,7 @@ namespace OpenGL_Engine { namespace graphics {
 		m_SkyboxShader.setUniformMat4("projection", m_Camera->getProjectionMatrix());
 
 		// Since the vertex shader is gonna make the depth value 1.0, and the default value in the depth buffer is 1.0 so this is needed to draw the sky  box
-		glDepthFunc(GL_LEQUAL);
+		m_GLCache->setDepthFunc(GL_LEQUAL);
 		m_SkyboxVAO.bind();
 		m_SkyboxIBO.bind();
 		glDrawElements(GL_TRIANGLES, m_SkyboxIBO.getCount(), GL_UNSIGNED_INT, 0);
@@ -66,7 +69,7 @@ namespace OpenGL_Engine { namespace graphics {
 		m_SkyboxIBO.unbind();
 		glDepthFunc(GL_LESS);
 
-		m_SkyboxShader.disable();
+		m_GLCache->setDepthFunc(GL_LESS);
 	}
 
 } }
