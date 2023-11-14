@@ -1,23 +1,22 @@
 
-#include "RenderTarget.h"
+#include "FrameBuffer.h"
 #include <glad/glad.h>
 #include <utils/Logger.h>
 #include "Defs.h"
 
 namespace OpenGL_Engine {
-	namespace opengl {
 
-		RenderTarget::RenderTarget(unsigned int width, unsigned int height)
+		FrameBuffer::FrameBuffer(unsigned int width, unsigned int height)
 			: m_Width(width), m_Height(height), m_FBO(0), m_ColourTexture(0), m_DepthStencilRBO(0), m_DepthTexture(0)
 		{
 			glGenFramebuffers(1, &m_FBO);
 		}
 
-		RenderTarget::~RenderTarget() {
+		FrameBuffer::~FrameBuffer() {
 			glDeleteFramebuffers(1, &m_FBO);
 		}
 
-		void RenderTarget::createFramebuffer() {
+		void FrameBuffer::createFramebuffer() {
 			bind();
 			if (m_ColourTexture == 0) {
 				// Indicate that there won't be a colour buffer for this FBO
@@ -27,13 +26,13 @@ namespace OpenGL_Engine {
 
 			// Check if the creation failed
 			if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-				utils::Logger::getInstance().error("logged_files/error.txt", "Framebuffer initialization", "Could not initialize the framebuffer");
+				Logger::getInstance().error("logged_files/error.txt", "Framebuffer initialization", "Could not initialize the framebuffer");
 				return;
 			}
 			unbind();
 		}
 
-		RenderTarget& RenderTarget::addColorAttachment(bool multisampledBuffer) {
+		FrameBuffer& FrameBuffer::addColorAttachment(bool multisampledBuffer) {
 			m_IsMultiSampledColorBuffer = multisampledBuffer;
 			bind();
 			glGenTextures(1, &m_ColourTexture);
@@ -60,7 +59,7 @@ namespace OpenGL_Engine {
 			return *this;
 		}
 
-		RenderTarget& RenderTarget::addDepthStencilRBO(bool multisampledBuffer) {
+		FrameBuffer& FrameBuffer::addDepthStencilRBO(bool multisampledBuffer) {
 			bind();
 
 			// Generate depth+stencil rbo attachment
@@ -78,7 +77,7 @@ namespace OpenGL_Engine {
 			return *this;
 		}
 
-		RenderTarget& RenderTarget::addDepthAttachment(bool multisampled) {
+		FrameBuffer& FrameBuffer::addDepthAttachment(bool multisampled) {
 			bind();
 			// Generate depth attachment
 			glGenTextures(1, &m_DepthTexture);
@@ -107,17 +106,15 @@ namespace OpenGL_Engine {
 			return *this;
 		}
 
-		void RenderTarget::bind() {
+		void FrameBuffer::bind() {
 			glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
 		}
 
-		void RenderTarget::unbind() {
+		void FrameBuffer::unbind() {
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 
-		void RenderTarget::clear() {
+		void FrameBuffer::clear() {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		}
-
-	}
 }

@@ -5,12 +5,12 @@
 
 #include <graphics/Shader.h>
 #include <graphics/mesh/common/Quad.h>
-#include <platform/OpenGL/Framebuffers/RenderTarget.h>
+#include <platform/OpenGL/Framebuffers/FrameBuffer.h>
 #include <ui/DebugPane.h>
 #include <ui/RuntimePane.h>
 #include <utils/Timer.h>
 
-namespace OpenGL_Engine { namespace graphics {
+namespace OpenGL_Engine {  
 
 	class PostProcessor {
 	public:
@@ -19,9 +19,12 @@ namespace OpenGL_Engine { namespace graphics {
 
 		void preLightingPostProcess();
 
-		void postLightingPostProcess(opengl::RenderTarget* input);
+		void postLightingPostProcess(FrameBuffer* input);
 
 		void EnableBlur(bool choice);
+
+		// Might be useful to have if we want to have more custom post processing. Unity does it this way
+		//void blit(Texture *texture, Framebuffer *source);
 
 	private:
 		float m_GammaCorrection = 2.2f;
@@ -29,10 +32,10 @@ namespace OpenGL_Engine { namespace graphics {
 		MeshRenderer* m_MeshRenderer;
 		Shader m_PostProcessShader;
 		Quad m_NDC_Plane;
-		opengl::RenderTarget m_ScreenRenderTarget;
+		FrameBuffer m_ScreenRenderTarget;
 		Timer m_Timer;
 		// Post Processing Toggles
 		bool m_Blur = false;
 	};
 
-} }
+} 

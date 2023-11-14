@@ -5,7 +5,7 @@
 #include <graphics/textures/Texture.h>
 #include <utils/loaders/TextureLoader.h>
 
-namespace OpenGL_Engine { namespace graphics {
+namespace OpenGL_Engine {  
 
 	// TODO: Move to a PBR material system
 	class Material {
@@ -25,4 +25,4 @@ namespace OpenGL_Engine { namespace graphics {
 		Texture* m_AlbedoMap, * m_NormalMap, * m_MetallicMap, * m_RoughnessMap, * m_AmbientOcclusionMap, * m_EmissionMap;
 	};
 
-} }
+} 

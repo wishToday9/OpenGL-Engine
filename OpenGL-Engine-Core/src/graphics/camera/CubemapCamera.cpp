@@ -1,7 +1,7 @@
 
 #include "CubemapCamera.h"
 
-namespace OpenGL_Engine { namespace graphics {
+namespace OpenGL_Engine {  
 
 	CubemapCamera::CubemapCamera(glm::vec3& centerPosition)
 		:m_CenterPosition(centerPosition)
@@ -50,4 +50,4 @@ namespace OpenGL_Engine { namespace graphics {
 		return glm::perspective(glm::radians(90.0f), 1.0f, NEAR_PLANE, FAR_PLANE);
 	}
 
-} }
+} 

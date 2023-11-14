@@ -1,6 +1,6 @@
 
 #include "EnvironmentProbe.h"
-namespace OpenGL_Engine { namespace graphics {
+namespace OpenGL_Engine {  
 	
 	EnvironmentProbe::EnvironmentProbe(glm::vec3& probePosition, glm::vec2& probeResolution)
 	{
@@ -22,4 +22,4 @@ namespace OpenGL_Engine { namespace graphics {
 		shader.setUniform1i("brdfLUT", 3);
 	}
 
-} }
+} 

@@ -4,7 +4,7 @@
 
 #include "Logger.h"
 
-namespace OpenGL_Engine { namespace utils {
+namespace OpenGL_Engine {  
 	Logger::Logger() {
 		file = "logged_files/log.txt";
 	}
@@ -62,4 +62,4 @@ namespace OpenGL_Engine { namespace utils {
 		}
 		filestream.close();
 	}
-} }
+} 

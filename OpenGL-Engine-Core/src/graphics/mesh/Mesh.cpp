@@ -2,20 +2,20 @@
 #include "Mesh.h"
 #include <utils/Logger.h>
 
-namespace OpenGL_Engine { namespace graphics {
+namespace OpenGL_Engine {  
 
 	Mesh::Mesh() {}
 
-	Mesh::Mesh(std::vector<glm::vec3> positions, std::vector<unsigned int> indices)
+	Mesh::Mesh(std::vector<glm::vec3>& positions, std::vector<unsigned int>& indices)
 		: m_Positions(positions), m_Indices(indices) {}
 
-	Mesh::Mesh(std::vector<glm::vec3> positions, std::vector<glm::vec2> uvs, std::vector<unsigned int> indices)
+	Mesh::Mesh(std::vector<glm::vec3>& positions, std::vector<glm::vec2>& uvs, std::vector<unsigned int>& indices)
 		: m_Positions(positions), m_UVs(uvs), m_Indices(indices) {}
 
-	Mesh::Mesh(std::vector<glm::vec3> positions, std::vector<glm::vec2> uvs, std::vector<glm::vec3> normals, std::vector<unsigned int> indices)
+	Mesh::Mesh(std::vector<glm::vec3>& positions, std::vector<glm::vec2>& uvs, std::vector<glm::vec3>& normals, std::vector<unsigned int>& indices)
 		: m_Positions(positions), m_UVs(uvs), m_Normals(normals), m_Indices(indices) {}
 
-	Mesh::Mesh(std::vector<glm::vec3> positions, std::vector<glm::vec2> uvs, std::vector<glm::vec3> normals, std::vector<glm::vec3> tangents, std::vector<glm::vec3> bitangents, std::vector<unsigned int> indices)
+	Mesh::Mesh(std::vector<glm::vec3>& positions, std::vector<glm::vec2>& uvs, std::vector<glm::vec3>& normals, std::vector<glm::vec3>& tangents, std::vector<glm::vec3>& bitangents, std::vector<unsigned int>& indices)
 		: m_Positions(positions), m_UVs(uvs), m_Normals(normals), m_Tangents(tangents), m_Bitangents(bitangents), m_Indices(indices) {}
  
 
@@ -38,16 +38,16 @@ namespace OpenGL_Engine { namespace graphics {
 			unsigned int vertexCount = m_Positions.size();
 
 			if (vertexCount == 0)
-				utils::Logger::getInstance().error("logged_files/mesh_creation.txt", "Mesh Creation", "Mesh doesn't contain any vertices");
+				Logger::getInstance().error("logged_files/mesh_creation.txt", "Mesh Creation", "Mesh doesn't contain any vertices");
 
 			if (m_UVs.size() != 0 && m_UVs.size() != vertexCount)
-				utils::Logger::getInstance().error("logged_files/mesh_creation.txt", "Mesh Creation", "Mesh UV count doesn't match the vertex count");
+				Logger::getInstance().error("logged_files/mesh_creation.txt", "Mesh Creation", "Mesh UV count doesn't match the vertex count");
 			if (m_Normals.size() != 0 && m_Normals.size() != vertexCount)
-				utils::Logger::getInstance().error("logged_files/mesh_creation.txt", "Mesh Creation", "Mesh Normal count doesn't match the vertex count");
+				Logger::getInstance().error("logged_files/mesh_creation.txt", "Mesh Creation", "Mesh Normal count doesn't match the vertex count");
 			if (m_Tangents.size() != 0 && m_Tangents.size() != vertexCount)
-				utils::Logger::getInstance().error("logged_files/mesh_creation.txt", "Mesh Creation", "Mesh Tangent count doesn't match the vertex count");
+				Logger::getInstance().error("logged_files/mesh_creation.txt", "Mesh Creation", "Mesh Tangent count doesn't match the vertex count");
 			if (m_Bitangents.size() != 0 && m_Bitangents.size() != vertexCount)
-				utils::Logger::getInstance().error("logged_files/mesh_creation.txt", "Mesh Creation", "Mesh Bitangent count doesn't match the vertex count");
+				Logger::getInstance().error("logged_files/mesh_creation.txt", "Mesh Creation", "Mesh Bitangent count doesn't match the vertex count");
 		}
 
 		// Preprocess the mesh data in the format that was specified
@@ -192,4 +192,4 @@ namespace OpenGL_Engine { namespace graphics {
 		glBindVertexArray(0);
 	}
 
-} }
+} 

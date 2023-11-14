@@ -6,7 +6,7 @@
 
 #include "../../Defs.h"
 
-namespace OpenGL_Engine { namespace graphics {
+namespace OpenGL_Engine {  
 	class CubemapCamera {
 	public:
 		CubemapCamera(glm::vec3& centerPosition);
@@ -19,4 +19,4 @@ namespace OpenGL_Engine { namespace graphics {
 	private:
 		glm::vec3 m_CenterPosition, m_Front, m_Up;
 	};
-} }
+} 

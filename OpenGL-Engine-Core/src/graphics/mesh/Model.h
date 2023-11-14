@@ -11,9 +11,7 @@
 #include <graphics/renderer/RenderPass.h>
 #include <utils/loaders/TextureLoader.h>
 
-namespace OpenGL_Engine { namespace graphics {
-
-	
+namespace OpenGL_Engine {  
 	class Model {
 	public:
 		Model(const char *path);
@@ -34,4 +32,4 @@ namespace OpenGL_Engine { namespace graphics {
 		Texture* loadMaterialTexture(aiMaterial *mat, aiTextureType type, bool isSRGB);
 	};
 
-} }
+} 

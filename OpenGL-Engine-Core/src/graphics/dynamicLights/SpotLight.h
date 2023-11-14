@@ -2,7 +2,7 @@
 
 #include "DynamicLight.h"
 
-namespace OpenGL_Engine { namespace graphics {
+namespace OpenGL_Engine {  
 
 	struct SpotLight : public DynamicLight {
 	public:
@@ -15,4 +15,4 @@ namespace OpenGL_Engine { namespace graphics {
 		float cutOff, outerCutOff;
 	};
 
-} }
+} 

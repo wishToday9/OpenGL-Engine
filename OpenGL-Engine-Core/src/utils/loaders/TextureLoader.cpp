@@ -4,8 +4,7 @@
 #include <glad/glad.h>
 #include <utils/Logger.h>
 #include <vector>
-namespace OpenGL_Engine { namespace utils {
-		
+namespace OpenGL_Engine {  		
 	
 	void TextureLoader::initializeDefaultTextures()
 	{
@@ -44,10 +43,10 @@ namespace OpenGL_Engine { namespace utils {
 		m_DefaultTextures.m_DefaultEmission->setTextureMagFilter(GL_NEAREST);
 	}
 
-	OpenGL_Engine::graphics::Texture* TextureLoader::load2DTexture(std::string& path, bool isSRGB, graphics::TextureSetting* settings)
+	OpenGL_Engine::Texture* TextureLoader::load2DTexture(std::string& path, bool isSRGB, TextureSetting* settings)
 	{
 		//check the cache
-		std::map<std::string, graphics::Texture>::iterator iter = m_TextureCache.find(path);
+		std::map<std::string, Texture>::iterator iter = m_TextureCache.find(path);
 		if (iter != m_TextureCache.end()) {
 			return &iter->second;
 		}
@@ -56,9 +55,9 @@ namespace OpenGL_Engine { namespace utils {
 		int width, height, numComponents;
 		unsigned char* data = stbi_load(path.c_str(), &width, &height, &numComponents, 0);
 		if (!data) {
-			utils::Logger::getInstance().error("logged_files/texture_loading.txt", "texture load fail - path:", path);
+			Logger::getInstance().error("logged_files/texture_loading.txt", "texture load fail - path:", path);
 			stbi_image_free(data);
-			graphics::Texture texture;
+			Texture texture;
 			return nullptr;
 		}
 
@@ -78,7 +77,7 @@ namespace OpenGL_Engine { namespace utils {
 			}
 		}
 
-		graphics::Texture texture;
+		Texture texture;
 		if (settings != nullptr) {
 			texture.setTextureSettings(*settings);
 		}
@@ -86,16 +85,16 @@ namespace OpenGL_Engine { namespace utils {
 
 		// Add the texture to the cache (unless the user wants full control over the texture they loaded)
 
-		m_TextureCache.insert(std::pair<std::string, graphics::Texture>(path, texture));
+		m_TextureCache.insert(std::pair<std::string, Texture>(path, texture));
 		
 
 		return &m_TextureCache[path];
 	}
 
-	graphics::Cubemap* TextureLoader::loadCubemapTexture(const std::string& right, const std::string& left, const std::string& top, 
-		const std::string& bottom, const std::string& back, const std::string& front, bool isSRGB, graphics::CubemapSettings* settings)
+	Cubemap* TextureLoader::loadCubemapTexture(const std::string& right, const std::string& left, const std::string& top, 
+		const std::string& bottom, const std::string& back, const std::string& front, bool isSRGB, CubemapSettings* settings)
 	{
-		graphics::Cubemap* cubemap = new graphics::Cubemap();
+		Cubemap* cubemap = new Cubemap();
 		if (settings != nullptr) {
 			cubemap->setCubemapSettings(*settings);
 		}
@@ -128,7 +127,7 @@ namespace OpenGL_Engine { namespace utils {
 				stbi_image_free(data);
 			}
 			else {
-				utils::Logger::getInstance().error("logged_files/error.txt", "Cubemap initialization", "Couldn't load cubemap using 6 filepaths. Filepath error: " + faces[i]);
+				Logger::getInstance().error("logged_files/error.txt", "Cubemap initialization", "Couldn't load cubemap using 6 filepaths. Filepath error: " + faces[i]);
 				stbi_image_free(data);
 				return cubemap;
 			}
@@ -137,8 +136,8 @@ namespace OpenGL_Engine { namespace utils {
 		return cubemap;
 	}
 
-	std::map<std::string, OpenGL_Engine::graphics::Texture> TextureLoader::m_TextureCache;
+	std::map<std::string, OpenGL_Engine::Texture> TextureLoader::m_TextureCache;
 
 	TextureLoader::DefaultTextures TextureLoader::m_DefaultTextures;
 
-}}
+}

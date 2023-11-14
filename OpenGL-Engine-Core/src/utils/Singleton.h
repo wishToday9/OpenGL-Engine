@@ -1,6 +1,6 @@
 #pragma once
 
-namespace OpenGL_Engine { namespace utils {
+namespace OpenGL_Engine {  
 
 	class Singleton {
 	public:
@@ -14,4 +14,4 @@ namespace OpenGL_Engine { namespace utils {
 		virtual ~Singleton() = default;
 	};
 
-} }
+} 

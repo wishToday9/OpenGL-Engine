@@ -2,7 +2,7 @@
 
 #include "Defs.h"
 #include <glad/glad.h>
-namespace OpenGL_Engine {namespace graphics {
+namespace OpenGL_Engine { 
 
 	struct TextureSetting {
 		//texture wrapping options
@@ -58,4 +58,4 @@ namespace OpenGL_Engine {namespace graphics {
 
 		TextureSetting m_TextureSettings;
 	};
-}}
+}

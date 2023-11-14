@@ -5,7 +5,7 @@
 #include "SpotLight.h"
 
 
-namespace OpenGL_Engine { namespace graphics {
+namespace OpenGL_Engine {  
 
 	class DynamicLightManager {
 	public:
@@ -30,5 +30,4 @@ namespace OpenGL_Engine { namespace graphics {
 		SpotLight m_SpotLight;
 		std::vector<PointLight> m_PointLights;
 	};
-
-} }
+}

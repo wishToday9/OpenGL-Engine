@@ -7,7 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-namespace OpenGL_Engine { namespace graphics {
+namespace OpenGL_Engine {  
 
 	class Shader {
 	private:
@@ -36,4 +36,4 @@ namespace OpenGL_Engine { namespace graphics {
 		unsigned int load();
 	};
 
-} }
+} 

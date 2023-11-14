@@ -1,7 +1,7 @@
 
 #include "GLCache.h"
 #include <glad/glad.h>
-namespace OpenGL_Engine { namespace graphics {
+namespace OpenGL_Engine {  
 
 	GLCache::GLCache() : m_ActiveShaderID(0) {
 		// Initialize cache values to ensure garbage data doesn't mess with my GL state
@@ -131,4 +131,4 @@ namespace OpenGL_Engine { namespace graphics {
 		}
 	}
 
-} }
+} 

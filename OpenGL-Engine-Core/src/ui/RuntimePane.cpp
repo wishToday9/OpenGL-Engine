@@ -2,7 +2,6 @@
 #include "RuntimePane.h"
 
 namespace OpenGL_Engine {
-	namespace ui {
 		
 		RuntimePane::RuntimePane(glm::vec2& panePosition)
 			:Pane(std::string("Runtime Analytics"), panePosition)
@@ -22,7 +21,5 @@ namespace OpenGL_Engine {
 		float RuntimePane::m_ShadowmapTimer = 0.0f;
 
 		float RuntimePane::m_PostProcessTimer = 0.;
-
-	}
 
 }

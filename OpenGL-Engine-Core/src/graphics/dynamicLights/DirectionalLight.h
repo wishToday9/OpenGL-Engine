@@ -2,7 +2,7 @@
 
 #include "DynamicLight.h"
 
-namespace OpenGL_Engine { namespace graphics {
+namespace OpenGL_Engine {  
 
 	struct DirectionalLight : public DynamicLight {
 		DirectionalLight();
@@ -15,4 +15,4 @@ namespace OpenGL_Engine { namespace graphics {
 		glm::vec3 direction;
 	};
 
-} }
+} 

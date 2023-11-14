@@ -3,7 +3,7 @@
 #include <graphics/textures/Cubemap.h>
 #include <graphics/Shader.h>
 
-namespace OpenGL_Engine { namespace graphics {
+namespace OpenGL_Engine {  
 	class EnvironmentProbe {
 	public:
 		EnvironmentProbe(glm::vec3& probePosition, glm::vec2& probeResolution);
@@ -17,4 +17,4 @@ namespace OpenGL_Engine { namespace graphics {
 		glm::vec3 m_GeneratedPosition;
 		bool m_Generated;
 	};
-} }
+} 

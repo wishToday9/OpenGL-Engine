@@ -3,7 +3,7 @@
 
 #include <graphics/Shader.h>
 
-namespace OpenGL_Engine { namespace graphics {
+namespace OpenGL_Engine {  
 
 	// TODO: Add functionality so it can update with an entitie's position and orientation
 	struct DynamicLight {
@@ -16,4 +16,4 @@ namespace OpenGL_Engine { namespace graphics {
 		bool isActive;
 	};
 
-} }
+} 

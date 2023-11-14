@@ -1,14 +1,14 @@
 
 #include "PostProcessor.h"
 
-namespace OpenGL_Engine { namespace graphics {
+namespace OpenGL_Engine {  
 	
 	PostProcessor::PostProcessor(MeshRenderer* renderer)
 		: m_MeshRenderer(renderer), m_PostProcessShader("src/shaders/postprocess.vert", "src/shaders/postprocess.frag"), 
 		m_ScreenRenderTarget(Window::getWidth(), Window::getHeight())
 	{
 		m_ScreenRenderTarget.addColorAttachment(false).addDepthStencilRBO(false).createFramebuffer();
-		ui::DebugPane::bindGammaCorrectionValue(&m_GammaCorrection);
+		DebugPane::bindGammaCorrectionValue(&m_GammaCorrection);
 	}
 
 	PostProcessor::~PostProcessor()
@@ -22,14 +22,14 @@ namespace OpenGL_Engine { namespace graphics {
 
 	}
 
-	void PostProcessor::postLightingPostProcess(opengl::RenderTarget* input)
+	void PostProcessor::postLightingPostProcess(FrameBuffer* input)
 	{
 #if DEBUG_ENABLED
 		glFinish();
 		m_Timer.reset();
 #endif
 
-		opengl::RenderTarget* target = input;
+		FrameBuffer* target = input;
 		if (input->isMultisampledColourBuffer()) {
 			glBindFramebuffer(GL_READ_FRAMEBUFFER, input->getFramebuffer());
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_ScreenRenderTarget.getFramebuffer());
@@ -37,7 +37,7 @@ namespace OpenGL_Engine { namespace graphics {
 			target = &m_ScreenRenderTarget;
 		}
 #if DEBUG_ENABLED
-		if (ui::DebugPane::getWireframeMode()) {
+		if (DebugPane::getWireframeMode()) {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
 #endif
@@ -56,7 +56,7 @@ namespace OpenGL_Engine { namespace graphics {
 
 #if DEBUG_ENABLED
 		glFinish();
-		ui::RuntimePane::setPostProcessTimer(m_Timer.elapsed());
+		RuntimePane::setPostProcessTimer(m_Timer.elapsed());
 #endif
 	}
 
@@ -65,4 +65,4 @@ namespace OpenGL_Engine { namespace graphics {
 		m_Blur = choice;
 	}
 
-} }
+} 

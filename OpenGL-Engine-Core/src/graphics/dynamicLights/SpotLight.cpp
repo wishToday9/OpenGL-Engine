@@ -1,7 +1,6 @@
 
 #include "SpotLight.h"
-
-namespace OpenGL_Engine { namespace graphics {
+namespace OpenGL_Engine {  
 
 	SpotLight::SpotLight(glm::vec3& lightColor, glm::vec3& pos, glm::vec3& dir, float cutOffAngle, float outerCutOffAngle)
 		: DynamicLight(lightColor), position(pos), direction(dir), cutOff(cutOffAngle), outerCutOff(outerCutOffAngle)
@@ -19,4 +18,4 @@ namespace OpenGL_Engine { namespace graphics {
 		}
 	}
 
-} }
+} 

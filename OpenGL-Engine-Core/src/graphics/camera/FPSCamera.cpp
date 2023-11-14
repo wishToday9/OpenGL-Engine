@@ -1,6 +1,8 @@
 #include "FPSCamera.h"
 #include <glm/gtc/matrix_transform.hpp>
-namespace OpenGL_Engine {	namespace graphics {
+#include <graphics/Window.h>
+
+namespace OpenGL_Engine {	 
 
 	FPSCamera::FPSCamera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH)
 		: m_Front(glm::vec3(0.0f, 0.0f, -1.0f)), m_MovementSpeed(SPEED), m_MouseSensitivity(SENSITIVITY), m_FOV(FOV)
@@ -12,7 +14,7 @@ namespace OpenGL_Engine {	namespace graphics {
 		m_Pitch = pitch;
 		updateCameraVectors();
 
-		ui::DebugPane::bindCameraPositionValue(&m_Position);
+		DebugPane::bindCameraPositionValue(&m_Position);
 	}
 
 	FPSCamera::FPSCamera(float xPos, float yPos, float zPos, float xUp, float yUp, float zUp, float yaw = YAW, float pitch = PITCH)
@@ -30,35 +32,35 @@ namespace OpenGL_Engine {	namespace graphics {
 	}
 
 	glm::mat4 FPSCamera::getProjectionMatrix() {
-		return glm::perspective(glm::radians(m_FOV), (float)graphics::Window::getWidth() / (float)graphics::Window::getHeight(), NEAR_PLANE, FAR_PLANE);
+		return glm::perspective(glm::radians(m_FOV), (float)Window::getWidth() / (float)Window::getHeight(), NEAR_PLANE, FAR_PLANE);
 	}
 
 	void FPSCamera::processInput(float deltaTime) {
 		// Keyboard input
-		if (Window::isKeyPressed(GLFW_KEY_W))
-			processKeyboard(OpenGL_Engine::graphics::FORWARD, deltaTime);
-		if (Window::isKeyPressed(GLFW_KEY_S))
-			processKeyboard(OpenGL_Engine::graphics::BACKWARD, deltaTime);
-		if (Window::isKeyPressed(GLFW_KEY_A))
-			processKeyboard(OpenGL_Engine::graphics::LEFT, deltaTime);
-		if (Window::isKeyPressed(GLFW_KEY_D))
-			processKeyboard(OpenGL_Engine::graphics::RIGHT, deltaTime);
-		if (Window::isKeyPressed(GLFW_KEY_SPACE))
-			processKeyboard(OpenGL_Engine::graphics::UPWARDS, deltaTime);
-		if (Window::isKeyPressed(GLFW_KEY_LEFT_CONTROL))
-			processKeyboard(OpenGL_Engine::graphics::DOWNWARDS, deltaTime);
-		if (Window::isKeyPressed(GLFW_KEY_LEFT_SHIFT))
+		if (InputManager::isKeyPressed(GLFW_KEY_W))
+			processKeyboard(OpenGL_Engine::FORWARD, deltaTime);
+		if (InputManager::isKeyPressed(GLFW_KEY_S))
+			processKeyboard(OpenGL_Engine::BACKWARD, deltaTime);
+		if (InputManager::isKeyPressed(GLFW_KEY_A))
+			processKeyboard(OpenGL_Engine::LEFT, deltaTime);
+		if (InputManager::isKeyPressed(GLFW_KEY_D))
+			processKeyboard(OpenGL_Engine::RIGHT, deltaTime);
+		if (InputManager::isKeyPressed(GLFW_KEY_SPACE))
+			processKeyboard(OpenGL_Engine::UPWARDS, deltaTime);
+		if (InputManager::isKeyPressed(GLFW_KEY_LEFT_CONTROL))
+			processKeyboard(OpenGL_Engine::DOWNWARDS, deltaTime);
+		if (InputManager::isKeyPressed(GLFW_KEY_LEFT_SHIFT))
 			m_MovementSpeed = SPEED * 4.0f;
-		else if (Window::isKeyPressed(GLFW_KEY_LEFT_ALT))
+		else if (InputManager::isKeyPressed(GLFW_KEY_LEFT_ALT))
 			m_MovementSpeed = SPEED / 4.0f;
 		else
 			m_MovementSpeed = SPEED;
 
 		// Mouse scrolling
-		processMouseScroll(Window::getScrollY() * 6.0);
+		processMouseScroll(InputManager::getScrollY() * 6.0);
 
 		// Mouse movement
-		processMouseMovement(Window::getMouseXDelta(), -Window::getMouseYDelta(), true);
+		processMouseMovement(InputManager::getMouseXDelta(), -InputManager::getMouseYDelta(), true);
 	}
 
 	void FPSCamera::processKeyboard(Camera_Movement direction, float deltaTime) {
@@ -129,4 +131,4 @@ namespace OpenGL_Engine {	namespace graphics {
 		m_Up = glm::normalize(glm::cross(m_Right, m_Front));
 	}
 
-} }
+} 

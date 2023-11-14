@@ -6,7 +6,7 @@
 #include <string>
 #include <fstream>
 
-namespace OpenGL_Engine { namespace utils {
+namespace OpenGL_Engine {  
 
 	class Logger : public Singleton {
 	private:
@@ -76,4 +76,4 @@ namespace OpenGL_Engine { namespace utils {
 		std::string file; // Default value set to: "logged_files/log.txt"
 	};
 
-} }
+} 

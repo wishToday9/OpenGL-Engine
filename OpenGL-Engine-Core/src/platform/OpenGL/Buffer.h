@@ -1,7 +1,6 @@
 #pragma once
 
-
-namespace OpenGL_Engine { namespace opengl {
+namespace OpenGL_Engine {  
 
 	class Buffer {
 	private:
@@ -20,4 +19,4 @@ namespace OpenGL_Engine { namespace opengl {
 		inline unsigned int getComponentCount() const { return m_ComponentCount; }
 	};
 
-} }
+} 

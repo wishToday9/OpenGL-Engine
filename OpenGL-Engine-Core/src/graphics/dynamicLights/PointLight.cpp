@@ -1,15 +1,11 @@
 
 #include "PointLight.h"
 
-namespace OpenGL_Engine { namespace graphics {
-
+namespace OpenGL_Engine {  
 
 	PointLight::PointLight(glm::vec3& lightColor, glm::vec3& pos)
 		:DynamicLight(lightColor), position(pos)
-	{
-
-	}
-
+	{	}
 	// TODO: Assert that the shader is bound in debug
 	void PointLight::setupUniforms(Shader &shader, int currentLightIndex) {
 		if (isActive) {
@@ -18,4 +14,4 @@ namespace OpenGL_Engine { namespace graphics {
 		}
 	}
 
-} }
+} 

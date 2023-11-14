@@ -1,7 +1,7 @@
 #pragma once
 
 
-namespace OpenGL_Engine { namespace opengl {
+namespace OpenGL_Engine {  
 
 	class IndexBuffer {
 	private:
@@ -20,4 +20,4 @@ namespace OpenGL_Engine { namespace opengl {
 		inline int getCount() const { return m_Count; }
 	};
 
-} }
+} 

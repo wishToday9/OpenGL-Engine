@@ -4,7 +4,7 @@
 
 
 namespace OpenGL_Engine {
-	namespace ui {
+	 
 		class DebugPane : public Pane {
 		public:
 			DebugPane(glm::vec2& panePosition);
@@ -28,6 +28,4 @@ namespace OpenGL_Engine {
 			static bool s_WireframeMode;
 			static glm::vec3* s_CameraPosition;
  		};
-	}
-
 }

@@ -1,8 +1,7 @@
 
 #include "DirectionalLight.h"
 
-namespace OpenGL_Engine { namespace graphics {
-
+namespace OpenGL_Engine {  
 
 	DirectionalLight::DirectionalLight(glm::vec3& lightColour, glm::vec3& dir)
 		: DynamicLight(lightColour), direction(dir) {}
@@ -16,4 +15,4 @@ namespace OpenGL_Engine { namespace graphics {
 		}
 	}
 
-} }
+} 

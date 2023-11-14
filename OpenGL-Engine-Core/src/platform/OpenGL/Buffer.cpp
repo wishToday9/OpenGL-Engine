@@ -3,7 +3,7 @@
 
 #include "Buffer.h"
 
-namespace OpenGL_Engine { namespace opengl {
+namespace OpenGL_Engine {  
 
 	Buffer::Buffer() {
 		glGenBuffers(1, &m_BufferID);
@@ -33,4 +33,4 @@ namespace OpenGL_Engine { namespace opengl {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-} }
+} 

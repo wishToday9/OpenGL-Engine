@@ -1,6 +1,6 @@
 #include <glad/glad.h>
 #include "Cubemap.h"
-namespace OpenGL_Engine { namespace graphics {
+namespace OpenGL_Engine {  
 
 	Cubemap::Cubemap():m_CubemapId(0){	}
 
@@ -50,4 +50,4 @@ namespace OpenGL_Engine { namespace graphics {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 
-}}
+}

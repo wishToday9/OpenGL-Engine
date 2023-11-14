@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 #include "Defs.h"
-namespace OpenGL_Engine { namespace graphics {
+namespace OpenGL_Engine {  
 	struct CubemapSettings
 	{
 		//texture wrapping options
@@ -46,4 +46,4 @@ namespace OpenGL_Engine { namespace graphics {
 
 		CubemapSettings m_CubemapSettings;
 	};
-}}
+}

@@ -2,7 +2,7 @@
 
 #include "VertexArray.h"
 
-namespace OpenGL_Engine { namespace opengl {
+namespace OpenGL_Engine {  
 
 	VertexArray::VertexArray() {
 		glGenVertexArrays(1, &m_VertexArrayID);
@@ -35,4 +35,4 @@ namespace OpenGL_Engine { namespace opengl {
 		glBindVertexArray(0);
 	}
 
-} }
+} 

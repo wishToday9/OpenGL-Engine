@@ -5,9 +5,9 @@
 
 #include <glad/glad.h>
 
-namespace OpenGL_Engine { namespace graphics {
+namespace OpenGL_Engine {  
 
-	class GLCache : utils::Singleton {
+	class GLCache : Singleton {
 	public:
 		GLCache();
 		~GLCache();
@@ -57,4 +57,4 @@ namespace OpenGL_Engine { namespace graphics {
 		unsigned int m_ActiveShaderID;
 	};
 
-} }
+} 

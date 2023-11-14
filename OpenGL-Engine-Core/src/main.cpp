@@ -1,6 +1,4 @@
-
-#include "Scene3D.h"
-
+#include <Scene/Scene3D.h>
 #include <graphics/Shader.h>
 #include <graphics/Window.h>
 #include <graphics/camera/FPSCamera.h>
@@ -8,7 +6,7 @@
 #include <graphics/mesh/common/Quad.h>
 #include <graphics/renderer/GLCache.h>
 #include <graphics/renderer/PostProcessor.h>
-#include <platform/OpenGL/Framebuffers/RenderTarget.h>
+#include <platform/OpenGL/Framebuffers/Framebuffer.h>
 #include <terrain/Terrain.h>
 #include <ui/DebugPane.h>
 #include <ui/RuntimePane.h>
@@ -18,26 +16,26 @@
 
 int main() {
 	// Prepare the engine
-	OpenGL_Engine::graphics::FPSCamera camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f);
-	OpenGL_Engine::graphics::Window window("OpenGL_Engine Engine", WINDOW_X_RESOLUTION, WINDOW_Y_RESOLUTION);
+	OpenGL_Engine::FPSCamera camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f);
+	OpenGL_Engine::Window window("OpenGL_Engine Engine", WINDOW_X_RESOLUTION, WINDOW_Y_RESOLUTION);
 	OpenGL_Engine::Scene3D scene(&camera, &window);
-	OpenGL_Engine::graphics::GLCache* glCache = OpenGL_Engine::graphics::GLCache::getInstance();
-	OpenGL_Engine::graphics::PostProcessor postProcessor(scene.getRenderer());
+	OpenGL_Engine::GLCache* glCache = OpenGL_Engine::GLCache::getInstance();
+	OpenGL_Engine::PostProcessor postProcessor(scene.getRenderer());
 
-	OpenGL_Engine::utils::TextureLoader::initializeDefaultTextures();
+	OpenGL_Engine::TextureLoader::initializeDefaultTextures();
 
 	// Prepare the UI
-	OpenGL_Engine::ui::RuntimePane runtimePane(glm::vec2(256.0f, 90.0f));
-	OpenGL_Engine::ui::DebugPane debugPane(glm::vec2(256.0f, 100.0f));
+	OpenGL_Engine::RuntimePane runtimePane(glm::vec2(256.0f, 90.0f));
+	OpenGL_Engine::DebugPane debugPane(glm::vec2(256.0f, 100.0f));
 
 
 
 	// Construct framebuffers
 	bool shouldMultisample = MSAA_SAMPLE_AMOUNT > 1.0 ? true : false;
-	OpenGL_Engine::opengl::RenderTarget framebuffer(window.getWidth(), window.getHeight());
+	OpenGL_Engine::FrameBuffer framebuffer(window.getWidth(), window.getHeight());
 	framebuffer.addColorAttachment(shouldMultisample).addDepthStencilRBO(shouldMultisample).createFramebuffer();
 	// TODO: MAKE MULTISAMPLE OPTION WORK OR INVESTIGATE
-	OpenGL_Engine::opengl::RenderTarget shadowmap(SHADOWMAP_RESOLUTION_X, SHADOWMAP_RESOLUTION_Y);
+	OpenGL_Engine::FrameBuffer shadowmap(SHADOWMAP_RESOLUTION_X, SHADOWMAP_RESOLUTION_Y);
 	shadowmap.addDepthAttachment(false).createFramebuffer();
 
 	// Debug timers
@@ -94,7 +92,6 @@ int main() {
 		ImGui::Render();
 		ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
 
-		window.resetScroll();
 		window.update();
 
 		if (glfwGetKey(window.getNativeWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -104,24 +101,24 @@ int main() {
 }
 //int main() {
 //	// Prepare the game
-//	OpenGL_Engine::graphics::Camera camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f);
-//	OpenGL_Engine::graphics::Window window("OpenGL Engine", WINDOW_X_RESOLUTION, WINDOW_Y_RESOLUTION);
+//	OpenGL_Engine::Camera camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f);
+//	OpenGL_Engine::Window window("OpenGL Engine", WINDOW_X_RESOLUTION, WINDOW_Y_RESOLUTION);
 //	OpenGL_Engine::Scene3D scene(&camera, &window);
-//	OpenGL_Engine::graphics::GLCache* glCache = OpenGL_Engine::graphics::GLCache::getInstance();
-//	OpenGL_Engine::utils::TextureLoader::initializeDefaultTextures();
+//	OpenGL_Engine::GLCache* glCache = OpenGL_Engine::GLCache::getInstance();
+//	OpenGL_Engine::TextureLoader::initializeDefaultTextures();
 //
 //	// Construct framebuffers
-//	OpenGL_Engine::opengl::RenderTarget framebuffer(window.getWidth(), window.getHeight());
+//	OpenGL_Engine::RenderTarget framebuffer(window.getWidth(), window.getHeight());
 //	framebuffer.addColorAttachment(true).addDepthStencilRBO(true).createFramebuffer();
 //	// TODO: MAKE MULTISAMPLE OPTION WORK OR INVESTIGATE
-//	OpenGL_Engine::opengl::RenderTarget shadowmap(SHADOWMAP_RESOLUTION_X, SHADOWMAP_RESOLUTION_Y);
+//	OpenGL_Engine::RenderTarget shadowmap(SHADOWMAP_RESOLUTION_X, SHADOWMAP_RESOLUTION_Y);
 //	shadowmap.addDepthAttachment(false).createFramebuffer();
-//	OpenGL_Engine::opengl::RenderTarget blitFramebuffer(window.getWidth(), window.getHeight());
+//	OpenGL_Engine::RenderTarget blitFramebuffer(window.getWidth(), window.getHeight());
 //	blitFramebuffer.addColorAttachment(false).addDepthStencilRBO(false).createFramebuffer();
 //
 //	// Instantiate the shaders and mesh factories
-//	OpenGL_Engine::graphics::Shader framebufferShader("src/shaders/postprocess.vert", "src/shaders/postprocess.frag");
-//	OpenGL_Engine::graphics::Quad screenQuad;
+//	OpenGL_Engine::Shader framebufferShader("src/shaders/postprocess.vert", "src/shaders/postprocess.frag");
+//	OpenGL_Engine::Quad screenQuad;
 //	screenQuad.getMaterial().setDiffuseMap(blitFramebuffer.getColourBufferTexture());
 //
 //	// Setup post processing information

@@ -1,7 +1,7 @@
 #include <glad/glad.h>
 #include "IndexBuffer.h"
 
-namespace OpenGL_Engine { namespace opengl {
+namespace OpenGL_Engine {  
 
 	IndexBuffer::IndexBuffer() {
 		glGenBuffers(1, &m_BufferID);
@@ -31,4 +31,4 @@ namespace OpenGL_Engine { namespace opengl {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
-} }
+} 

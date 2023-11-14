@@ -4,7 +4,7 @@
 #include "Buffer.h"
 
 
-namespace OpenGL_Engine { namespace opengl {
+namespace OpenGL_Engine {  
 
 	class VertexArray {
 	private:
@@ -21,4 +21,4 @@ namespace OpenGL_Engine { namespace opengl {
 		void unbind() const;
 	};
 
-} }
+} 

@@ -10,22 +10,23 @@
 #include "../utils/loaders/TextureLoader.h"
 #include "../graphics/renderer/GLCache.h"
 
-namespace OpenGL_Engine { namespace graphics {
+namespace OpenGL_Engine {  
 
 	class Skybox {
 	public:
 		Skybox(const std::vector<std::string> &filePaths, FPSCamera *camera);
 
 		void Draw();
+		Cubemap* getSkyboxCubemap() { return m_SkyboxCubemap; }
 	private:
 		FPSCamera *m_Camera;
 		Shader m_SkyboxShader;
 		GLCache* m_GLCache;
 
-		opengl::VertexArray m_SkyboxVAO;
-		opengl::IndexBuffer m_SkyboxIBO;
-		opengl::Buffer  m_SkyboxVBO;
-		graphics::Cubemap* m_SkyboxCubemap; // Cubemap 
+		VertexArray m_SkyboxVAO;
+		IndexBuffer m_SkyboxIBO;
+		Buffer  m_SkyboxVBO;
+		Cubemap* m_SkyboxCubemap; // Cubemap 
 	};
 
-} }
+} 

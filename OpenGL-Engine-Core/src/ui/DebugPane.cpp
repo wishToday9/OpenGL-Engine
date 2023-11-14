@@ -2,7 +2,7 @@
 #include "DebugPane.h"
 
 namespace OpenGL_Engine {
-	namespace ui {
+	 
 
 		DebugPane::DebugPane(glm::vec2& panePosition)
 			:Pane(std::string("Debug Controls"), panePosition)
@@ -26,6 +26,4 @@ namespace OpenGL_Engine {
 		bool DebugPane::s_WireframeMode = false;
 		float* DebugPane::s_GammaCorrectionValue = nullptr;
 		glm::vec3* DebugPane::s_CameraPosition = nullptr;
-	}
-
 }

@@ -2,7 +2,7 @@
 
 #include "DynamicLight.h"
 
-namespace OpenGL_Engine { namespace graphics {
+namespace OpenGL_Engine {  
 
 	struct PointLight : public DynamicLight {
 	public:
@@ -14,4 +14,4 @@ namespace OpenGL_Engine { namespace graphics {
 		glm::vec3 position;
 	};
 
-} }
+} 

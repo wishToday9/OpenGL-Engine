@@ -1,7 +1,7 @@
 
 #include "Material.h"
 
-namespace OpenGL_Engine { namespace graphics {
+namespace OpenGL_Engine {  
 
 	Material::Material(Texture* albedoMap, Texture* normalMap, Texture* metallicMap, Texture* roughnessMap, Texture* ambientOcclusionMap, Texture* emissionMap)
 		: m_AlbedoMap(albedoMap), m_NormalMap(normalMap), m_MetallicMap(metallicMap), m_RoughnessMap(roughnessMap),
@@ -19,7 +19,7 @@ namespace OpenGL_Engine { namespace graphics {
 			m_AlbedoMap->bind(currentTextureUnit++);
 		}
 		else {
-			utils::TextureLoader::getDefaultAlbedo()->bind(currentTextureUnit++);
+			TextureLoader::getDefaultAlbedo()->bind(currentTextureUnit++);
 		}
 
 		shader.setUniform1i("material.texture_normal", currentTextureUnit);
@@ -27,7 +27,7 @@ namespace OpenGL_Engine { namespace graphics {
 			m_NormalMap->bind(currentTextureUnit++);
 		}
 		else {
-			utils::TextureLoader::getDefaultNormal()->bind(currentTextureUnit++);
+			TextureLoader::getDefaultNormal()->bind(currentTextureUnit++);
 		}
 
 		shader.setUniform1i("material.texture_metallic", currentTextureUnit);
@@ -35,7 +35,7 @@ namespace OpenGL_Engine { namespace graphics {
 			m_MetallicMap->bind(currentTextureUnit++);
 		}
 		else {
-			utils::TextureLoader::getDefaultMetallic()->bind(currentTextureUnit++);
+			TextureLoader::getDefaultMetallic()->bind(currentTextureUnit++);
 		}
 
 		shader.setUniform1i("material.texture_roughness", currentTextureUnit);
@@ -43,7 +43,7 @@ namespace OpenGL_Engine { namespace graphics {
 			m_RoughnessMap->bind(currentTextureUnit++);
 		}
 		else {
-			utils::TextureLoader::getDefaultRoughness()->bind(currentTextureUnit++);
+			TextureLoader::getDefaultRoughness()->bind(currentTextureUnit++);
 		}
 
 		shader.setUniform1i("material.texture_ao", currentTextureUnit);
@@ -51,7 +51,7 @@ namespace OpenGL_Engine { namespace graphics {
 			m_AmbientOcclusionMap->bind(currentTextureUnit++);
 		}
 		else {
-			utils::TextureLoader::getDefaultAO()->bind(currentTextureUnit++);
+			TextureLoader::getDefaultAO()->bind(currentTextureUnit++);
 		}
 
 		shader.setUniform1i("material.texture_emission", currentTextureUnit);
@@ -59,7 +59,7 @@ namespace OpenGL_Engine { namespace graphics {
 			m_EmissionMap->bind(currentTextureUnit++);
 		}
 		else {
-			utils::TextureLoader::getDefaultEmission()->bind(currentTextureUnit++);
+			TextureLoader::getDefaultEmission()->bind(currentTextureUnit++);
 		}
 	}
-} }
+} 
