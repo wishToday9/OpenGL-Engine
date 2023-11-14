@@ -4,12 +4,14 @@ namespace OpenGL_Engine {
 
 	Cubemap::Cubemap():m_CubemapId(0){	}
 
-	Cubemap::Cubemap(CubemapSettings settings)
+	Cubemap::Cubemap(CubemapSettings& settings)
 		:m_CubemapId(0), m_CubemapSettings(settings)
 	{
 	}
 
-	Cubemap::~Cubemap(){ }
+	Cubemap::~Cubemap() {
+		glDeleteTextures(1, &m_CubemapId);
+	}
 
 	void Cubemap::generateCubemapFace(GLenum face, unsigned int faceWidth, unsigned int faceHeight, GLenum textureFormat, GLenum dataFormat, const unsigned char* data)
 	{

@@ -21,8 +21,8 @@ namespace OpenGL_Engine {
 		JoystickManager();
 		~JoystickManager();
 
-		void Update();
-		void JoystickConnectionCallback(int joystick, int event);
+		void update();
+		void joystickConnectionCallback(int joystick, int event);
 	private:
 		static JoystickInputData s_JoystickData[MAX_JOYSTICKS];
 	};

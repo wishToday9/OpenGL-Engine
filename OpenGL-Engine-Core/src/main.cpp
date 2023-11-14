@@ -33,7 +33,7 @@ int main() {
 	// Construct framebuffers
 	bool shouldMultisample = MSAA_SAMPLE_AMOUNT > 1.0 ? true : false;
 	OpenGL_Engine::FrameBuffer framebuffer(window.getWidth(), window.getHeight());
-	framebuffer.addColorAttachment(shouldMultisample).addDepthStencilRBO(shouldMultisample).createFramebuffer();
+	framebuffer.addTexture2DColorAttachment(shouldMultisample).addDepthStencilRBO(shouldMultisample).createFramebuffer();
 	// TODO: MAKE MULTISAMPLE OPTION WORK OR INVESTIGATE
 	OpenGL_Engine::FrameBuffer shadowmap(SHADOWMAP_RESOLUTION_X, SHADOWMAP_RESOLUTION_Y);
 	shadowmap.addDepthAttachment(false).createFramebuffer();

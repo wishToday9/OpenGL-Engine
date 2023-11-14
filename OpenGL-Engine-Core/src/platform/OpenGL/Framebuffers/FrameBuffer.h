@@ -10,12 +10,15 @@ namespace OpenGL_Engine {
 		~FrameBuffer();
 
 		void createFramebuffer();
-		FrameBuffer& addColorAttachment(bool multisampledBuffer);
+		FrameBuffer& addTexture2DColorAttachment(bool multisampledBuffer);
 		FrameBuffer& addDepthStencilRBO(bool multisampledBuffer);
 		FrameBuffer& addDepthAttachment(bool multisampledBuffer);
 
 		void bind();
 		void unbind();
+
+		// Assumes framebuffer is bound
+		void setColorAttachment(unsigned int target, unsigned int targetType);
 
 		void clear();
 

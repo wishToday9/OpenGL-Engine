@@ -27,7 +27,7 @@ namespace OpenGL_Engine {
 		s_MouseXDelta = s_MouseYDelta = 0;
 		s_ScrollX = 0; s_ScrollY = 0;
 
-		m_JoystickManager.Update();
+		m_JoystickManager.update();
 	}
 
 	bool InputManager::isKeyPressed(unsigned int keycode) {
@@ -83,6 +83,6 @@ namespace OpenGL_Engine {
 	}
 
 	void InputManager::joystickCallback(int joystick, int event) {
-		m_JoystickManager.JoystickConnectionCallback(joystick, event);
+		m_JoystickManager.joystickConnectionCallback(joystick, event);
 	}
 }

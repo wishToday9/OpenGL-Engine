@@ -5,7 +5,7 @@
 
 #include "../mesh/Model.h"
 #include "../camera/FPSCamera.h"
-#include "../../Scene/Renderable3D.h"
+#include "../../Scene/RenderableModel.h"
 #include "GLCache.h"
 #include "RenderPass.h"
 #include "../mesh/common/Quad.h"
@@ -16,8 +16,8 @@ namespace OpenGL_Engine {
 	public:
 		MeshRenderer(FPSCamera* camera);
 
-		void submitOpaque(Renderable3D* renderable);
-		void submitTransparent(Renderable3D* renderable);
+		void submitOpaque(RenderableModel* renderable);
+		void submitTransparent(RenderableModel* renderable);
 
 		void flushOpaque(Shader& shader, RenderPass pass);
 		void flushTransparent(Shader& shader, RenderPass pass);
@@ -25,10 +25,10 @@ namespace OpenGL_Engine {
 	public:
 		Quad NDC_Plane;
 	private:
-		void MeshRenderer::setupModelMatrix(Renderable3D* renderable, Shader& shader, RenderPass pass);
+		void MeshRenderer::setupModelMatrix(RenderableModel* renderable, Shader& shader, RenderPass pass);
 
-		std::deque<Renderable3D*> m_OpaqueRenderQueue;
-		std::deque<Renderable3D*> m_TransparentRenderQueue;
+		std::deque<RenderableModel*> m_OpaqueRenderQueue;
+		std::deque<RenderableModel*> m_TransparentRenderQueue;
 
 		// TODO: ADD QUAD TYPE - GOES HERE CALLED m_NDCPLane
 

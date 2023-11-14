@@ -162,7 +162,7 @@
     <ClCompile Include="src\graphics\mesh\Material.cpp" />
     <ClCompile Include="src\input\InputManager.cpp" />
     <ClCompile Include="src\input\JoystickManager.cpp" />
-    <ClCompile Include="src\Scene\Renderable3D.cpp" />
+    <ClCompile Include="src\Scene\RenderableModel.cpp" />
     <ClCompile Include="src\graphics\textures\Cubemap.cpp" />
     <ClCompile Include="src\ui\DebugPane.cpp" />
     <ClCompile Include="src\ui\Pane.cpp" />
@@ -216,7 +216,7 @@
     <ClInclude Include="src\graphics\renderer\RenderPass.h" />
     <ClInclude Include="src\input\InputManager.h" />
     <ClInclude Include="src\input\JoystickManager.h" />
-    <ClInclude Include="src\Scene\Renderable3D.h" />
+    <ClInclude Include="src\Scene\RenderableModel.h" />
     <ClInclude Include="src\graphics\textures\Cubemap.h" />
     <ClInclude Include="src\ui\DebugPane.h" />
     <ClInclude Include="src\ui\Pane.h" />

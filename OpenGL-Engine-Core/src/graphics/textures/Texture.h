@@ -25,7 +25,7 @@ namespace OpenGL_Engine {
 	public:
 		Texture();
 
-		Texture(TextureSetting settings);
+		Texture(TextureSetting& settings);
 		~Texture();
 
 		//generation functions

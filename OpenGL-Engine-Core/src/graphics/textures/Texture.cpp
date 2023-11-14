@@ -11,13 +11,13 @@ namespace OpenGL_Engine {
 	{
 	}
 
-	Texture::Texture(TextureSetting settings)
+	Texture::Texture(TextureSetting& settings)
 	{
 	}
 
 	Texture::~Texture()
 	{
-		unbind();
+		glDeleteTextures(1, &m_TextureId);
 	}
 
 	void Texture::generate2DTexture(unsigned int width, unsigned int height, GLenum textureFormat, GLenum dataFormat, const void* data)

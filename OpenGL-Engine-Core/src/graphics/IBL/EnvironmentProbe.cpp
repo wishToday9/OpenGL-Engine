@@ -2,14 +2,22 @@
 #include "EnvironmentProbe.h"
 namespace OpenGL_Engine {  
 	
-	EnvironmentProbe::EnvironmentProbe(glm::vec3& probePosition, glm::vec2& probeResolution)
+	EnvironmentProbe::EnvironmentProbe(glm::vec3& probePosition, glm::vec2& probeResolution, bool isStatic)
+		:m_Position(probePosition), m_ProbeResolution(probeResolution), m_IsStatic(isStatic)
 	{
 
 	}
 
-	void EnvironmentProbe::generate()
-	{
+	void EnvironmentProbe::generate(){
+		//generate the environment probe and set generated flag
+		CubemapSettings settings;
+		m_IrradianceMap = new Cubemap(settings);
+		for (int i = 0; i < 6; i++) {
+			m_IrradianceMap->generateCubemapFace(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, (unsigned int)m_ProbeResolution.x, 
+				(unsigned int)m_ProbeResolution.y, GL_RGBA16F, GL_RGBA16F, nullptr);
+		}
 
+		m_Generated = true;
 	}
 
 	void EnvironmentProbe::bind(Shader& shader)

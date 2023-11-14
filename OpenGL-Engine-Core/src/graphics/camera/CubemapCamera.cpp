@@ -1,8 +1,12 @@
 
 #include "CubemapCamera.h"
 
-namespace OpenGL_Engine {  
-
+namespace OpenGL_Engine {
+	CubemapCamera::CubemapCamera()
+		:m_CenterPosition(0.0f, 0.0f, 0.0f)
+	{
+		swithCameraToFace(0);
+	}
 	CubemapCamera::CubemapCamera(glm::vec3& centerPosition)
 		:m_CenterPosition(centerPosition)
 	{
