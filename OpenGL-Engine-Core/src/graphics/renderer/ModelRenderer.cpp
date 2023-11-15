@@ -1,7 +1,7 @@
-#include "MeshRenderer.h"
+#include "ModelRenderer.h"
 namespace OpenGL_Engine {
 
-	MeshRenderer::MeshRenderer(FPSCamera* camera) : m_Camera(camera), NDC_Plane()
+	ModelRenderer::ModelRenderer(FPSCamera* camera) : m_Camera(camera), NDC_Plane()
 	{
 		// Configure and cache OpenGL state
 		m_GLCache = GLCache::getInstance();
@@ -10,15 +10,15 @@ namespace OpenGL_Engine {
 		m_GLCache->setFaceCull(true);
 	}
 
-	void MeshRenderer::submitOpaque(RenderableModel* renderable) {
+	void ModelRenderer::submitOpaque(RenderableModel* renderable) {
 		m_OpaqueRenderQueue.push_back(renderable);
 	}
 
-	void MeshRenderer::submitTransparent(RenderableModel* renderable) {
+	void ModelRenderer::submitTransparent(RenderableModel* renderable) {
 		m_TransparentRenderQueue.push_back(renderable);
 	}
 
-	void MeshRenderer::flushOpaque(Shader& shader, RenderPass pass) {
+	void ModelRenderer::flushOpaque(Shader& shader, RenderPassType pass) {
 		m_GLCache->switchShader(shader.getShaderID());
 		m_GLCache->setDepthTest(true);
 		m_GLCache->setBlend(false);
@@ -37,7 +37,7 @@ namespace OpenGL_Engine {
 		}
 	}
 
-	void MeshRenderer::flushTransparent(Shader& shader, RenderPass pass) {
+	void ModelRenderer::flushTransparent(Shader& shader, RenderPassType pass) {
 		m_GLCache->switchShader(shader.getShaderID());
 		m_GLCache->setDepthTest(true);
 		m_GLCache->setBlend(true);
@@ -65,7 +65,7 @@ namespace OpenGL_Engine {
 
 	// TODO: Currently only supports two levels for hierarchical transformations
 	// Make it work with any number of levels
-	void MeshRenderer::setupModelMatrix(RenderableModel* renderable, Shader& shader, RenderPass pass) {
+	void ModelRenderer::setupModelMatrix(RenderableModel* renderable, Shader& shader, RenderPassType pass) {
 		glm::mat4 model(1);
 		glm::mat4 translate = glm::translate(glm::mat4(1.0f), renderable->getPosition());
 		glm::mat4 rotate = glm::toMat4(renderable->getOrientation());
@@ -81,7 +81,7 @@ namespace OpenGL_Engine {
 
 		shader.setUniformMat4("model", model);
 
-		if (pass != RenderPass::ShadowmapPass) {
+		if (pass != RenderPassType::ShadowmapPassType) {
 			glm::mat3 normalMatrix = glm::mat3(glm::transpose(glm::inverse(model)));
 			shader.setUniformMat3("normalMatrix", normalMatrix);
 		}

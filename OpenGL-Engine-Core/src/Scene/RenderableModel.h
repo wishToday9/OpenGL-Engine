@@ -1,7 +1,7 @@
 #pragma once
 
 #include <graphics/mesh/Model.h>
-#include <graphics/renderer/RenderPass.h>
+#include <graphics/renderer/renderpass/RenderPassType.h>
 
 namespace OpenGL_Engine {
 	class RenderableModel {
@@ -10,7 +10,7 @@ namespace OpenGL_Engine {
 		~RenderableModel();
 		// Assumes shader is already bound by the renderer
 
-		void draw(Shader& shader, RenderPass pass) const;
+		void draw(Shader& shader, RenderPassType pass) const;
 		void addChild(RenderableModel* child);
 
 		inline const glm::vec3& getPosition() const { return m_Position; }

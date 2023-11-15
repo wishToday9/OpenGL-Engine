@@ -1,6 +1,7 @@
 #pragma once
 
 
+#include <graphics/Shader.h>
 #include <utils/Singleton.h>
 
 #include <glad/glad.h>
@@ -27,6 +28,7 @@ namespace OpenGL_Engine {
 		void setCullFace(GLenum faceToCull);
 		void setMultisample(bool choice);
 
+		void switchShader(Shader& shader);
 		void switchShader(unsigned int shaderID);
 	private:
 		// Toggles

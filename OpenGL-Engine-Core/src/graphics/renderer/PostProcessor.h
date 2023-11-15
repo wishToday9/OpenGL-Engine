@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "MeshRenderer.h"
+#include "ModelRenderer.h"
 
 #include <graphics/Shader.h>
 #include <graphics/mesh/common/Quad.h>
@@ -14,7 +14,7 @@ namespace OpenGL_Engine {
 
 	class PostProcessor {
 	public:
-		PostProcessor(MeshRenderer* renderer);
+		PostProcessor(ModelRenderer* renderer);
 		~PostProcessor();
 
 		void preLightingPostProcess();
@@ -29,10 +29,12 @@ namespace OpenGL_Engine {
 	private:
 		float m_GammaCorrection = 2.2f;
 
-		MeshRenderer* m_MeshRenderer;
+		ModelRenderer* m_ModelRenderer;
 		Shader m_PostProcessShader;
 		Quad m_NDC_Plane;
-		FrameBuffer m_ScreenRenderTarget;
+
+		// Only used if multi-sampling is enabled so it can blit to a non-multisampled buffer
+		FrameBuffer m_ScreenRenderTarget; 
 		Timer m_Timer;
 		// Post Processing Toggles
 		bool m_Blur = false;

@@ -7,13 +7,15 @@
 
 #include <array>
 
+#include <graphics/renderer/renderpass/RenderPassType.h>
+
 namespace OpenGL_Engine { 
 	class Terrain {
 	public:
 		Terrain(glm::vec3 &worldPosition);
 		~Terrain();
 
-		void Draw(Shader &shader, RenderPass pass) const;
+		void Draw(Shader &shader, RenderPassType pass) const;
 
 		inline const glm::vec3& getPosition() const { return m_Position; }
 	private:

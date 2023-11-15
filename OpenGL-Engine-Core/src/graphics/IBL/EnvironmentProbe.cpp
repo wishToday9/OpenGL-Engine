@@ -16,7 +16,6 @@ namespace OpenGL_Engine {
 			m_IrradianceMap->generateCubemapFace(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, (unsigned int)m_ProbeResolution.x, 
 				(unsigned int)m_ProbeResolution.y, GL_RGBA16F, GL_RGBA16F, nullptr);
 		}
-
 		m_Generated = true;
 	}
 

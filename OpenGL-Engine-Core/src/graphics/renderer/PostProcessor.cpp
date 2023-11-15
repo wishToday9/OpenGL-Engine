@@ -3,18 +3,15 @@
 
 namespace OpenGL_Engine {  
 	
-	PostProcessor::PostProcessor(MeshRenderer* renderer)
-		: m_MeshRenderer(renderer), m_PostProcessShader("src/shaders/postprocess.vert", "src/shaders/postprocess.frag"), 
+	PostProcessor::PostProcessor(ModelRenderer* renderer)
+		: m_ModelRenderer(renderer), m_PostProcessShader("src/shaders/postprocess.vert", "src/shaders/postprocess.frag"), 
 		m_ScreenRenderTarget(Window::getWidth(), Window::getHeight())
 	{
 		m_ScreenRenderTarget.addTexture2DColorAttachment(false).addDepthStencilRBO(false).createFramebuffer();
 		DebugPane::bindGammaCorrectionValue(&m_GammaCorrection);
 	}
 
-	PostProcessor::~PostProcessor()
-	{
-
-	}
+	PostProcessor::~PostProcessor() { }
 
 	void PostProcessor::preLightingPostProcess()
 	{
@@ -42,6 +39,7 @@ namespace OpenGL_Engine {
 		}
 #endif
 		// Bind shader and its post processing settings, and also bind the screenspace texture
+		glViewport(0, 0, Window::getWidth(), Window::getHeight());
 		input->unbind();
 		GLCache::getInstance()->switchShader(m_PostProcessShader.getShaderID());
 		m_PostProcessShader.setUniform1f("gamma_inverse", 1.0f / m_GammaCorrection);
@@ -52,7 +50,7 @@ namespace OpenGL_Engine {
 		glBindTexture(GL_TEXTURE_2D, target->getColourBufferTexture());
 
 		Window::clear();
-		m_MeshRenderer->NDC_Plane.Draw();
+		m_ModelRenderer->NDC_Plane.Draw();
 
 #if DEBUG_ENABLED
 		glFinish();

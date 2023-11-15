@@ -16,7 +16,7 @@ namespace OpenGL_Engine {
 			}
 		}
 
-		void RenderableModel::draw(Shader& shader, RenderPass pass) const {
+		void RenderableModel::draw(Shader& shader, RenderPassType pass) const {
 			if (m_Model)
 				m_Model->Draw(shader, pass);
 		}
