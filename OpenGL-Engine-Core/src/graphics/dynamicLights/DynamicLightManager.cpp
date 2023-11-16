@@ -1,6 +1,4 @@
-#include <glm/common.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <vector>
+#include "pch.h"
 #include "DynamicLightManager.h"
 
 namespace OpenGL_Engine {

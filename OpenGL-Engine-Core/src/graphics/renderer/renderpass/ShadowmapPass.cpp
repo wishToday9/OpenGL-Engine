@@ -1,6 +1,9 @@
+#include "pch.h"
 #include "ShadowmapPass.h"
-#include "Defs.h"
+
+#include <platform/OpenGL/Framebuffers/FrameBuffer.h>
 #include <utils/loaders/ShaderLoader.h>
+
 
 namespace OpenGL_Engine {
 	ShadowmapPass::ShadowmapPass(Scene3D* scene)

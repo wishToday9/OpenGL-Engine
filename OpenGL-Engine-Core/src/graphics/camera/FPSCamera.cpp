@@ -1,5 +1,6 @@
+#include "pch.h"
+
 #include "FPSCamera.h"
-#include <glm/gtc/matrix_transform.hpp>
 #include <graphics/Window.h>
 
 namespace OpenGL_Engine {	 

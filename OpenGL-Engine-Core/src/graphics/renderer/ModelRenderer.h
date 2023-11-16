@@ -1,15 +1,11 @@
 #pragma once
+#include "GLCache.h"
 
-#include <deque>
-#include <glm\gtx\norm.hpp>
-
+#include <scene/RenderableModel.h>
 #include <graphics/camera/FPSCamera.h>
 #include <graphics/mesh/Model.h>
 #include <graphics/mesh/common/Quad.h>
 #include <graphics/renderer/renderpass/RenderPassType.h>
-#include <Scene/RenderableModel.h>
-
-#include "GLCache.h"
 
 namespace OpenGL_Engine {
 	class ModelRenderer {

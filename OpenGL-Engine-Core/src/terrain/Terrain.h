@@ -5,10 +5,6 @@
 #include <graphics/mesh/Model.h>
 #include <utils/loaders/TextureLoader.h>
 
-#include <array>
-
-#include <graphics/renderer/renderpass/RenderPassType.h>
-
 namespace OpenGL_Engine { 
 	class Terrain {
 	public:

@@ -1,15 +1,13 @@
 #pragma once
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-
 #include <graphics/Shader.h>
 #include <graphics/mesh/Mesh.h>
 #include <graphics/renderer/renderpass/RenderPassType.h>
 #include <utils/loaders/TextureLoader.h>
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 namespace OpenGL_Engine {  
 	class Model {

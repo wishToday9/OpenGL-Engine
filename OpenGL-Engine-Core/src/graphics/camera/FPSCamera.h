@@ -3,7 +3,6 @@
 #include <graphics/camera/ICamera.h>
 #include <graphics/Window.h>
 #include <ui/DebugPane.h>
-#include <glm/common.hpp>
 
 
 

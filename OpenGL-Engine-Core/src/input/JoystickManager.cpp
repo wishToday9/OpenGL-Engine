@@ -1,6 +1,4 @@
-#include <GLFW/glfw3.h>
-#include <utils/Logger.h>
-
+#include "pch.h"
 #include "JoystickManager.h"
 
 namespace OpenGL_Engine {

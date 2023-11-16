@@ -72,8 +72,8 @@
     <LibraryPath>$(SolutionDir)Dependencies\GLFW\lib-vc2013;$(SolutionDir)Dependencies\GLEW\lib;$(SolutionDir)Dependencies\SOIL\lib;$(SolutionDir)Dependencies\Assimp\lib;$(SolutionDir)Dependencies\FreeType\lib;$(SolutionDir)Dependencies\FreeType-GL\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\C++project\OpenGLEngine\OpenGL-Engine\OpenGL-Engine-Core\src\vendor\stbi_image;D:\C++project\OpenGLEngine\OpenGL-Engine\OpenGL-Engine-Core\src\vendor\glad;D:\C++project\OpenGLEngine\OpenGL-Engine\OpenGL-Engine-Core\src;D:\C++project\OpenGLEngine\OpenGL-Engine\OpenGL-Engine-Core;$(SolutionDir)ThirdParties\GLFW\include;$(SolutionDir)ThirdParties\glad\include;$(SolutionDir)ThirdParties\GLM\include;$(SolutionDir)ThirdParties\Assimp\include;$(SolutionDir)ThirdParties\FreeType\include;$(SolutionDir)ThirdParties\FreeType-GL\include;$(SolutionDir)ThirdParties\Stbi;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)ThirdParties\GLFW\lib-vc2019;$(SolutionDir)ThirdParties\GLEW\lib;$(SolutionDir)ThirdParties\Assimp\lib;$(SolutionDir)ThirdParties\FreeType\lib;$(SolutionDir)ThirdParties\FreeType-GL\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\C++project\OpenGLEngine\OpenGL-Engine\ImGui;D:\C++project\OpenGLEngine\OpenGL-Engine\stbi_image;$(SolutionDir)ThirdParties\FreeType-GL\include;$(SolutionDir)ThirdParties\FreeType\include;$(SolutionDir)ThirdParties\Assimp\include;$(SolutionDir)ThirdParties\GLM\include;D:\C++project\OpenGLEngine\OpenGL-Engine\GLFW\include;D:\C++project\OpenGLEngine\OpenGL-Engine\GLAD\include;D:\C++project\OpenGLEngine\OpenGL-Engine\OpenGL-Engine-Core;D:\C++project\OpenGLEngine\OpenGL-Engine\OpenGL-Engine-Core\src;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)ThirdParties\Assimp\lib;$(SolutionDir)ThirdParties\FreeType\lib;D:\C++project\OpenGLEngine\OpenGL-Engine\GLFW\lib-vc2019;$(SolutionDir)ThirdParties\FreeType-GL\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\SOIL\include;$(SolutionDir)Dependencies\GLM\include;$(SolutionDir)Dependencies\Assimp\include;$(SolutionDir)Dependencies\FreeType\include;$(SolutionDir)Dependencies\FreeType-GL\include;$(IncludePath)</IncludePath>
@@ -109,7 +109,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32s.lib;assimp-vc141-mt.lib;FreeType-GL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc141-mt.lib;FreeType-GL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -167,6 +167,7 @@
     <ClCompile Include="src\graphics\renderer\renderpass\ShadowmapPass.cpp" />
     <ClCompile Include="src\input\InputManager.cpp" />
     <ClCompile Include="src\input\JoystickManager.cpp" />
+    <ClCompile Include="src\pch.cpp" />
     <ClCompile Include="src\Scene\RenderableModel.cpp" />
     <ClCompile Include="src\graphics\textures\Cubemap.cpp" />
     <ClCompile Include="src\ui\DebugPane.cpp" />
@@ -193,13 +194,6 @@
     <ClCompile Include="src\utils\Logger.cpp" />
     <ClCompile Include="src\utils\Time.cpp" />
     <ClCompile Include="src\utils\Timer.cpp" />
-    <ClCompile Include="src\glad.c" />
-    <ClCompile Include="src\stbi_image.cpp" />
-    <ClCompile Include="src\vendor\imgui\imgui.cpp" />
-    <ClCompile Include="src\vendor\imgui\imgui_demo.cpp" />
-    <ClCompile Include="src\vendor\imgui\imgui_draw.cpp" />
-    <ClCompile Include="src\vendor\imgui\imgui_impl_glfw_gl3.cpp" />
-    <ClCompile Include="src\vendor\imgui\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\graphics\camera\CubemapCamera.h" />
@@ -226,6 +220,7 @@
     <ClInclude Include="src\graphics\renderer\renderpass\ShadowmapPass.h" />
     <ClInclude Include="src\input\InputManager.h" />
     <ClInclude Include="src\input\JoystickManager.h" />
+    <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\Scene\RenderableModel.h" />
     <ClInclude Include="src\graphics\textures\Cubemap.h" />
     <ClInclude Include="src\ui\DebugPane.h" />
@@ -251,13 +246,6 @@
     <ClInclude Include="src\utils\Singleton.h" />
     <ClInclude Include="src\utils\Time.h" />
     <ClInclude Include="src\utils\Timer.h" />
-    <ClInclude Include="src\vendor\imgui\imconfig.h" />
-    <ClInclude Include="src\vendor\imgui\imgui.h" />
-    <ClInclude Include="src\vendor\imgui\imgui_impl_glfw_gl3.h" />
-    <ClInclude Include="src\vendor\imgui\imgui_internal.h" />
-    <ClInclude Include="src\vendor\imgui\stb_rect_pack.h" />
-    <ClInclude Include="src\vendor\imgui\stb_textedit.h" />
-    <ClInclude Include="src\vendor\imgui\stb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\directionalLight.frag" />
@@ -290,6 +278,17 @@
     <Image Include="res\terrain\heightMap.png" />
     <Image Include="res\terrain\sand.png" />
     <Image Include="res\terrain\stone.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GLAD\GLAD.vcxproj">
+      <Project>{1ce6dda4-c1bf-4208-96b4-74021a94ab11}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ImGui\ImGui.vcxproj">
+      <Project>{bbcbb0c3-a075-402f-bcd9-137f6175b8ed}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\stbi_image\stbi_image.vcxproj">
+      <Project>{b601ddff-3dec-439a-9413-dee518870a12}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

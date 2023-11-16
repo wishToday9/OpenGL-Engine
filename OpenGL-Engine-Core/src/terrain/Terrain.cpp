@@ -1,6 +1,6 @@
-
+#include "pch.h"
 #include "Terrain.h"
-#include <utils/Logger.h>
+
 
 namespace OpenGL_Engine{
 		Terrain::Terrain(glm::vec3& worldPosition) : m_Position(worldPosition)

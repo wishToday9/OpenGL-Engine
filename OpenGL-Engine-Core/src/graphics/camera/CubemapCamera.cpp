@@ -1,5 +1,6 @@
-
+#include "pch.h"
 #include "CubemapCamera.h"
+
 
 namespace OpenGL_Engine {
 	CubemapCamera::CubemapCamera()

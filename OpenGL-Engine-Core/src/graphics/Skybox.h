@@ -1,16 +1,14 @@
 #pragma once
 
-#include <vector>
-#include "../platform/OpenGL/VertexArray.h"
-#include "../platform/OpenGL/IndexBuffer.h"
-#include "../platform/OpenGL/Buffer.h"
 #include "Shader.h"
-#include "camera\FPSCamera.h"
 #include "Window.h"
-#include "../utils/loaders/TextureLoader.h"
 
-#include <graphics/camera/ICamera.h>
+#include <graphics/camera/FPSCamera.h>
 #include <graphics/renderer/GLCache.h>
+#include <platform/OpenGL/Buffer.h>
+#include <platform/OpenGL/IndexBuffer.h>
+#include <platform/OpenGL/VertexArray.h>
+#include <utils/loaders/TextureLoader.h>
 
 namespace OpenGL_Engine {  
 	class Skybox {

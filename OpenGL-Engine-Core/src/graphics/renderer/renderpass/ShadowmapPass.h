@@ -1,10 +1,10 @@
 #pragma once
 
+#include <graphics/camera/ICamera.h>
 #include <graphics/renderer/renderpass/RenderPass.h>
 #include <graphics/Shader.h>
-#include <Scene/Scene3D.h>
-#include <platform/OpenGL/Framebuffers/FrameBuffer.h>
-#include <graphics/camera/ICamera.h>
+#include <scene/Scene3D.h>
+
 
 namespace OpenGL_Engine {
 	class ShadowmapPass : public RenderPass {

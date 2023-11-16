@@ -1,6 +1,5 @@
 
-#include <glad/glad.h>
-
+#include "pch.h"
 #include "Buffer.h"
 
 namespace OpenGL_Engine {  

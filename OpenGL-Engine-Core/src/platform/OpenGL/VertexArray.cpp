@@ -1,5 +1,4 @@
-#include <glad/glad.h>
-
+#include "pch.h"
 #include "VertexArray.h"
 
 namespace OpenGL_Engine {  

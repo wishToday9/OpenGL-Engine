@@ -1,4 +1,4 @@
-
+#include "pch.h"
 #include "Sphere.h"
 
 namespace OpenGL_Engine {

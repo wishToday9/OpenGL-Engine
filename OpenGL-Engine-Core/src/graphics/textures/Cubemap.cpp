@@ -1,5 +1,6 @@
-#include <glad/glad.h>
+#include "pch.h"
 #include "Cubemap.h"
+
 namespace OpenGL_Engine {  
 
 	Cubemap::Cubemap():m_CubemapId(0){	}

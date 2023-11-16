@@ -1,7 +1,6 @@
 #pragma once
 
-#include <glad/glad.h>
-#include "Defs.h"
+
 namespace OpenGL_Engine {  
 	struct CubemapSettings
 	{

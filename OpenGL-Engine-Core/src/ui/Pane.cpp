@@ -1,4 +1,4 @@
-
+#include "pch.h"
 #include "Pane.h"
 
 namespace OpenGL_Engine {

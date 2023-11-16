@@ -1,6 +1,4 @@
-#include <GLFW/glfw3.h>
-#include <string.h>
-#include <utils/Logger.h>
+#include "pch.h"
 #include "InputManager.h"
 
 namespace OpenGL_Engine {

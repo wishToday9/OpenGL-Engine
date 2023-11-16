@@ -1,9 +1,6 @@
-
+#include "pch.h"
 #include "TextureLoader.h"
 
-#include <glad/glad.h>
-#include <utils/Logger.h>
-#include <vector>
 namespace OpenGL_Engine {  		
 	
 	// Static declarations

@@ -1,8 +1,5 @@
-
-#include "FrameBuffer.h"
-#include <glad/glad.h>
-#include <utils/Logger.h>
-#include "Defs.h"
+#include "pch.h"
+#include "Framebuffer.h"
 
 namespace OpenGL_Engine {
 

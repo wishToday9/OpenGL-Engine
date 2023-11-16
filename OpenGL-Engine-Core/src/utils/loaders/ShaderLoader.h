@@ -1,7 +1,6 @@
 #pragma once
 
 #include <graphics/Shader.h>
-#include <unordered_map>
 
 namespace OpenGL_Engine {
 	class ShaderLoader {

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Defs.h"
-#include <glad/glad.h>
 namespace OpenGL_Engine { 
 
 	struct TextureSetting {

@@ -1,4 +1,4 @@
-
+#include "pch.h"
 #include "DynamicLight.h"
 
 namespace OpenGL_Engine {  

@@ -1,9 +1,8 @@
+#include "pch.h"
 #include "EnvironmentProbePass.h"
-
 
 #include <graphics/renderer/renderpass/LightingPass.h>
 #include <graphics/renderer/renderpass/ShadowmapPass.h>
-#include <graphics/IBL/EnvironmentProbe.h>
 
 namespace OpenGL_Engine {
 	

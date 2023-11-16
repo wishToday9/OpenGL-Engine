@@ -1,10 +1,8 @@
 #pragma once
 
-
 #include <graphics/Shader.h>
 #include <utils/Singleton.h>
 
-#include <glad/glad.h>
 
 namespace OpenGL_Engine {  
 

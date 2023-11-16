@@ -1,6 +1,6 @@
+#include "pch.h"
 #include "PostProcessPass.h"
-#include <ui/DebugPane.h>
-#include <graphics/Window.h>
+
 #include <utils/loaders/ShaderLoader.h>
 
 

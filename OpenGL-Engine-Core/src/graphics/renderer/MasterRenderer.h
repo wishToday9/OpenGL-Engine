@@ -1,11 +1,11 @@
 #pragma once
 
+#include <graphics/renderer/renderpass/EnvironmentProbePass.h>
 #include <graphics/renderer/renderpass/LightingPass.h>
 #include <graphics/renderer/renderpass/PostProcessPass.h>
 #include <graphics/renderer/renderpass/ShadowmapPass.h>
 #include <scene/Scene3D.h>
 #include <utils/Timer.h>
-#include <graphics/renderer/renderpass/EnvironmentProbePass.h>
 
 namespace OpenGL_Engine {
 	class MasterRenderer {

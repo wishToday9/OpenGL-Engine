@@ -1,15 +1,7 @@
 #pragma once
 
-#include <glad\glad.h>
-#include <GLFW\glfw3.h>
-#include <iostream>
-
-#include "../Defs.h"
-#include "../utils/Logger.h"
-#include "../Defs.h"
-
-#include "../vendor/imgui/imgui.h"
-#include "../vendor/imgui/imgui_impl_glfw_gl3.h"
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_glfw_gl3.h>
 
 #include <input/InputManager.h>
 

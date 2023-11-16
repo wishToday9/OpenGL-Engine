@@ -1,6 +1,8 @@
-
+#include "pch.h"
 #include "Skybox.h"
-#include <utils\loaders\ShaderLoader.h>
+
+#include <utils/loaders/ShaderLoader.h>
+
 namespace OpenGL_Engine {  
 	Skybox::Skybox(const std::vector<std::string>& filePaths)
 	{

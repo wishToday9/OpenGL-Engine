@@ -1,11 +1,8 @@
 #pragma once
 
-#include <glad/glad.h>
-#include <glm/common.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <graphics/camera/ICamera.h>
 
-#include "../../Defs.h"
+#include <graphics/camera/ICamera.h>
+#include <glm/common.hpp>
 
 namespace OpenGL_Engine {  
 	class CubemapCamera : public ICamera{

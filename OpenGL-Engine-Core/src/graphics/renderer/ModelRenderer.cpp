@@ -1,11 +1,5 @@
+#include "pch.h"
 #include "ModelRenderer.h"
-
-#include <graphics/Shader.h>
-
-#include <scene/RenderableModel.h>
-
-#include <glm/common.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
 namespace OpenGL_Engine {
 

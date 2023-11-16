@@ -1,4 +1,4 @@
-
+#include "pch.h"
 #include "SpotLight.h"
 namespace OpenGL_Engine {  
 

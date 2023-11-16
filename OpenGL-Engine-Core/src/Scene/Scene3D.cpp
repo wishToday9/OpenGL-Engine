@@ -1,11 +1,10 @@
+#include "pch.h"
 #include "Scene3D.h"
 
-#include "graphics/mesh/Mesh.h"
-#include "graphics/mesh/common/Cube.h"
-#include "graphics/mesh/common/Sphere.h"
-#include "graphics/mesh/common/Quad.h"
-#include <graphics/mesh/Model.h>
-#include <Scene/RenderableModel.h>
+#include <graphics/mesh/Mesh.h>
+#include <graphics/mesh/common/Cube.h>
+#include <graphics/mesh/common/Sphere.h>
+#include <graphics/mesh/common/Quad.h>
 
 namespace OpenGL_Engine {
 

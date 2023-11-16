@@ -1,6 +1,6 @@
-
+#include "pch.h"
 #include "GLCache.h"
-#include <glad/glad.h>
+
 namespace OpenGL_Engine {  
 
 	GLCache::GLCache() : m_ActiveShaderID(0) {

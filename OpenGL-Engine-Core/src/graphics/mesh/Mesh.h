@@ -1,6 +1,6 @@
 #pragma once
 
-#include <graphics/mesh/Material.h>
+#include "Material.h"
 
 #include <platform/OpenGL/IndexBuffer.h>
 #include <platform/OpenGL/VertexArray.h>

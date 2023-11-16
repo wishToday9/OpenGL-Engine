@@ -2,9 +2,6 @@
 
 
 #include "Singleton.h"
-#include <vector>
-#include <string>
-#include <fstream>
 
 namespace OpenGL_Engine {  
 

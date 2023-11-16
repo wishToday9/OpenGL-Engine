@@ -1,11 +1,7 @@
 #pragma once
-#include <map>
-#include <stb_image.h>
-#include "../../graphics/textures/Texture.h"
-#include "../../graphics/textures/Cubemap.h"
 
-#include <string>
-#include <unordered_map>
+#include <graphics/textures/Cubemap.h>
+#include <graphics/textures/Texture.h>
 
 namespace OpenGL_Engine {
 	class TextureLoader {

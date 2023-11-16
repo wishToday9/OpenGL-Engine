@@ -1,5 +1,8 @@
-
+#include "pch.h"
 #include "Material.h"
+
+#include <graphics/Window.h>
+
 
 namespace OpenGL_Engine {  
 	Material::Material(Texture* albedoMap, Texture* normalMap, Texture* metallicMap, Texture* roughnessMap, Texture* ambientOcclusionMap, Texture* emissionMap)

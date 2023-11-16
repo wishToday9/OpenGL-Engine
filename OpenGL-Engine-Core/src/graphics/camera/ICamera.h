@@ -1,6 +1,5 @@
 #pragma once
 
-#include <glm/common.hpp>
 namespace OpenGL_Engine {
 	class ICamera {
 	public:

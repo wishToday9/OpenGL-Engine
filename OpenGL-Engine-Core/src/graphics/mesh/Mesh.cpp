@@ -1,6 +1,5 @@
-
+#include "pch.h"
 #include "Mesh.h"
-#include <utils/Logger.h>
 
 namespace OpenGL_Engine {  
 

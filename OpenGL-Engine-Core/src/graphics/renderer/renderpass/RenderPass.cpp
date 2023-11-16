@@ -1,4 +1,6 @@
+#include "pch.h"
 #include "RenderPass.h"
+
 
 namespace OpenGL_Engine {
 	RenderPass::RenderPass(Scene3D* scene, RenderPassType passType)

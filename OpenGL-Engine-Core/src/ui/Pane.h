@@ -1,9 +1,7 @@
 #pragma once
 
-#include <string>
-#include <glm/common.hpp>
 
-#include <vendor/imgui/imgui.h>
+#include <imgui/imgui.h>
 
 namespace OpenGL_Engine {
 	

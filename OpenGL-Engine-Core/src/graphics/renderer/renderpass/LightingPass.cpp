@@ -1,7 +1,7 @@
+#include "pch.h"
 #include "LightingPass.h"
-#include <graphics/camera/ICamera.h>
-#include <utils/loaders/ShaderLoader.h>
 
+#include <utils/loaders/ShaderLoader.h>
 namespace OpenGL_Engine {
 	
 	LightingPass::LightingPass(Scene3D* scene) 

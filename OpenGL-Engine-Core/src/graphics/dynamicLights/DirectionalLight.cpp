@@ -1,4 +1,4 @@
-
+#include "pch.h"
 #include "DirectionalLight.h"
 
 namespace OpenGL_Engine {  
