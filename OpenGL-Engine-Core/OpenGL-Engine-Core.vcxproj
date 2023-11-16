@@ -167,6 +167,7 @@
     <ClCompile Include="src\graphics\renderer\renderpass\RenderPass.cpp" />
     <ClCompile Include="src\graphics\renderer\renderpass\ShadowmapPass.cpp" />
     <ClCompile Include="src\input\InputManager.cpp" />
+    <ClCompile Include="src\input\JoystickInputData.cpp" />
     <ClCompile Include="src\input\JoystickManager.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -223,6 +224,7 @@
     <ClInclude Include="src\graphics\renderer\renderpass\RenderPassType.h" />
     <ClInclude Include="src\graphics\renderer\renderpass\ShadowmapPass.h" />
     <ClInclude Include="src\input\InputManager.h" />
+    <ClInclude Include="src\input\JoystickInputData.h" />
     <ClInclude Include="src\input\JoystickManager.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\Scene\RenderableModel.h" />

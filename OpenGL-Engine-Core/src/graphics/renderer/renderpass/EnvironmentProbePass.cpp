@@ -24,7 +24,7 @@ namespace OpenGL_Engine {
 		FrameBuffer lightingFramebuffer(DEFAULT_IBL_RESOLUTION, DEFAULT_IBL_RESOLUTION);
 
 		//todo clean:needs to be created with color or it will be considered depth map 
-		lightingFramebuffer.addDepthAttachment(false).addDepthStencilRBO(false).createFramebuffer();
+		lightingFramebuffer.addTexture2DColorAttachment(false).addDepthStencilRBO(false).createFramebuffer();
 
 		// Generate the cubemap for the probe
 		glm::vec3 probePosition = glm::vec3(67.0f, 92.0f, 133.0f);
@@ -34,7 +34,7 @@ namespace OpenGL_Engine {
 		// Initialize step before rendering to the probe's cubemap
 		m_CubemapCamera.setCenterPosition(probePosition);
 		ShadowmapPass shadowPass(m_ActiveScene, &shadowmapFramebuffer);
-		LightingPass lightingPass(m_ActiveScene, &lightingFramebuffer);
+		LightingPass lightingPass(m_ActiveScene, &lightingFramebuffer, false);
 
 		// Render to the probe's cubemap
 		for (int i = 0; i < 6; i++) {
@@ -45,7 +45,6 @@ namespace OpenGL_Engine {
 			ShadowmapPassOutput shadowpassOutput = shadowPass.generateShadowmaps(&m_CubemapCamera);
 
 			// Light pass
-			iblProbe->getIrradianceMap()->bind();
 			lightingFramebuffer.bind();
 			lightingFramebuffer.setColorAttachment(iblProbe->getIrradianceMap()->getCubemapID(), GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
 			lightingPass.executeRenderPass(shadowpassOutput, &m_CubemapCamera);

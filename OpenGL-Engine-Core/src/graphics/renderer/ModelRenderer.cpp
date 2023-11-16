@@ -3,7 +3,8 @@
 
 namespace OpenGL_Engine {
 
-	ModelRenderer::ModelRenderer(FPSCamera* camera) : m_Camera(camera), NDC_Plane()
+	ModelRenderer::ModelRenderer(FPSCamera* camera) :
+		m_Camera(camera), NDC_Plane()
 	{
 		// Configure and cache OpenGL state
 		m_GLCache = GLCache::getInstance();
@@ -21,7 +22,7 @@ namespace OpenGL_Engine {
 	}
 
 	void ModelRenderer::flushOpaque(Shader* shader, RenderPassType pass) {
-		m_GLCache->switchShader(shader->getShaderID());
+		m_GLCache->switchShader(shader);
 		m_GLCache->setDepthTest(true);
 		m_GLCache->setBlend(false);
 		m_GLCache->setStencilTest(false);
@@ -40,7 +41,7 @@ namespace OpenGL_Engine {
 	}
 
 	void ModelRenderer::flushTransparent(Shader* shader, RenderPassType pass) {
-		m_GLCache->switchShader(shader->getShaderID());
+		m_GLCache->switchShader(shader);
 		m_GLCache->setDepthTest(true);
 		m_GLCache->setBlend(true);
 		m_GLCache->setStencilTest(false);

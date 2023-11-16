@@ -38,7 +38,7 @@ namespace OpenGL_Engine {
 
 		// Temporary location code for the shadowmap. Will move to a proper system with CSM (Cascaded shadow maps)
 		m_GLCache->switchShader(m_ShadowmapShader->getShaderID());
-		glm::vec3 dirLightShadowmapLookAtPos = camera->getPosition() + (glm::normalize(glm::vec3(camera->getFront().x, 0.0f, camera->getFront().z)) * 50.0f);
+		glm::vec3 dirLightShadowmapLookAtPos = camera->getPosition() + (glm::normalize(camera->getFront()) * 50.0f);
 		glm::vec3 dirLightShadowmapEyePos = dirLightShadowmapLookAtPos + (-lightManager->getDirectionalLightDirection() * 100.0f);
 
 		glm::mat4 directionalLightProjection = glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, SHADOWMAP_NEAR_PLANE, SHADOWMAP_FAR_PLANE);

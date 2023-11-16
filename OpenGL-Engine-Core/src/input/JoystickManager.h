@@ -1,29 +1,27 @@
 #pragma once
 
+#define MAX_JOYSTICKS 16
+#define INPUT_LOGGER_DIRECTORY "logged_files/input_errors.txt"
+
+#include <input/JoystickInputData.h>
+
+
 namespace OpenGL_Engine {
-
-#define MAX_JOYSTICKS 4
-
-
-	struct JoystickInputData {
-		bool isJoystickConnected = false;
-
-		// Range [-1, 1]
-		float leftStickHorizontal = 0, leftStickVertical = 0;
-		float rightStickHorizontal = 0, rightStickVertical = 0;
-
-		// Range [0, 1]
-		float leftTrigger = 0, rightTrigger = 0;
-	};
 
 	class JoystickManager {
 	public:
 		JoystickManager();
 		~JoystickManager();
 
-		void update();
+		static JoystickInputData* getJoystickInfo(int joystick);
+
 		void joystickConnectionCallback(int joystick, int event);
+
+		void update();
+		bool GetButton(int joystickId, int buttonCode); // Get the state of a certain button 
+		bool GetButtonDown(int joystickId, int buttonCode); // Get first button press
 	private:
-		static JoystickInputData s_JoystickData[MAX_JOYSTICKS];
+		static JoystickInputData s_JoystickData[MAX_JOYSTICKS]; // We can use a map if we don't want to create 16 values
+
 	};
 }

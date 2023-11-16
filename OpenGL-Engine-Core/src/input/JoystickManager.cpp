@@ -9,7 +9,7 @@ namespace OpenGL_Engine {
 	JoystickManager::JoystickManager() {
 		// Setup Joysticks
 		for (int i = 0; i < MAX_JOYSTICKS; i++) {
-			s_JoystickData[i].isJoystickConnected = glfwJoystickPresent(GLFW_JOYSTICK_1 + i);
+			s_JoystickData[i].SetConnection(glfwJoystickPresent(GLFW_JOYSTICK_1 + i)); // This will return 0 or 1
 		}
 	}
 
@@ -17,21 +17,20 @@ namespace OpenGL_Engine {
 
 	void JoystickManager::update() {
 		for (int i = 0; i < MAX_JOYSTICKS; i++) {
-			if (!s_JoystickData[i].isJoystickConnected)
+			if (!s_JoystickData[i].IsConnected())
 				continue;
 
 			int count;
 			const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1 + i, &count);
-			if (count != 6) {
+			if (count != 6)
 				continue;
-			}
 
-			s_JoystickData[i].leftStickHorizontal = axes[0];
-			s_JoystickData[i].leftStickVertical = axes[1];
-			s_JoystickData[i].rightStickHorizontal = axes[2];
-			s_JoystickData[i].rightStickVertical = axes[3];
-			s_JoystickData[i].leftTrigger = axes[4] * 0.5f + 0.5f;
-			s_JoystickData[i].rightTrigger = axes[5] * 0.5f + 0.5f;
+			s_JoystickData[i].m_LeftStickHorizontal = axes[0];
+			s_JoystickData[i].m_LeftStickVertical = axes[1];
+			s_JoystickData[i].m_RightStickHorizontal = axes[2];
+			s_JoystickData[i].m_RightStickVertical = axes[3];
+			s_JoystickData[i].m_LeftTrigger = axes[4] * 0.5f + 0.5f;
+			s_JoystickData[i].m_RightTrigger = axes[5] * 0.5f + 0.5f;
 		}
 	}
 
@@ -42,11 +41,45 @@ namespace OpenGL_Engine {
 		}
 
 		if (event == GLFW_CONNECTED) {
-			s_JoystickData[joystick].isJoystickConnected = true;
+			// Check if we have a gamepad
+			//if (!glfwJoystickIsGamepad(joystick))
+			//	Logger::getInstance().error(INPUT_LOGGER_DIRECTORY, "Gamepad Check", "This joystick is not a gamepad and is not supported");
+
+			s_JoystickData[joystick].SetConnection(true);
 		}
 		else if (event == GLFW_DISCONNECTED) {
-			s_JoystickData[joystick].isJoystickConnected = false;
+			s_JoystickData[joystick].SetConnection(false);
 		}
+	}
+
+	JoystickInputData* JoystickManager::getJoystickInfo(int joystick) {
+		if (joystick < 0 || joystick >= MAX_JOYSTICKS) {
+			Logger::getInstance().error("logged_files/input_errors.txt", "Joystick Check", "Joystick data requested does not exist");
+			return nullptr;
+		}
+
+		return &s_JoystickData[joystick];
+	}
+
+	bool JoystickManager::GetButton(int joystickId, int buttonCode)
+	{
+		JoystickInputData* controller = getJoystickInfo(joystickId);
+		if (!controller || buttonCode < 0 || buttonCode >= NUM_JOYSTICK_BUTTONS)
+			return false;
+
+		return controller->m_ButtonStates[buttonCode];
+	}
+
+	bool JoystickManager::GetButtonDown(int joystickId, int buttonCode)
+	{
+		JoystickInputData* controller = getJoystickInfo(joystickId);
+
+		if (!controller || buttonCode < 0 || buttonCode >= NUM_JOYSTICK_BUTTONS)
+			return false;
+
+		// Check if the button has been pressed once and if it has return false for later presses until we get a release call(might need to store previous presses) 
+
+		return false;
 	}
 
 }

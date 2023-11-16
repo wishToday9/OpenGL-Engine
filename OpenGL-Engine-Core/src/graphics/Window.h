@@ -13,9 +13,9 @@ namespace OpenGL_Engine {
 	private:
 		const char *m_Title;
 		GLFWwindow *m_Window;
-		bool m_HideCursor;
+		static bool s_HideCursor;
 		
-		static int m_Width, m_Height;
+		static int s_Width, s_Height;
 	public:
 
 		Window(const char *title, int width, int height);
@@ -35,8 +35,10 @@ namespace OpenGL_Engine {
 		static bool isKeyPressed(unsigned int keycode);
 		static bool isMouseButtonPressed(unsigned int code);
 
-		static inline int getWidth() { return m_Width; }
-		static inline int getHeight() { return m_Height; }
+
+		static inline bool getHideCursor() { return s_HideCursor; }
+		static inline int getWidth() { return s_Width; }
+		static inline int getHeight() { return s_Height; }
 	private:
 		bool init();
 

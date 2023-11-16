@@ -39,7 +39,6 @@ namespace OpenGL_Engine {
 				m_Skybox->getSkyboxCubemap()->bind(1);
 			}
 		}
-
 		//if probes are disabled just use the sky box
 		else if (m_ProbeBlendSetting == PROBES_DISABLED) {
 			//fall back to skybox

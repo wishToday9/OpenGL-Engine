@@ -3,11 +3,10 @@
 
 namespace OpenGL_Engine {
 
-		RenderableModel::RenderableModel(glm::vec3& position, glm::vec3& scale, glm::vec3& rotationAxis, float radianRotation, Model* model, RenderableModel* parent, bool transparent)
-			: m_Position(position), m_Scale(scale), m_Orientation(glm::angleAxis(radianRotation, rotationAxis)), m_Model(model), m_Parent(parent), m_IsTransparent(transparent)
-		{
-
-		}
+	RenderableModel::RenderableModel(glm::vec3& position, glm::vec3& scale, glm::vec3& rotationAxis, float radianRotation, Model* model, RenderableModel* parent, bool isStatic, bool isTransparent)
+		: m_Position(position), m_Scale(scale), m_Orientation(glm::angleAxis(radianRotation, rotationAxis)), m_Model(model), m_Parent(parent), m_IsStatic(isStatic), m_IsTransparent(isTransparent)
+	{
+	}
 
 		RenderableModel::~RenderableModel() {
 			// Recursive delete on children

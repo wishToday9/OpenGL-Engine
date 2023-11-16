@@ -38,6 +38,10 @@ namespace OpenGL_Engine {
 		// Global Data
 		GLCache* m_GLCache;
 
+
+		//Scene parameters
+		EnvironmentProbeBlendSetting m_SceneProbeBlendingSetting = PROBES_SIMPLE;
+
 		// Scene Specific Data
 		FPSCamera m_SceneCamera;
 		Skybox* m_Skybox;
@@ -47,8 +51,6 @@ namespace OpenGL_Engine {
 		EnvironmentProbeManager m_ProbeManager;
 		std::vector<RenderableModel*> m_RenderableModels;
 
-		//Scene parameters
-		EnvironmentProbeBlendSetting m_SceneProbeBlendingSetting = PROBES_SIMPLE;
 	};
 
 }
