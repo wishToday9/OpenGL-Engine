@@ -37,8 +37,13 @@ namespace OpenGL_Engine {
 		void setCubemapSettings(CubemapSettings settings) {
 			m_CubemapSettings = settings;
 		}
+
+		//getters
+		unsigned int getCubemapID() {
+			return m_CubemapId;
+		}
 	private:
-	
+		
 		unsigned int m_CubemapId;
 
 		unsigned int m_FaceWidth, m_FaceHeight;

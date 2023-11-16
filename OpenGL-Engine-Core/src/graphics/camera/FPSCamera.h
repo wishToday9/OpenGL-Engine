@@ -1,9 +1,10 @@
 #pragma once
 
+#include <graphics/camera/ICamera.h>
 #include <graphics/Window.h>
 #include <ui/DebugPane.h>
-
 #include <glm/common.hpp>
+
 
 
 namespace OpenGL_Engine {  
@@ -24,7 +25,7 @@ namespace OpenGL_Engine {
 	const float SENSITIVITY = 0.10f;
 	const float FOV = 100.0f;
 
-	class FPSCamera {
+	class FPSCamera : public ICamera{
 	private:
 		// Camera Attributes
 		glm::vec3 m_Position, m_Front, m_Up, m_Right, m_WorldUp;
@@ -45,14 +46,12 @@ namespace OpenGL_Engine {
 		FPSCamera(float xPos, float yPos, float zPos, float xUp, float yUp, float zUp, float yaw, float pitch);
 
 
-		/**
-		* Returns the view matrix for the camera's position, yaw, and pitch
-		*
-		* @return returns the view matrix for the camera
-		*/
-		glm::mat4 getViewMatrix();
 
-		glm::mat4 getProjectionMatrix();
+		virtual glm::mat4 getViewMatrix() override;
+
+		virtual glm::mat4 getProjectionMatrix() override;
+
+
 
 		void processInput(float deltaTime);
 
@@ -62,8 +61,10 @@ namespace OpenGL_Engine {
 		inline float getMovementSpeed() const { return m_MovementSpeed; }
 		inline float getMouseSensitivity() const { return m_MouseSensitivity; }
 		inline float getFOV() const { return m_FOV; }
-		inline const glm::vec3& getFront() const { return m_Front; }
-		inline const glm::vec3& getPosition() const { return m_Position; }
+
+		inline virtual const glm::vec3& getPosition() const override{ return m_Position; }
+		inline virtual const glm::vec3& getFront() const { return m_Front; }
+		inline virtual const glm::vec3& getUp() const { return m_Up; }
 	private:
 
 		void updateCameraVectors();

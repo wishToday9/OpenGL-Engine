@@ -8,19 +8,22 @@
 #include "camera\FPSCamera.h"
 #include "Window.h"
 #include "../utils/loaders/TextureLoader.h"
-#include "../graphics/renderer/GLCache.h"
+
+#include <graphics/camera/ICamera.h>
+#include <graphics/renderer/GLCache.h>
 
 namespace OpenGL_Engine {  
-
 	class Skybox {
 	public:
-		Skybox(const std::vector<std::string> &filePaths, FPSCamera *camera);
+		Skybox(const std::vector<std::string> &filePaths);
 
-		void Draw();
+		void Draw(ICamera* camera);
 		Cubemap* getSkyboxCubemap() { return m_SkyboxCubemap; }
+
+
 	private:
-		FPSCamera *m_Camera;
-		Shader m_SkyboxShader;
+		
+		Shader* m_SkyboxShader;
 		GLCache* m_GLCache;
 
 		VertexArray m_SkyboxVAO;
@@ -28,5 +31,4 @@ namespace OpenGL_Engine {
 		Buffer  m_SkyboxVBO;
 		Cubemap* m_SkyboxCubemap; // Cubemap 
 	};
-
 } 

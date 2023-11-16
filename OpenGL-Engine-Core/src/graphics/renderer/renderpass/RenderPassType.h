@@ -8,12 +8,13 @@ namespace OpenGL_Engine {
 	{
 		ShadowmapPassType,
 		LightingPassType,
-		PostProcessPassType
+		PostProcessPassType,
+		EnvironmentProbePassType
 	};
 
 	struct ShadowmapPassOutput {
 		glm::mat4 directionalLightViewProjMatrix;
-		unsigned int shadowmapTexture;
+		FrameBuffer* shadowmapFramebuffer;
 	};
 
 	struct LightingPassOutput {

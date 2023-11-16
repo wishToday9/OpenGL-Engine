@@ -6,14 +6,13 @@
 #include <utils/loaders/TextureLoader.h>
 
 namespace OpenGL_Engine {  
-
 	// TODO: Move to a PBR material system
 	class Material {
 	public:
 		Material(Texture* albedoMap = nullptr, Texture* normalMap = nullptr, Texture* metallicMap = nullptr, Texture* roughnessMap = nullptr,
 			Texture* ambientOcclusionMap = nullptr, Texture* emissionMap = nullptr);
 		// Assumes the shader is already bound
-		void BindMaterialInformation(Shader& shader) const;
+		void BindMaterialInformation(Shader* shader) const;
 
 		inline void setAlbedoMap(Texture* texture) { m_AlbedoMap = texture; }
 		inline void setNormalMap(Texture* texture) { m_NormalMap = texture; }
@@ -24,5 +23,4 @@ namespace OpenGL_Engine {
 	private:
 		Texture* m_AlbedoMap, * m_NormalMap, * m_MetallicMap, * m_RoughnessMap, * m_AmbientOcclusionMap, * m_EmissionMap;
 	};
-
 } 

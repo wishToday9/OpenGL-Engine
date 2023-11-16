@@ -1,39 +1,47 @@
 #include "ShadowmapPass.h"
+#include "Defs.h"
+#include <utils/loaders/ShaderLoader.h>
 
 namespace OpenGL_Engine {
 	ShadowmapPass::ShadowmapPass(Scene3D* scene)
-		:RenderPass(scene, RenderPassType::ShadowmapPassType),
-		m_ShadowmapFramebuffer(SHADOWMAP_RESOLUTION_X, SHADOWMAP_RESOLUTION_Y), 
-		m_ShadowmapShader("src/shaders/shadowmap.vert", "src/shaders/shadowmap.frag")
+		:RenderPass(scene, RenderPassType::ShadowmapPassType)
 	{
-		m_ShadowmapFramebuffer.addDepthAttachment(false).createFramebuffer();
+		m_ShadowmapShader = ShaderLoader::loadShader("src/shaders/shadowmap.vert", "src/shaders/shadowmap.frag");
+		m_ShadowmapFramebuffer = new FrameBuffer(SHADOWMAP_RESOLUTION_X, SHADOWMAP_RESOLUTION_Y);
+		m_ShadowmapFramebuffer->addDepthAttachment(false).createFramebuffer();
+	}
+
+	ShadowmapPass::ShadowmapPass(Scene3D* scene, FrameBuffer* customFramebuffer)
+		: RenderPass(scene, RenderPassType::ShadowmapPassType), 
+		m_ShadowmapFramebuffer(customFramebuffer)
+	{
+
 	}
 
 	ShadowmapPass::~ShadowmapPass()
 	{	}
 
-	OpenGL_Engine::ShadowmapPassOutput ShadowmapPass::executeRenderPass()
+	OpenGL_Engine::ShadowmapPassOutput ShadowmapPass::generateShadowmaps(ICamera* camera)
 	{
-		glViewport(0, 0, m_ShadowmapFramebuffer.getWidth(), m_ShadowmapFramebuffer.getHeight());
-		m_ShadowmapFramebuffer.bind();
-		m_ShadowmapFramebuffer.clear();
+		glViewport(0, 0, m_ShadowmapFramebuffer->getWidth(), m_ShadowmapFramebuffer->getHeight());
+		m_ShadowmapFramebuffer->bind();
+		m_ShadowmapFramebuffer->clear();
 
 		//setup 
 		ModelRenderer* modelRenderer = m_ActiveScene->getModelRenderer();
-		FPSCamera* camera = m_ActiveScene->getCamera();
 		Terrain* terrain = m_ActiveScene->getTerrain();
 		DynamicLightManager* lightManager = m_ActiveScene->getDynamicLightManager();
 
 
 		// Temporary location code for the shadowmap. Will move to a proper system with CSM (Cascaded shadow maps)
-		m_GLCache->switchShader(m_ShadowmapShader.getShaderID());
+		m_GLCache->switchShader(m_ShadowmapShader->getShaderID());
 		glm::vec3 dirLightShadowmapLookAtPos = camera->getPosition() + (glm::normalize(glm::vec3(camera->getFront().x, 0.0f, camera->getFront().z)) * 50.0f);
 		glm::vec3 dirLightShadowmapEyePos = dirLightShadowmapLookAtPos + (-lightManager->getDirectionalLightDirection() * 100.0f);
 
 		glm::mat4 directionalLightProjection = glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, SHADOWMAP_NEAR_PLANE, SHADOWMAP_FAR_PLANE);
 		glm::mat4 directionalLightView = glm::lookAt(dirLightShadowmapEyePos, dirLightShadowmapLookAtPos, glm::vec3(0.0f, 1.0f, 0.0f));
 		glm::mat4 directionalLightViewProjMatrix = directionalLightProjection * directionalLightView;
-		m_ShadowmapShader.setUniformMat4("lightSpaceViewProjectionMatrix", directionalLightViewProjMatrix);
+		m_ShadowmapShader->setUniformMat4("lightSpaceViewProjectionMatrix", directionalLightViewProjMatrix);
 
 		//render models
 		m_ActiveScene->addModelsToRenderer();
@@ -45,7 +53,7 @@ namespace OpenGL_Engine {
 		//render pass output
 		ShadowmapPassOutput passOutput;
 		passOutput.directionalLightViewProjMatrix = directionalLightViewProjMatrix;
-		passOutput.shadowmapTexture = m_ShadowmapFramebuffer.getDepthTexture();
+		passOutput.shadowmapFramebuffer = m_ShadowmapFramebuffer;
 		return passOutput;
 	}
 

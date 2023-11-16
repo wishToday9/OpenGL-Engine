@@ -18,7 +18,7 @@ namespace OpenGL_Engine {
 		Model(const Mesh& mesh);
 		Model(const std::vector<Mesh> &meshes);
 		
-		void Draw(Shader &shader, RenderPassType pass) const;
+		void Draw(Shader *shader, RenderPassType pass) const;
 
 		std::vector<Mesh>& getMeshes() { return m_Meshes; }
 	private:

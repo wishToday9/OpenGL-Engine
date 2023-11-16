@@ -6,25 +6,31 @@ namespace OpenGL_Engine
 {
 
 	MasterRenderer::MasterRenderer(Scene3D* scene) : m_ActiveScene(scene),
-		m_ShadowmapPass(scene), m_LightingPass(scene), m_PostProcessPass(scene)
+		m_ShadowmapPass(scene), m_LightingPass(scene), m_PostProcessPass(scene), m_EnvironmentProbePass(scene)
 	{
 		m_GLCache = GLCache::getInstance();
 	}
 
+
+	void MasterRenderer::init()
+	{
+		//m_EnvironmentProbePass.pregenerateProbes();
+	}
+
 	void MasterRenderer::render() {
-		// Shadow map passs
+		// Shadow map pass
 #if DEBUG_ENABLED
 		glFinish();
 		m_Timer.reset();
 #endif
-		ShadowmapPassOutput shadowmapOutput = m_ShadowmapPass.executeRenderPass();
+		ShadowmapPassOutput shadowmapOutput = m_ShadowmapPass.generateShadowmaps(m_ActiveScene->getCamera());
 #if DEBUG_ENABLED
 		glFinish();
 		RuntimePane::setShadowmapTimer((float)m_Timer.elapsed());
 #endif
 
 		// Lighting Pass
-		LightingPassOutput lightingOutput = m_LightingPass.executeRenderPass(shadowmapOutput);
+		LightingPassOutput lightingOutput = m_LightingPass.executeRenderPass(shadowmapOutput, m_ActiveScene->getCamera());
 
 		// Post Process Pass
 #if DEBUG_ENABLED

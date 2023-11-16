@@ -124,11 +124,11 @@ namespace OpenGL_Engine {
 		}
 	}
 
-	void GLCache::switchShader(Shader& shader)
+	void GLCache::switchShader(Shader* shader)
 	{
-		if (m_ActiveShaderID != shader.getShaderID()) {
-			m_ActiveShaderID = shader.getShaderID();
-			shader.enable();
+		if (m_ActiveShaderID != shader->getShaderID()) {
+			m_ActiveShaderID = shader->getShaderID();
+			shader->enable();
 		}
 	}
 

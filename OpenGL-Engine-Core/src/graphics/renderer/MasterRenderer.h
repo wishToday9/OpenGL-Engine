@@ -5,12 +5,14 @@
 #include <graphics/renderer/renderpass/ShadowmapPass.h>
 #include <scene/Scene3D.h>
 #include <utils/Timer.h>
+#include <graphics/renderer/renderpass/EnvironmentProbePass.h>
 
 namespace OpenGL_Engine {
 	class MasterRenderer {
 	public:
 		MasterRenderer(Scene3D* scene);
 
+		void init();
 		void render();
 	private:
 		GLCache* m_GLCache;
@@ -20,6 +22,7 @@ namespace OpenGL_Engine {
 		ShadowmapPass m_ShadowmapPass;
 		LightingPass m_LightingPass;
 		PostProcessPass m_PostProcessPass;
+		EnvironmentProbePass m_EnvironmentProbePass;
 
 		Timer m_Timer;
 	};

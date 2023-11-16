@@ -5,7 +5,6 @@
 #include <graphics/mesh/Model.h>
 #include <graphics/mesh/common/Quad.h>
 #include <graphics/renderer/GLCache.h>
-#include <graphics/renderer/PostProcessor.h>
 #include <platform/OpenGL/Framebuffers/Framebuffer.h>
 #include <terrain/Terrain.h>
 #include <ui/DebugPane.h>
@@ -27,6 +26,9 @@ int main() {
 	OpenGL_Engine::RuntimePane runtimePane(glm::vec2(256.0f, 90.0f));
 	OpenGL_Engine::DebugPane debugPane(glm::vec2(256.0f, 100.0f));
 
+
+	// initialize the renderer
+	renderer.init();
 
 	// Debug timers
 #if DEBUG_ENABLED

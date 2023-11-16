@@ -11,19 +11,17 @@
 #include "graphics\DynamicLights\DynamicLightManager.h"
 #include "utils\loaders\TextureLoader.h"
 
-#include <graphics/IBL/EnvironmentProbeManager.h>
+#include <graphics/IBL/EnvironmentProbe.h>
+
 
 namespace OpenGL_Engine {
 	class Scene3D {
 	public:
 		Scene3D(Window *window);
 		~Scene3D();
-		
-		
-		//shadow pass
-		void shadowmapPass();
+
 		void onUpdate(float deltaTime);
-		void onRender(unsigned int shadowmap);
+		void onRender();
 
 
 		void addModelsToRenderer();
@@ -46,10 +44,9 @@ namespace OpenGL_Engine {
 		ModelRenderer m_ModelRenderer;
 		Terrain m_Terrain;
 		DynamicLightManager m_DynamicLightManager;
-		EnvironmentProbeManager m_ProbeManager;
+		std::vector<EnvironmentProbe*> m_Probes;
 		std::vector<RenderableModel*> m_RenderableModels;
 
-		Shader m_TerrainShader, m_ModelShader, m_ShadowmapShader;
 	};
 
 }

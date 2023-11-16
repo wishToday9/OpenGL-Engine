@@ -5,15 +5,15 @@ namespace OpenGL_Engine {
 	CubemapCamera::CubemapCamera()
 		:m_CenterPosition(0.0f, 0.0f, 0.0f)
 	{
-		swithCameraToFace(0);
+		switchCameraToFace(0);
 	}
 	CubemapCamera::CubemapCamera(glm::vec3& centerPosition)
 		:m_CenterPosition(centerPosition)
 	{
-		swithCameraToFace(0);
+		switchCameraToFace(0);
 	}
 
-	void CubemapCamera::swithCameraToFace(int cubeFaceIndex)
+	void CubemapCamera::switchCameraToFace(int cubeFaceIndex)
 	{
 		switch (cubeFaceIndex)
 		{

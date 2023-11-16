@@ -149,7 +149,6 @@
   <ItemGroup>
     <ClCompile Include="src\graphics\camera\CubemapCamera.cpp" />
     <ClCompile Include="src\graphics\IBL\EnvironmentProbe.cpp" />
-    <ClCompile Include="src\graphics\IBL\EnvironmentProbeManager.cpp" />
     <ClCompile Include="src\graphics\mesh\common\Cube.cpp" />
     <ClCompile Include="src\graphics\mesh\common\Quad.cpp" />
     <ClCompile Include="src\graphics\mesh\common\Sphere.cpp" />
@@ -161,6 +160,7 @@
     <ClCompile Include="src\graphics\camera\FPSCamera.cpp" />
     <ClCompile Include="src\graphics\mesh\Material.cpp" />
     <ClCompile Include="src\graphics\renderer\MasterRenderer.cpp" />
+    <ClCompile Include="src\graphics\renderer\renderpass\EnvironmentProbePass.cpp" />
     <ClCompile Include="src\graphics\renderer\renderpass\LightingPass.cpp" />
     <ClCompile Include="src\graphics\renderer\renderpass\PostProcessPass.cpp" />
     <ClCompile Include="src\graphics\renderer\renderpass\RenderPass.cpp" />
@@ -175,7 +175,6 @@
     <ClCompile Include="src\graphics\mesh\Mesh.cpp" />
     <ClCompile Include="src\graphics\mesh\Model.cpp" />
     <ClCompile Include="src\graphics\renderer\GLCache.cpp" />
-    <ClCompile Include="src\graphics\renderer\PostProcessor.cpp" />
     <ClCompile Include="src\graphics\renderer\ModelRenderer.cpp" />
     <ClCompile Include="src\graphics\Shader.cpp" />
     <ClCompile Include="src\graphics\Skybox.cpp" />
@@ -189,6 +188,7 @@
     <ClCompile Include="src\Scene\Scene3D.cpp" />
     <ClCompile Include="src\terrain\Terrain.cpp" />
     <ClCompile Include="src\utils\FileUtils.cpp" />
+    <ClCompile Include="src\utils\loaders\ShaderLoader.cpp" />
     <ClCompile Include="src\utils\loaders\TextureLoader.cpp" />
     <ClCompile Include="src\utils\Logger.cpp" />
     <ClCompile Include="src\utils\Time.cpp" />
@@ -203,8 +203,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\graphics\camera\CubemapCamera.h" />
+    <ClInclude Include="src\graphics\camera\ICamera.h" />
     <ClInclude Include="src\graphics\IBL\EnvironmentProbe.h" />
-    <ClInclude Include="src\graphics\IBL\EnvironmentProbeManager.h" />
     <ClInclude Include="src\graphics\mesh\common\Cube.h" />
     <ClInclude Include="src\graphics\mesh\common\Quad.h" />
     <ClInclude Include="src\graphics\mesh\common\Sphere.h" />
@@ -218,6 +218,7 @@
     <ClInclude Include="src\graphics\mesh\Material.h" />
     <ClInclude Include="src\graphics\mesh\Mesh.h" />
     <ClInclude Include="src\graphics\renderer\MasterRenderer.h" />
+    <ClInclude Include="src\graphics\renderer\renderpass\EnvironmentProbePass.h" />
     <ClInclude Include="src\graphics\renderer\renderpass\LightingPass.h" />
     <ClInclude Include="src\graphics\renderer\renderpass\PostProcessPass.h" />
     <ClInclude Include="src\graphics\renderer\renderpass\RenderPass.h" />
@@ -232,7 +233,6 @@
     <ClInclude Include="src\ui\RuntimePane.h" />
     <ClInclude Include="src\graphics\mesh\Model.h" />
     <ClInclude Include="src\graphics\renderer\GLCache.h" />
-    <ClInclude Include="src\graphics\renderer\PostProcessor.h" />
     <ClInclude Include="src\graphics\renderer\ModelRenderer.h" />
     <ClInclude Include="src\graphics\Shader.h" />
     <ClInclude Include="src\graphics\Skybox.h" />
@@ -245,6 +245,7 @@
     <ClInclude Include="src\Scene\Scene3D.h" />
     <ClInclude Include="src\terrain\Terrain.h" />
     <ClInclude Include="src\utils\FileUtils.h" />
+    <ClInclude Include="src\utils\loaders\ShaderLoader.h" />
     <ClInclude Include="src\utils\loaders\TextureLoader.h" />
     <ClInclude Include="src\utils\Logger.h" />
     <ClInclude Include="src\utils\Singleton.h" />
@@ -266,7 +267,6 @@
     <None Include="src\shaders\pbr_model.vert" />
     <None Include="src\shaders\postprocess.frag" />
     <None Include="src\shaders\postprocess.vert" />
-    <None Include="src\shaders\model.frag" />
     <None Include="src\shaders\modelReflection.frag" />
     <None Include="src\shaders\modelRefraction.frag" />
     <None Include="src\shaders\pointlight.frag" />
@@ -275,7 +275,6 @@
     <None Include="src\shaders\skybox.frag" />
     <None Include="src\shaders\skybox.vert" />
     <None Include="src\shaders\spotlight.frag" />
-    <None Include="src\shaders\model.vert" />
     <None Include="src\shaders\terrain.frag" />
   </ItemGroup>
   <ItemGroup>

@@ -28,7 +28,7 @@ namespace OpenGL_Engine {
 		void setCullFace(GLenum faceToCull);
 		void setMultisample(bool choice);
 
-		void switchShader(Shader& shader);
+		void switchShader(Shader* shader);
 		void switchShader(unsigned int shaderID);
 	private:
 		// Toggles

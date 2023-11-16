@@ -42,10 +42,14 @@ namespace OpenGL_Engine {
 		if (result == GL_FALSE) {
 			int length;
 			glGetShaderiv(vertex, GL_INFO_LOG_LENGTH, &length);
-			std::vector<char> error(length);
-			glGetShaderInfoLog(vertex, length, &length, &error[0]);
-			std::cout << "Failed to Compile Vertex Shader" << std::endl << &error[0] << std::endl;
-			Logger::getInstance().error("logged_files/shader_creation.txt", "shader initialization", "failed to compile vertex shader " + error[0]);
+			if (length > 0) {
+				std::vector<char> error(length);
+				glGetShaderInfoLog(vertex, length, &length, &error[0]);
+				Logger::getInstance().error("logged_files/shader_creation.txt", "shader initialization", "failed to compile vertex shader " + error[0]);
+			}
+			else {
+				Logger::getInstance().error("logged_files/shader_creation.txt", "shader initialization", "failed to compile vertex shader");
+			}
 			glDeleteShader(vertex);
 			return 0;
 		}
@@ -58,11 +62,16 @@ namespace OpenGL_Engine {
 		glGetShaderiv(fragment, GL_COMPILE_STATUS, &result);
 		if (result == GL_FALSE) {
 			int length;
-			glGetShaderiv(fragment, GL_INFO_LOG_LENGTH, &length);
+			glGetShaderiv(vertex, GL_INFO_LOG_LENGTH, &length);
 			std::vector<char> error(length);
-			glGetShaderInfoLog(fragment, length, &length, &error[0]);
-			std::cout << "Failed to Compile Fragment Shader" << std::endl << &error[0] << std::endl;
-			Logger::getInstance().error("logged_files/shader_creation.txt", "shader initialization", "failed to compile fragment shader " + error[0]);
+			if (length > 0) {
+				glGetShaderInfoLog(fragment, length, &length, &error[0]);
+				std::cout << "Failed to Compile Fragment Shader" << std::endl << &error[0] << std::endl;
+				Logger::getInstance().error("logged_files/shader_creation.txt", "shader initialization", "failed to compile fragment shader " + error[0]);
+			}
+			else {
+				Logger::getInstance().error("logged_files/shader_creation.txt", "shader initialization", "failed to compile fragment shader");
+			}
 			glDeleteShader(fragment);
 			return 0;
 		}
@@ -85,9 +94,14 @@ namespace OpenGL_Engine {
 				int length;
 				glGetShaderiv(geometry, GL_INFO_LOG_LENGTH, &length);
 				std::vector<char> error(length);
-				glGetShaderInfoLog(geometry, length, &length, &error[0]);
-				std::cout << "Failed to Compile Geometry Shader" << std::endl << &error[0] << std::endl;
-				Logger::getInstance().error("logged_files/shader_creation.txt", "shader initialization", "failed to compile geometry shader " + error[0]);
+				if (length > 0) {
+					std::vector<char> error(length);
+					glGetShaderInfoLog(geometry, length, &length, &error[0]);
+					Logger::getInstance().error("logged_files/shader_creation.txt", "shader initialization", "failed to compile geometry shader " + error[0]);
+				}
+				else {
+					Logger::getInstance().error("logged_files/shader_creation.txt", "shader initialization", "failed to compile geometry shader");
+				}
 				glDeleteShader(geometry);
 				return 0;
 			}

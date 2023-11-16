@@ -1,14 +1,12 @@
 #pragma once
 
-#include "Material.h"
+#include <graphics/mesh/Material.h>
 
 #include <platform/OpenGL/IndexBuffer.h>
 #include <platform/OpenGL/VertexArray.h>
 
 namespace OpenGL_Engine {  
-
 	class Model;
-
 	class Mesh {
 		friend Model;
 	public:
@@ -45,5 +43,4 @@ namespace OpenGL_Engine {
 
 		std::vector<unsigned int> m_Indices;
 	};
-
 } 

@@ -9,7 +9,7 @@ namespace OpenGL_Engine {
 	struct DynamicLight {
 		DynamicLight(glm::vec3& lightColor);
 
-		virtual void setupUniforms(Shader &shader, int currentLightIndex) = 0;
+		virtual void setupUniforms(Shader* shader, int currentLightIndex) = 0;
 
 
 		glm::vec3 lightColor;
