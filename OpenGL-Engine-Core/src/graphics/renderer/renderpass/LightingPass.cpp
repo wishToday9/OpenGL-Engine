@@ -4,8 +4,8 @@
 #include <utils/loaders/ShaderLoader.h>
 namespace OpenGL_Engine {
 	
-	LightingPass::LightingPass(Scene3D* scene) 
-		: RenderPass(scene, RenderPassType::LightingPassType)
+	LightingPass::LightingPass(Scene3D* scene, bool useIBL)
+		: RenderPass(scene, RenderPassType::LightingPassType), m_UseIBL(useIBL)
 	{
 		m_ModelShader = ShaderLoader::loadShader("src/shaders/pbr_model.vert", "src/shaders/pbr_model.frag");
 		m_TerrainShader = ShaderLoader::loadShader("src/shaders/terrain.vert", "src/shaders/terrain.frag");
@@ -14,7 +14,8 @@ namespace OpenGL_Engine {
 		bool shouldMultisample = MSAA_SAMPLE_AMOUNT > 1.0 ? true : false;
 		m_Framebuffer->addTexture2DColorAttachment(shouldMultisample).addDepthStencilRBO(shouldMultisample).createFramebuffer();
 	}
-	LightingPass::LightingPass(Scene3D* scene, FrameBuffer* customFramebuffer) : RenderPass(scene, RenderPassType::LightingPassType), m_Framebuffer(customFramebuffer)
+	LightingPass::LightingPass(Scene3D* scene, FrameBuffer* customFramebuffer, bool useIBL) 
+		: RenderPass(scene, RenderPassType::LightingPassType), m_Framebuffer(customFramebuffer), m_UseIBL(useIBL)
 	{
 		m_ModelShader = ShaderLoader::loadShader("src/shaders/pbr_model.vert", "src/shaders/pbr_model.frag");
 		m_TerrainShader = ShaderLoader::loadShader("src/shaders/terrain.vert", "src/shaders/terrain.frag");
@@ -23,7 +24,7 @@ namespace OpenGL_Engine {
 	LightingPass::~LightingPass()
 	{ }
 
-	OpenGL_Engine::LightingPassOutput LightingPass::executeRenderPass(ShadowmapPassOutput shadowmapData, ICamera* camera)
+	OpenGL_Engine::LightingPassOutput LightingPass::executeRenderPass(ShadowmapPassOutput& shadowmapData, ICamera* camera)
 	{
 		glViewport(0, 0, m_Framebuffer->getWidth(), m_Framebuffer->getHeight());
 		m_Framebuffer->bind();
@@ -35,6 +36,7 @@ namespace OpenGL_Engine {
 		DynamicLightManager* lightManager = m_ActiveScene->getDynamicLightManager();
 		Skybox* skybox = m_ActiveScene->getSkybox();
 
+		EnvironmentProbeManager* probeManager = m_ActiveScene->getProbeManager();
 
 		// Models
 		m_GLCache->switchShader(m_ModelShader);
@@ -48,14 +50,16 @@ namespace OpenGL_Engine {
 		lightManager->setSpotLightPosition(Camera->getPosition());
 		*/
 		// Shadow map code
-		m_ModelShader->setUniform1i("shadowmap", 0);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, shadowmapData.shadowmapFramebuffer->getDepthTexture());
-		m_ModelShader->setUniformMat4("lightSpaceViewProjectionMatrix", shadowmapData.directionalLightViewProjMatrix);
+		bindShadowmap(m_ModelShader, shadowmapData);
 
 		// IBL code
-		m_ModelShader->setUniform1i("irradianceMap", 1);
-		skybox->getSkyboxCubemap()->bind(1);
+		if (m_UseIBL) {
+			m_ModelShader->setUniform1i("computeIBL", 1);
+			probeManager->bindProbe(glm::vec3(0.0, 0.0, 0.0), m_ModelShader);
+		}
+		else {
+			m_ModelShader->setUniform1i("computeIBL", 0);
+		}
 
 		// Add objects to the renderer
 		m_ActiveScene->addModelsToRenderer();
@@ -64,9 +68,6 @@ namespace OpenGL_Engine {
 
 		// Terrain
 		m_GLCache->switchShader(m_TerrainShader->getShaderID());
-		m_TerrainShader->setUniform1i("shadowmap", 0);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, shadowmapData.shadowmapFramebuffer->getDepthTexture());
 
 		lightManager->setupLightingUniforms(m_TerrainShader);
 		m_TerrainShader->setUniform3f("viewPos", camera->getPosition());
@@ -77,7 +78,8 @@ namespace OpenGL_Engine {
 		m_TerrainShader->setUniformMat4("model", modelMatrix);
 		m_TerrainShader->setUniformMat4("view", camera->getViewMatrix());
 		m_TerrainShader->setUniformMat4("projection", camera->getProjectionMatrix());
-		m_TerrainShader->setUniformMat4("lightSpaceViewProjectionMatrix", shadowmapData.directionalLightViewProjMatrix);
+		
+		bindShadowmap(m_TerrainShader, shadowmapData);
 		terrain->Draw(m_TerrainShader, RenderPassType::LightingPassType);
 
 		// Skybox
@@ -91,6 +93,15 @@ namespace OpenGL_Engine {
 		LightingPassOutput passOutput;
 		passOutput.outputFramebuffer = m_Framebuffer;
 		return passOutput;
+	}
+
+	void LightingPass::bindShadowmap(Shader* shader, ShadowmapPassOutput& shadowmapData)
+	{
+		shader->setUniform1i("shadowmap", 0);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, shadowmapData.shadowmapFramebuffer->getDepthTexture());
+		shader->setUniformMat4("lightSpaceViewProjectionMatrix", shadowmapData.directionalLightViewProjMatrix);
+
 	}
 
 }

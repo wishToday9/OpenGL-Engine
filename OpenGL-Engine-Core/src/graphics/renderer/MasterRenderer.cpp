@@ -8,7 +8,7 @@ namespace OpenGL_Engine
 {
 
 	MasterRenderer::MasterRenderer(Scene3D* scene) : m_ActiveScene(scene),
-		m_ShadowmapPass(scene), m_LightingPass(scene), m_PostProcessPass(scene), m_EnvironmentProbePass(scene)
+		m_ShadowmapPass(scene), m_LightingPass(scene, true), m_PostProcessPass(scene), m_EnvironmentProbePass(scene)
 	{
 		m_GLCache = GLCache::getInstance();
 	}
@@ -16,7 +16,7 @@ namespace OpenGL_Engine
 
 	void MasterRenderer::init()
 	{
-		//m_EnvironmentProbePass.pregenerateProbes();
+		m_EnvironmentProbePass.pregenerateProbes();
 	}
 
 	void MasterRenderer::render() {
@@ -44,6 +44,8 @@ namespace OpenGL_Engine
 		glFinish();
 		RuntimePane::setPostProcessTimer((float)m_Timer.elapsed());
 #endif
+		// TEMP CODE
+		//m_EnvironmentProbePass.pregenerateProbes();
 	}
 
 }

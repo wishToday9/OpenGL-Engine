@@ -11,7 +11,7 @@ namespace OpenGL_Engine {
 		void generate();
 
 		//assumes the shader is bound
-		void bind(Shader& shader);
+		void bind(Shader* shader);
 
 		//get
 		inline Cubemap* getIrradianceMap() {

@@ -20,12 +20,14 @@ namespace OpenGL_Engine {
 	void EnvironmentProbePass::pregenerateProbes() {
 		// Create framebuffers for generating the probes
 		FrameBuffer shadowmapFramebuffer(DEFAULT_IBL_RESOLUTION, DEFAULT_IBL_RESOLUTION); // Creating without colour might make a depth only framebuffer :O
-		shadowmapFramebuffer.addTexture2DColorAttachment(false).addDepthAttachment(false).createFramebuffer();
+		shadowmapFramebuffer.addDepthAttachment(false).createFramebuffer();
 		FrameBuffer lightingFramebuffer(DEFAULT_IBL_RESOLUTION, DEFAULT_IBL_RESOLUTION);
-		lightingFramebuffer.addDepthStencilRBO(false).createFramebuffer();
+
+		//todo clean:needs to be created with color or it will be considered depth map 
+		lightingFramebuffer.addDepthAttachment(false).addDepthStencilRBO(false).createFramebuffer();
 
 		// Generate the cubemap for the probe
-		glm::vec3 probePosition = glm::vec3(120.0f, 90.0f, 140.0f);
+		glm::vec3 probePosition = glm::vec3(67.0f, 92.0f, 133.0f);
 		EnvironmentProbe* iblProbe = new EnvironmentProbe(probePosition, glm::vec2(DEFAULT_IBL_RESOLUTION, DEFAULT_IBL_RESOLUTION), true);
 		iblProbe->generate();
 
@@ -44,11 +46,13 @@ namespace OpenGL_Engine {
 
 			// Light pass
 			iblProbe->getIrradianceMap()->bind();
+			lightingFramebuffer.bind();
 			lightingFramebuffer.setColorAttachment(iblProbe->getIrradianceMap()->getCubemapID(), GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
 			lightingPass.executeRenderPass(shadowpassOutput, &m_CubemapCamera);
 		}
 		// Temp cleanup
-		delete iblProbe;
+		EnvironmentProbeManager* probeManager = m_ActiveScene->getProbeManager();
+		probeManager->addProbe(iblProbe);
 	}
 
 }

@@ -12,9 +12,10 @@
 int main() {
 	// Prepare the engine
 	OpenGL_Engine::Window window("OpenGL_Engine Engine", WINDOW_X_RESOLUTION, WINDOW_Y_RESOLUTION);
+	OpenGL_Engine::TextureLoader::initializeDefaultTextures();
 	OpenGL_Engine::Scene3D scene(&window);
 	OpenGL_Engine::MasterRenderer renderer(&scene);
-	OpenGL_Engine::TextureLoader::initializeDefaultTextures();
+
 
 	// Prepare the UI
 	OpenGL_Engine::RuntimePane runtimePane(glm::vec2(256.0f, 90.0f));

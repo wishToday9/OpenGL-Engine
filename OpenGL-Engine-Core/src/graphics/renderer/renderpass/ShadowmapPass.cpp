@@ -18,7 +18,7 @@ namespace OpenGL_Engine {
 		: RenderPass(scene, RenderPassType::ShadowmapPassType), 
 		m_ShadowmapFramebuffer(customFramebuffer)
 	{
-
+		m_ShadowmapShader = ShaderLoader::loadShader("src/shaders/shadowmap.vert", "src/shaders/shadowmap.frag");
 	}
 
 	ShadowmapPass::~ShadowmapPass()

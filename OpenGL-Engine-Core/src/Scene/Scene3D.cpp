@@ -10,7 +10,8 @@ namespace OpenGL_Engine {
 
 	Scene3D::Scene3D(Window* window)
 		: m_SceneCamera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f), 
-		m_DynamicLightManager(), m_ModelRenderer(getCamera()), m_Terrain(glm::vec3(0.0f, -20.0f, 0.0f))
+		m_DynamicLightManager(), m_ModelRenderer(getCamera()), 
+		m_Terrain(glm::vec3(0.0f, -20.0f, 0.0f)), m_ProbeManager(m_SceneProbeBlendingSetting)
 	{
 		m_GLCache = GLCache::getInstance();
 
@@ -47,20 +48,20 @@ namespace OpenGL_Engine {
 
 		// Temp testing code
 		
-		int nrRows = 2;
-		int nrColumns = 2;
+		int nrRows = 1;
+		int nrColumns = 1;
 		float spacing = 2.5;
 		for (int row = 0; row < nrRows; row++) {
 			for (int col = 0; col < nrColumns; col++) {
 				Model* sphere = new OpenGL_Engine::Model("res/3D_Models/Sphere/globe-sphere.obj");
 				Material& mat = sphere->getMeshes()[0].getMaterial();
-				mat.setAlbedoMap(TextureLoader::load2DTexture(std::string("res/3D_Models/Sphere/rustediron2_basecolor.png"), true));
-				mat.setNormalMap(TextureLoader::load2DTexture(std::string("res/3D_Models/Sphere/rustediron2_normal.png"), false));
-				mat.setAmbientOcclusionMap(TextureLoader::load2DTexture(std::string("res/textures/default/white.png"), false));
-				mat.setMetallicMap(TextureLoader::load2DTexture(std::string("res/3D_Models/Sphere/rustediron2_metallic.png"), false));
-				mat.setRoughnessMap(TextureLoader::load2DTexture(std::string("res/3D_Models/Sphere/rustediron2_roughness.png"), false));
-				m_RenderableModels.push_back(new RenderableModel(glm::vec3((float)(col - (nrColumns / 2)) * spacing,
-					(float)(row - (nrRows / 2)) * spacing, 0.0f), glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(1.0f, 0.0f, 0.0f), 0.0f, sphere, nullptr, false));
+				mat.setAlbedoMap(TextureLoader::getDefaultAO());
+				mat.setNormalMap(TextureLoader::getDefaultNormal());
+				mat.setAmbientOcclusionMap(TextureLoader::getDefaultAO());
+				mat.setMetallicMap(TextureLoader::getFullMetallic());
+				mat.setRoughnessMap(TextureLoader::getNoRoughness());
+				m_RenderableModels.push_back(new RenderableModel(glm::vec3((float)(col - (nrColumns / 2)) * spacing + 60,
+					(float)(row - (nrRows / 2)) * spacing + 90, 130.0f), glm::vec3(20.0f, 20.0f, 20.0f), glm::vec3(1.0f, 0.0f, 0.0f), 0.0f, sphere, nullptr, false));
 			}
 		}
 
@@ -73,6 +74,7 @@ namespace OpenGL_Engine {
 		skyboxFilePaths.push_back("res/skybox/back.png");
 		skyboxFilePaths.push_back("res/skybox/front.png");
 		m_Skybox = new Skybox(skyboxFilePaths);
+		m_ProbeManager.init(m_Skybox);
 	}
 
 
