@@ -4,10 +4,10 @@
 #include <graphics/Shader.h>
 
 namespace OpenGL_Engine {  
-	class EnvironmentProbe {
+	class LightProbe {
 	public:
-		EnvironmentProbe(glm::vec3& probePosition, glm::vec2& probeResolution, bool isStatic);
-		~EnvironmentProbe();
+		LightProbe(glm::vec3& probePosition, glm::vec2& probeResolution);
+		~LightProbe();
 		void generate();
 
 		//assumes the shader is bound
@@ -18,11 +18,10 @@ namespace OpenGL_Engine {
 			return m_IrradianceMap;
 		}
 	private:
-		Cubemap* m_IrradianceMap, * m_PrefilterMap, * m_BRDF_LUT;
-		glm::vec3 m_Position;
-		bool m_Generated;
+		Cubemap* m_IrradianceMap;
 
+		glm::vec3 m_Position;
 		glm::vec2 m_ProbeResolution;
-		bool m_IsStatic;
+		bool m_Generated;
 	};
 } 

@@ -50,7 +50,7 @@ namespace OpenGL_Engine {
 	}
 
 	void Skybox::Draw(ICamera* camera) {
-		m_SkyboxShader->enable();
+		m_GLCache->switchShader(m_SkyboxShader);
 
 		// Pass the texture to the shader
 		m_SkyboxCubemap->bind(0);
@@ -69,5 +69,7 @@ namespace OpenGL_Engine {
 		glDepthFunc(GL_LESS);
 
 		m_GLCache->setDepthFunc(GL_LESS);
+
+		m_SkyboxCubemap->unbind();
 	}
 } 

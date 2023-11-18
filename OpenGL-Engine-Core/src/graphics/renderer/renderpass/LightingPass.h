@@ -8,7 +8,7 @@
 
 
 namespace OpenGL_Engine {
-	class LightingPass : RenderPass {
+	class LightingPass : public RenderPass {
 	public:
 		LightingPass(Scene3D* scene, bool useIBL = true);
 		LightingPass(Scene3D* scene, FrameBuffer* customFramebuffer, bool useIBL = true);

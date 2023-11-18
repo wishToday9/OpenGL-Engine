@@ -31,7 +31,7 @@ namespace OpenGL_Engine {
 		static inline double getMouseYDelta() { return s_MouseYDelta; }
 		static inline double getScrollX() { return s_ScrollX; }
 		static inline double getScrollY() { return s_ScrollY; }
-		static inline void getMousePosition(double& x, double& y) { x = s_MouseX; y = s_MouseY; }
+		static inline void getMousePosition(double &x, double &y) { x = s_MouseX; y = s_MouseY; }
 
 		static inline void setMouseX(double value) { s_MouseX = value; }
 		static inline void setMouseY(double value) { s_MouseY = value; }

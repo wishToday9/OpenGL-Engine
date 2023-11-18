@@ -5,6 +5,7 @@
 #include <graphics/camera/FPSCamera.h>
 #include <graphics/mesh/Model.h>
 #include <graphics/mesh/common/Quad.h>
+#include <graphics/mesh/common/Cube.h>
 #include <graphics/renderer/renderpass/RenderPassType.h>
 
 namespace OpenGL_Engine {
@@ -20,6 +21,7 @@ namespace OpenGL_Engine {
 
 	public:
 		Quad NDC_Plane;
+		Cube NDC_Cube;
 	private:
 		void ModelRenderer::setupModelMatrix(RenderableModel* renderable, Shader* shader, RenderPassType pass);
 

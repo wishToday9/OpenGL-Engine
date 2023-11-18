@@ -31,7 +31,7 @@ namespace OpenGL_Engine {
 		Model *glass = new Model(windowPane);
 		*/
 
-		//m_RenderableModels.push_back(new RenderableModel(glm::vec3(200.0f, 50.0f, 100.0f), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.0f, 0.0f, 1.0f), glm::radians(0.0f), new arcane::Model("res/3D_Models/Sponza/sponza.obj"), nullptr, true, false));
+		//m_RenderableModels.push_back(new RenderableModel(glm::vec3(200.0f, 50.0f, 100.0f), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.0f, 0.0f, 1.0f), glm::radians(0.0f), new OpenGL_Engine::Model("res/3D_Models/Sponza/sponza.obj"), nullptr, true, false));
 
 		//m_RenderableModels.push_back(new RenderableModel(glm::vec3(40, 60, 40), glm::vec3(15, 15, 15), glm::vec3(0.0, 1.0, 0.0), glm::radians(180.0f), glass, nullptr, true, true));
 		//m_RenderableModels.push_back(new RenderableModel(glm::vec3(80, 60, 80), glm::vec3(15, 15, 15), glm::vec3(0.0, 1.0, 0.0), glm::radians(180.0f), glass, nullptr, true, true));

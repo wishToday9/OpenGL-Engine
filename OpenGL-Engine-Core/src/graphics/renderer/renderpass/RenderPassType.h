@@ -9,7 +9,7 @@ namespace OpenGL_Engine {
 		ShadowmapPassType,
 		LightingPassType,
 		PostProcessPassType,
-		EnvironmentProbePassType
+		ProbePassType
 	};
 
 	struct ShadowmapPassOutput {

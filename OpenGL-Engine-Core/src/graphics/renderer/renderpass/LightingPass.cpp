@@ -36,7 +36,7 @@ namespace OpenGL_Engine {
 		DynamicLightManager* lightManager = m_ActiveScene->getDynamicLightManager();
 		Skybox* skybox = m_ActiveScene->getSkybox();
 
-		EnvironmentProbeManager* probeManager = m_ActiveScene->getProbeManager();
+		ProbeManager* probeManager = m_ActiveScene->getProbeManager();
 
 		// Models
 		m_GLCache->switchShader(m_ModelShader);
@@ -97,9 +97,9 @@ namespace OpenGL_Engine {
 
 	void LightingPass::bindShadowmap(Shader* shader, ShadowmapPassOutput& shadowmapData)
 	{
-		shader->setUniform1i("shadowmap", 0);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, shadowmapData.shadowmapFramebuffer->getDepthTexture());
+		shader->setUniform1i("shadowmap", 0);
 		shader->setUniformMat4("lightSpaceViewProjectionMatrix", shadowmapData.directionalLightViewProjMatrix);
 
 	}

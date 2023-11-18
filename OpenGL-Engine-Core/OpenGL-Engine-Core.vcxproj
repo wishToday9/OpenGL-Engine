@@ -148,8 +148,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\graphics\camera\CubemapCamera.cpp" />
-    <ClCompile Include="src\graphics\IBL\EnvironmentProbe.cpp" />
-    <ClCompile Include="src\graphics\IBL\EnvironmentProbeManager.cpp" />
+    <ClCompile Include="src\graphics\IBL\LightProbe.cpp" />
+    <ClCompile Include="src\graphics\IBL\ProbeManager.cpp" />
+    <ClCompile Include="src\graphics\IBL\ReflectionProbe.cpp" />
     <ClCompile Include="src\graphics\mesh\common\Cube.cpp" />
     <ClCompile Include="src\graphics\mesh\common\Quad.cpp" />
     <ClCompile Include="src\graphics\mesh\common\Sphere.cpp" />
@@ -161,9 +162,9 @@
     <ClCompile Include="src\graphics\camera\FPSCamera.cpp" />
     <ClCompile Include="src\graphics\mesh\Material.cpp" />
     <ClCompile Include="src\graphics\renderer\MasterRenderer.cpp" />
-    <ClCompile Include="src\graphics\renderer\renderpass\EnvironmentProbePass.cpp" />
     <ClCompile Include="src\graphics\renderer\renderpass\LightingPass.cpp" />
     <ClCompile Include="src\graphics\renderer\renderpass\PostProcessPass.cpp" />
+    <ClCompile Include="src\graphics\renderer\renderpass\ProbePass.cpp" />
     <ClCompile Include="src\graphics\renderer\renderpass\RenderPass.cpp" />
     <ClCompile Include="src\graphics\renderer\renderpass\ShadowmapPass.cpp" />
     <ClCompile Include="src\input\InputManager.cpp" />
@@ -202,8 +203,9 @@
   <ItemGroup>
     <ClInclude Include="src\graphics\camera\CubemapCamera.h" />
     <ClInclude Include="src\graphics\camera\ICamera.h" />
-    <ClInclude Include="src\graphics\IBL\EnvironmentProbe.h" />
-    <ClInclude Include="src\graphics\IBL\EnvironmentProbeManager.h" />
+    <ClInclude Include="src\graphics\IBL\LightProbe.h" />
+    <ClInclude Include="src\graphics\IBL\ProbeManager.h" />
+    <ClInclude Include="src\graphics\IBL\ReflectionProbe.h" />
     <ClInclude Include="src\graphics\mesh\common\Cube.h" />
     <ClInclude Include="src\graphics\mesh\common\Quad.h" />
     <ClInclude Include="src\graphics\mesh\common\Sphere.h" />
@@ -217,9 +219,9 @@
     <ClInclude Include="src\graphics\mesh\Material.h" />
     <ClInclude Include="src\graphics\mesh\Mesh.h" />
     <ClInclude Include="src\graphics\renderer\MasterRenderer.h" />
-    <ClInclude Include="src\graphics\renderer\renderpass\EnvironmentProbePass.h" />
     <ClInclude Include="src\graphics\renderer\renderpass\LightingPass.h" />
     <ClInclude Include="src\graphics\renderer\renderpass\PostProcessPass.h" />
+    <ClInclude Include="src\graphics\renderer\renderpass\ProbePass.h" />
     <ClInclude Include="src\graphics\renderer\renderpass\RenderPass.h" />
     <ClInclude Include="src\graphics\renderer\renderpass\RenderPassType.h" />
     <ClInclude Include="src\graphics\renderer\renderpass\ShadowmapPass.h" />
@@ -255,6 +257,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\directionalLight.frag" />
+    <None Include="src\shaders\lightprobe_convolution.frag" />
+    <None Include="src\shaders\lightprobe_convolution.vert" />
     <None Include="src\shaders\oldModel.frag" />
     <None Include="src\shaders\terrain.vert" />
     <None Include="src\shaders\pbr_model.frag" />

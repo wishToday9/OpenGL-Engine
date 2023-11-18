@@ -25,12 +25,12 @@ namespace OpenGL_Engine {
 		s_MouseXDelta = s_MouseYDelta = 0;
 		s_ScrollX = 0; s_ScrollY = 0;
 
-		m_JoystickManager.update();
+		m_JoystickManager.Update();
 	}
 
 	bool InputManager::isKeyPressed(unsigned int keycode) {
 		if (keycode >= MAX_KEYS) {
-			Logger::getInstance().error("logged_files/input_errors.txt", "Input Check", "Key checked is out of bounds (not supported)");
+			Logger::getInstance().error("logged_files/input_errors.txt", "Input Check", "Key checked is out of bounds (ie not supported)");
 			return false;
 		}
 		else {
@@ -40,7 +40,7 @@ namespace OpenGL_Engine {
 
 	float InputManager::getKeyPressure(unsigned int keycode) {
 		if (keycode >= MAX_KEYS) {
-			Logger::getInstance().error("logged_files/input_errors.txt", "Input Check", "Key checked is out of bounds (not supported)");
+			Logger::getInstance().error("logged_files/input_errors.txt", "Input Check", "Key checked is out of bounds (ie not supported)");
 			return 0.0f;
 		}
 		else {
@@ -50,14 +50,13 @@ namespace OpenGL_Engine {
 
 	bool InputManager::isMouseButtonPressed(unsigned int code) {
 		if (code >= MAX_BUTTONS) {
-			Logger::getInstance().error("logged_files/input_errors.txt", "Input Check", "Mouse button checked is out of bounds (not supported)");
+			Logger::getInstance().error("logged_files/input_errors.txt", "Input Check", "Mouse button checked is out of bounds (ie not supported)");
 			return false;
 		}
 		else {
 			return s_Buttons[code];
 		}
 	}
-
 
 	void InputManager::keyCallback(int key, int scancode, int action, int mods) {
 		s_Keys[key] = action != GLFW_RELEASE;
@@ -83,4 +82,6 @@ namespace OpenGL_Engine {
 	void InputManager::joystickCallback(int joystick, int event) {
 		m_JoystickManager.joystickConnectionCallback(joystick, event);
 	}
+
 }
+

@@ -15,6 +15,7 @@ int main() {
 	OpenGL_Engine::TextureLoader::initializeDefaultTextures();
 	OpenGL_Engine::Scene3D scene(&window);
 	OpenGL_Engine::MasterRenderer renderer(&scene);
+	OpenGL_Engine::InputManager manager;
 
 
 	// Prepare the UI
@@ -41,6 +42,8 @@ int main() {
 
 		window.clear();
 		ImGui_ImplGlfwGL3_NewFrame();
+
+		//manager.Update();
 
 		scene.onUpdate((float)deltaTime.getDeltaTime());
 		renderer.render();

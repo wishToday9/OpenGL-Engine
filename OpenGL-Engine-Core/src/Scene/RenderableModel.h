@@ -6,8 +6,8 @@
 namespace OpenGL_Engine {
 	class RenderableModel {
 	public:
-		RenderableModel(glm::vec3& position, glm::vec3& scale, glm::vec3& rotationAxis, float radianRotation,
-			Model* model, RenderableModel* parent, bool isStatic, bool isTransparent);
+		RenderableModel(glm::vec3& position, glm::vec3& scale, glm::vec3& rotationAxis, float radianRotation, Model* model, 
+			RenderableModel* parent, bool isStatic = false, bool isTransparent = false);
 		~RenderableModel();
 		// Assumes shader is already bound by the renderer
 
