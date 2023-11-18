@@ -16,6 +16,9 @@ namespace OpenGL_Engine
 
 	void MasterRenderer::init()
 	{
+		//state that should never change
+		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+
 		m_EnvironmentProbePass.pregenerateProbes();
 	}
 
@@ -44,6 +47,7 @@ namespace OpenGL_Engine
 		glFinish();
 		RuntimePane::setPostProcessTimer((float)m_Timer.elapsed());
 #endif
+		
 	}
 
 }

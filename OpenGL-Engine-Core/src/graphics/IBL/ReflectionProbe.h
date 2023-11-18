@@ -2,6 +2,7 @@
 
 #include <graphics/Shader.h>
 #include <graphics/textures/Cubemap.h>
+#include <graphics/textures/Texture.h>
 
 namespace OpenGL_Engine {
 	class ReflectionProbe {
@@ -16,9 +17,13 @@ namespace OpenGL_Engine {
 
 		// Getters
 		inline Cubemap* getPrefilterMap() { return m_PrefilterMap; }
+		static Texture* getBRDFLUT() { return s_BRDF_LUT; }
+
+		// Setters
+		static void setBRDFLUT(Texture* texture) { s_BRDF_LUT = texture; }
 	private:
 		Cubemap* m_PrefilterMap;
-		//static Cubemap *m_BRDF_LUT;
+		static Texture *s_BRDF_LUT;
 
 		glm::vec3 m_Position;
 		glm::vec2 m_ProbeResolution;

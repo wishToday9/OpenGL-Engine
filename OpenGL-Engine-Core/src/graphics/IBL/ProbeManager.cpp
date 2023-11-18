@@ -1,9 +1,8 @@
 #include "pch.h"
-
 #include "ProbeManager.h"
 
 namespace OpenGL_Engine {
-	
+
 	ProbeManager::ProbeManager(ProbeBlendSetting sceneProbeBlendSetting)
 		: m_ProbeBlendSetting(sceneProbeBlendSetting), m_Skybox(nullptr)
 	{}
@@ -39,7 +38,7 @@ namespace OpenGL_Engine {
 				m_LightProbes[0]->bind(shader);
 			}
 			else {
-				// Fall back to skybox
+				// Fallback to skybox
 				m_Skybox->getSkyboxCubemap()->bind(1);
 				shader->setUniform1i("irradianceMap", 1);
 			}
@@ -49,9 +48,12 @@ namespace OpenGL_Engine {
 				m_ReflectionProbes[0]->bind(shader);
 			}
 			else {
-				// Fall back to skybox
+				// Fallback to skybox
+				shader->setUniform1i("reflectionProbeMipCount", REFLECTION_PROBE_MIP_COUNT);
 				m_Skybox->getSkyboxCubemap()->bind(2);
 				shader->setUniform1i("prefilterMap", 2);
+				ReflectionProbe::getBRDFLUT()->bind(3);
+				shader->setUniform1i("brdfLUT", 3);
 			}
 		}
 		// If probes are disabled just use the skybox
@@ -61,10 +63,12 @@ namespace OpenGL_Engine {
 			shader->setUniform1i("irradianceMap", 1);
 
 			// Reflection Probes
+			shader->setUniform1i("reflectionProbeMipCount", REFLECTION_PROBE_MIP_COUNT);
 			m_Skybox->getSkyboxCubemap()->bind(2);
 			shader->setUniform1i("prefilterMap", 2);
+			ReflectionProbe::getBRDFLUT()->bind(3);
+			shader->setUniform1i("brdfLUT", 3);
 		}
 	}
-
 
 }

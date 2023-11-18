@@ -16,6 +16,9 @@ namespace OpenGL_Engine {
 		GLenum TextureMagnificationFilterMode = GL_LINEAR; //// Filtering mode when the texture gets closer and multiple pixels map to a single texel (Never needs to be more than bilinear because that is as accurate as it gets in this sitation)
 
 		float TextureAnisotropyLevel = ANISOTROPIC_FILTERING_LEVEL; // Specified independent of texture min and mag filtering, should be a power of 2 (1.0 means the usual isotropic texture filtering is used which means anisotropic filtering isn't used)
+	
+		//Mip Settings
+		bool HasMips = false;
 	};
 
 
@@ -38,14 +41,17 @@ namespace OpenGL_Engine {
 		}
 
 		//getters
-		unsigned int getCubemapID() {
-			return m_CubemapId;
-		}
+		unsigned int getCubemapID() { return m_CubemapID; }
+		unsigned int getFaceWidth() { return m_FaceWidth; }
+		unsigned int getFaceHeight() { return m_FaceHeight; }
+
+
 	private:
 		
-		unsigned int m_CubemapId;
+		unsigned int m_CubemapID;
 
 		unsigned int m_FaceWidth, m_FaceHeight;
+		unsigned int m_FacesGenerated;
 		GLenum m_TextureFormat;
 
 		CubemapSettings m_CubemapSettings;

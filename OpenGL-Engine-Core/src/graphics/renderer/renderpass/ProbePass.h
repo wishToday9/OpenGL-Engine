@@ -15,14 +15,16 @@ namespace OpenGL_Engine {
 		virtual ~ProbePass() override;
 
 		void pregenerateProbes();
+		void generateBRDFLUT();
 		void generateLightProbe(glm::vec3& probePosition);
 		void generateReflectionProbe(glm::vec3& probePosition);
 	private:
-		FrameBuffer m_SceneCaptureShadowFramebuffer, m_SceneCaptureLightingFramebuffer, m_LightProbeConvolutionFramebuffer;
+		FrameBuffer m_SceneCaptureShadowFramebuffer, m_SceneCaptureLightingFramebuffer,
+			m_LightProbeConvolutionFramebuffer, m_ReflectionProbeSamplingFramebuffer;
 		CubemapCamera m_CubemapCamera;
 		CubemapSettings m_SceneCaptureSettings;
 		Cubemap m_SceneCaptureCubemap;
 
-		Shader* m_ConvolutionShader;
+		Shader* m_ConvolutionShader, *m_ImportanceSamplingShader;
 	};
 }

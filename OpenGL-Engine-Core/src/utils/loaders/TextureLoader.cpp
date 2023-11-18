@@ -49,7 +49,7 @@ namespace OpenGL_Engine {
 		s_DefaultEmission->setTextureMagFilter(GL_NEAREST);
 	}
 
-	OpenGL_Engine::Texture* TextureLoader::load2DTexture(std::string& path, bool isSRGB, TextureSetting* settings)
+	OpenGL_Engine::Texture* TextureLoader::load2DTexture(std::string& path, bool isSRGB, TextureSettings* settings)
 	{
 		//check the cache
 		auto iter = m_TextureCache.find(path);

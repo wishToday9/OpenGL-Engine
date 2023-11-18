@@ -5,13 +5,11 @@
 namespace OpenGL_Engine { 
 		
 	Texture::Texture()
-		:m_TextureTarget(0)
+		: m_TextureId(0), m_TextureTarget(0), m_Width(0), m_Height(0), m_TextureFormat(0), m_TextureSettings()
 	{
 	}
 
-	Texture::Texture(TextureSetting& settings)
-	{
-	}
+	Texture::Texture(TextureSettings& settings) : m_TextureId(0), m_TextureTarget(0), m_Width(0), m_Height(0), m_TextureFormat(0), m_TextureSettings(settings) {}
 
 	Texture::~Texture()
 	{
@@ -34,7 +32,7 @@ namespace OpenGL_Engine {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, m_TextureSettings.TextureWrapTMode);
 
 		// Texture filtering
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, m_TextureSettings.TextureMinFilterMode);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, m_TextureSettings.TextureMinificationFilterMode);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, m_TextureSettings.TextureMagnificationFilterMode);
 
 		// Mipmapping
@@ -94,14 +92,14 @@ namespace OpenGL_Engine {
 	}
 
 	void Texture::setTextureMinFilter(GLenum textureFilterMode, bool shouldBind) {
-		if (m_TextureSettings.TextureMinFilterMode == textureFilterMode)
+		if (m_TextureSettings.TextureMinificationFilterMode == textureFilterMode)
 			return;
 
-		m_TextureSettings.TextureMinFilterMode = textureFilterMode;
+		m_TextureSettings.TextureMinificationFilterMode = textureFilterMode;
 		if (shouldBind)
 			bind();
 		if (m_TextureTarget) {
-			glTexParameteri(m_TextureTarget, GL_TEXTURE_MIN_FILTER, m_TextureSettings.TextureMinFilterMode);
+			glTexParameteri(m_TextureTarget, GL_TEXTURE_MIN_FILTER, m_TextureSettings.TextureMinificationFilterMode);
 		}
 	}
 

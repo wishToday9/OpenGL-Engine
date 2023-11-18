@@ -3,13 +3,13 @@
 #include "Defs.h"
 namespace OpenGL_Engine { 
 
-	struct TextureSetting {
+	struct TextureSettings {
 		//texture wrapping options
 		GLenum TextureWrapSMode = GL_REPEAT;
 		GLenum TextureWrapTMode = GL_REPEAT;
 
 		//texture filtering options
-		GLenum TextureMinFilterMode = GL_LINEAR_MIPMAP_LINEAR;// Filtering mode when the texture moves further away and multiple texels map to one pixel (trilinear for best quality)
+		GLenum TextureMinificationFilterMode = GL_LINEAR_MIPMAP_LINEAR;// Filtering mode when the texture moves further away and multiple texels map to one pixel (trilinear for best quality)
 		GLenum TextureMagnificationFilterMode = GL_LINEAR; //// Filtering mode when the texture gets closer and multiple pixels map to a single texel (Never needs to be more than bilinear because that is as accurate as it gets in this sitation)
 
 		float TextureAnisotropyLevel = ANISOTROPIC_FILTERING_LEVEL; // Specified independent of texture min and mag filtering, should be a power of 2 (1.0 means the usual isotropic texture filtering is used which means anisotropic filtering isn't used)
@@ -24,7 +24,7 @@ namespace OpenGL_Engine {
 	public:
 		Texture();
 
-		Texture(TextureSetting& settings);
+		Texture(TextureSettings& settings);
 		~Texture();
 
 		//generation functions
@@ -42,11 +42,13 @@ namespace OpenGL_Engine {
 
 		// Pre-generation controls only
 		void setMipMode(bool shouldGenMips, int mipBias);
-		void setTextureSettings(TextureSetting settings) {
+		void setTextureSettings(TextureSettings settings) {
 			m_TextureSettings = settings;
 		}
 
 		unsigned int getTextureId() { return m_TextureId; }
+		unsigned int getWidth() { return m_Width; }
+		unsigned int getHeight() { return m_Height; }
 	private:
 		// TODO: Need support for deletion/cleanup of cubemap
 		unsigned int m_TextureId;
@@ -55,6 +57,6 @@ namespace OpenGL_Engine {
 		unsigned int m_Width, m_Height;
 		GLenum m_TextureFormat;
 
-		TextureSetting m_TextureSettings;
+		TextureSettings m_TextureSettings;
 	};
 }
