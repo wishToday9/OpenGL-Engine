@@ -4,8 +4,13 @@
 namespace OpenGL_Engine {  
 	struct CubemapSettings
 	{
+		CubemapSettings() {
+			
+		}
+		CubemapSettings(bool hashMips) {
+			HasMips = hashMips;
+		}
 		//texture wrapping options
-//texture wrapping options
 		GLenum TextureWrapSMode = GL_CLAMP_TO_EDGE;
 		GLenum TextureWrapTMode = GL_CLAMP_TO_EDGE;
 		GLenum TextureWrapRMode = GL_CLAMP_TO_EDGE;
@@ -39,6 +44,8 @@ namespace OpenGL_Engine {
 		void setCubemapSettings(CubemapSettings settings) {
 			m_CubemapSettings = settings;
 		}
+
+		void generateMipMaps();
 
 		//getters
 		unsigned int getCubemapID() { return m_CubemapID; }

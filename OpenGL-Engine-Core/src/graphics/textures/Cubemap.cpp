@@ -36,8 +36,9 @@ namespace OpenGL_Engine {
 			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, m_CubemapSettings.TextureWrapRMode);
 
 			// Mip settings
-			if (m_CubemapSettings.HasMips)
+			if (m_CubemapSettings.HasMips) {
 				glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+			}
 		}
 
 		unbind();
@@ -54,6 +55,12 @@ namespace OpenGL_Engine {
 	void Cubemap::unbind()
 	{
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	}
+
+	void Cubemap::generateMipMaps()
+	{
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_CubemapID);
+		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 	}
 
 }
