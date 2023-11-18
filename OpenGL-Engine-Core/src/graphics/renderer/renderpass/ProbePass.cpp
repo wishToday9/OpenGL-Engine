@@ -29,6 +29,7 @@ namespace OpenGL_Engine {
 	void ProbePass::pregenerateProbes() {
 		glm::vec3 probePosition = glm::vec3(67.0f, 92.0f, 133.0f);
 		generateLightProbe(probePosition);
+		generateReflectionProbe(probePosition);
 	}
 
 	void ProbePass::generateLightProbe(glm::vec3& probePosition) {
@@ -56,9 +57,9 @@ namespace OpenGL_Engine {
 		}
 
 		
-		// Take the capture and apply convolution for the irradiance map (indirect diffuse liing)
+		// Take the capture and apply convolution for the irradiance map 
+		// indirect diffuse lighting
 		// Since we are rendering by sampling a cubemap, use a cube
-
 		m_GLCache->switchShader(m_ConvolutionShader);
 		m_GLCache->setFaceCull(false);
 		m_GLCache->setDepthTest(false);
@@ -76,7 +77,7 @@ namespace OpenGL_Engine {
 
 			// Convolute the scene's capture and store it in the Light Probe's cubemap
 			m_LightProbeConvolutionFramebuffer.setColorAttachment(lightProbe->getIrradianceMap()->getCubemapID(), GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
-			m_ActiveScene->getModelRenderer()->NDC_Cube.Draw(); // Since we are sampling a cubemap, just use a cube in NDC space
+			m_ActiveScene->getModelRenderer()->NDC_Cube.Draw(); // Since we are sampling a cubemap, just use a cube
 			m_LightProbeConvolutionFramebuffer.setColorAttachment(0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
 		}
 		m_GLCache->setFaceCull(true);
@@ -87,7 +88,31 @@ namespace OpenGL_Engine {
 	}
 
 	void ProbePass::generateReflectionProbe(glm::vec3& probePosition) {
+		ReflectionProbe* reflectionProbe = new ReflectionProbe(probePosition, glm::vec2(IBL_CAPTURE_RESOLUTION, IBL_CAPTURE_RESOLUTION), true);
+		reflectionProbe->generate();
 
+		// Initialize step before rendering to the probe's cubemap
+		m_CubemapCamera.setCenterPosition(probePosition);
+		ShadowmapPass shadowPass(m_ActiveScene, &m_SceneCaptureShadowFramebuffer);
+		LightingPass lightingPass(m_ActiveScene, &m_SceneCaptureLightingFramebuffer, false);
+
+		// Render the scene to the probe's cubemap
+		for (int i = 0; i < 6; i++) {
+			// Setup the camera's view
+			m_CubemapCamera.switchCameraToFace(i);
+
+			// Shadow pass
+			ShadowmapPassOutput shadowpassOutput = shadowPass.generateShadowmaps(&m_CubemapCamera);
+
+			// Light pass
+			m_SceneCaptureLightingFramebuffer.bind();
+			m_SceneCaptureLightingFramebuffer.setColorAttachment(m_SceneCaptureCubemap.getCubemapID(), GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
+			lightingPass.executeRenderPass(shadowpassOutput, &m_CubemapCamera);
+			m_SceneCaptureLightingFramebuffer.setColorAttachment(0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
+		}
+
+		ProbeManager* probeManager = m_ActiveScene->getProbeManager();
+		probeManager->addProbe(reflectionProbe);
 	}
 
 }

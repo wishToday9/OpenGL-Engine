@@ -49,6 +49,7 @@ int main() {
 		renderer.render();
 
 		// Display panes
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		runtimePane.render();
 		debugPane.render();
 

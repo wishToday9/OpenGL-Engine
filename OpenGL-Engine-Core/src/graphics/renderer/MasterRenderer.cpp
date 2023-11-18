@@ -44,8 +44,6 @@ namespace OpenGL_Engine
 		glFinish();
 		RuntimePane::setPostProcessTimer((float)m_Timer.elapsed());
 #endif
-		// TEMP CODE
-		//m_EnvironmentProbePass.pregenerateProbes();
 	}
 
 }
