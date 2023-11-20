@@ -32,6 +32,8 @@ namespace OpenGL_Engine {
 	void ProbePass::pregenerateProbes() {
 		generateBRDFLUT();
 
+		m_SceneCaptureCubemap.generateMipMaps();
+
 		glm::vec3 probePosition = glm::vec3(67.0f, 92.0f, 133.0f);
 		generateLightProbe(probePosition);
 		generateReflectionProbe(probePosition);
@@ -176,9 +178,9 @@ namespace OpenGL_Engine {
 				m_CubemapCamera.switchCameraToFace(i);
 				m_ImportanceSamplingShader->setUniformMat4("view", m_CubemapCamera.getViewMatrix());
 
-				// Importance sample the scene's capture and store it in the Reflection Probe's cubemap
+				// Importance sample the scene's capture and store it in the Reflection Probe's cube map
 				m_ReflectionProbeSamplingFramebuffer.setColorAttachment(reflectionProbe->getPrefilterMap()->getCubemapID(), GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, mip);
-				m_ActiveScene->getModelRenderer()->NDC_Cube.Draw(); // Since we are sampling a cubemap, just use a cube
+				m_ActiveScene->getModelRenderer()->NDC_Cube.Draw(); // Since we are sampling a cube map, just use a cube
 				m_ReflectionProbeSamplingFramebuffer.setColorAttachment(0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
 			}
 		}
