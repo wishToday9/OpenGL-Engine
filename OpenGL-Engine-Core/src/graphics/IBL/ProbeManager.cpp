@@ -4,22 +4,21 @@
 namespace OpenGL_Engine {
 
 	ProbeManager::ProbeManager(ProbeBlendSetting sceneProbeBlendSetting)
-		: m_ProbeBlendSetting(sceneProbeBlendSetting), m_Skybox(nullptr)
+		: m_ProbeBlendSetting(sceneProbeBlendSetting), m_LightProbeFallback(nullptr), m_ReflectionProbeFallback(nullptr)
 	{}
 
 	ProbeManager::~ProbeManager() {
 		for (auto iter = m_LightProbes.begin(); iter != m_LightProbes.end(); ++iter) {
-			delete (*iter);
+			SAFE_DELETE(*iter);
 		}
 		for (auto iter = m_ReflectionProbes.begin(); iter != m_ReflectionProbes.end(); ++iter) {
-			delete (*iter);
+			SAFE_DELETE(*iter);
 		}
+		SAFE_DELETE(m_LightProbeFallback);
+		SAFE_DELETE(m_ReflectionProbeFallback);
+
 		m_LightProbes.clear();
 		m_ReflectionProbes.clear();
-	}
-
-	void ProbeManager::init(Skybox* skybox) {
-		m_Skybox = skybox;
 	}
 
 	void ProbeManager::addProbe(LightProbe* probe) {
@@ -38,9 +37,8 @@ namespace OpenGL_Engine {
 				m_LightProbes[0]->bind(shader);
 			}
 			else {
-				// Fallback to skybox
-				m_Skybox->getSkyboxCubemap()->bind(1);
-				shader->setUniform1i("irradianceMap", 1);
+				// Fall back to skybox
+				m_LightProbeFallback->bind(shader);
 			}
 
 			// Reflection Probes
@@ -48,26 +46,17 @@ namespace OpenGL_Engine {
 				m_ReflectionProbes[0]->bind(shader);
 			}
 			else {
-				// Fallback to skybox
-				shader->setUniform1i("reflectionProbeMipCount", REFLECTION_PROBE_MIP_COUNT);
-				m_Skybox->getSkyboxCubemap()->bind(2);
-				shader->setUniform1i("prefilterMap", 2);
-				ReflectionProbe::getBRDFLUT()->bind(3);
-				shader->setUniform1i("brdfLUT", 3);
+				// Fall back to skybox
+				m_ReflectionProbeFallback->bind(shader);
 			}
 		}
 		// If probes are disabled just use the skybox
 		else if (m_ProbeBlendSetting == PROBES_DISABLED) {
-			// Light Probes
-			m_Skybox->getSkyboxCubemap()->bind(1);
-			shader->setUniform1i("irradianceMap", 1);
+			// Light probe fall back
+			m_LightProbeFallback->bind(shader);
 
-			// Reflection Probes
-			shader->setUniform1i("reflectionProbeMipCount", REFLECTION_PROBE_MIP_COUNT);
-			m_Skybox->getSkyboxCubemap()->bind(2);
-			shader->setUniform1i("prefilterMap", 2);
-			ReflectionProbe::getBRDFLUT()->bind(3);
-			shader->setUniform1i("brdfLUT", 3);
+			// Reflection probe fall back
+			m_ReflectionProbeFallback->bind(shader);
 		}
 	}
 

@@ -1,4 +1,7 @@
 #version 450 core
+/*
+	This IBL - BRDF Integration approach is based on the approach Epic made in their paper "Real Shading in Unreal Engine 4"
+*/
 
 struct Material {
 	sampler2D texture_albedo;

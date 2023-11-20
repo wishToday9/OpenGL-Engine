@@ -1,4 +1,7 @@
 #version 430 core
+/*
+	IBL - BRDF Integration approach is based on the approach Epic made int their paper "Real Shading in	Unreal Engine 4" 
+*/
 
 out vec2 FragColor;
 
@@ -6,8 +9,22 @@ in vec2 TexCoords;
 
 const float PI = 3.14159265359;
 
+
+float RadicalInverse_VdC(uint bits);
+vec2 Hammersley(uint i, uint N);
+vec3 ImportanceSampleGGX(vec2 Xi, vec3 N, float roughness);
+float GeometrySchlickGGX(float NdotV, float roughness);
+vec2 IntegrateBRDF(float NdotV, float roughness);
+
+void main() 
+{
+	vec2 integratedBRDF = IntegrateBRDF(TexCoords.x, TexCoords.y);
+	FragColor = integratedBRDF;
+}
+
 // http://holger.dammertz.org/stuff/notes_HammersleyOnHemisphere.html
 // efficient VanDerCorpus calculation.
+// efficient VanDerCorpus calculation for importance sampling
 float RadicalInverse_VdC(uint bits) 
 {
 	bits = (bits << 16u) | (bits >> 16u);
@@ -71,9 +88,9 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
 vec2 IntegrateBRDF(float NdotV, float roughness)
 {
 	vec3 V;
-	V.x = sqrt(1.0 - NdotV * NdotV);
+	V.x = sqrt(1.0 - NdotV * NdotV); //sin
 	V.y = 0.0;
-	V.z = NdotV;
+	V.z = NdotV; //cos
 
 	float A = 0.0;
 	float B = 0.0; 
@@ -108,8 +125,4 @@ vec2 IntegrateBRDF(float NdotV, float roughness)
 	return vec2(A, B);
 }
 
-void main() 
-{
-	vec2 integratedBRDF = IntegrateBRDF(TexCoords.x, TexCoords.y);
-	FragColor = integratedBRDF;
-}
+

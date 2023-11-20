@@ -14,8 +14,10 @@ namespace OpenGL_Engine {
 		ProbePass(Scene3D* scene);
 		virtual ~ProbePass() override;
 
+
 		void pregenerateProbes();
 		void generateBRDFLUT();
+		void generateFallbackProbes();
 		void generateLightProbe(glm::vec3& probePosition);
 		void generateReflectionProbe(glm::vec3& probePosition);
 	private:

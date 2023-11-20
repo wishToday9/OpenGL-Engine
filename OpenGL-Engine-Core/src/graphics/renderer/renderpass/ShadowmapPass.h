@@ -15,6 +15,7 @@ namespace OpenGL_Engine {
 
 		ShadowmapPassOutput generateShadowmaps(ICamera* camera);
 	private:
+		bool m_AllocateFramebuffer;
 		FrameBuffer* m_ShadowmapFramebuffer;
 		Shader* m_ShadowmapShader;
 	};

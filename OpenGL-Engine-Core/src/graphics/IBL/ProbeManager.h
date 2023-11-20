@@ -23,12 +23,22 @@ namespace OpenGL_Engine {
 		void addProbe(LightProbe* probe);
 		void addProbe(ReflectionProbe* probe);
 
+
+		inline void setLightProbeFallback(LightProbe* probe) { m_LightProbeFallback = probe; }
+		inline void setReflectionProbeFallback(ReflectionProbe* probe) { m_ReflectionProbeFallback = probe; }
+
 		//Assumes shader is bound
 		void bindProbe(glm::vec3& renderPosition, Shader* shader);
 	private:
 		ProbeBlendSetting m_ProbeBlendSetting;
+
+		//scene probes
 		std::vector<LightProbe*> m_LightProbes;
 		std::vector<ReflectionProbe*> m_ReflectionProbes;
+
+		//fall back probes
+		LightProbe* m_LightProbeFallback;
+		ReflectionProbe* m_ReflectionProbeFallback;
 
 		Skybox* m_Skybox;
 	};

@@ -7,7 +7,7 @@
 
 namespace OpenGL_Engine {
 	ShadowmapPass::ShadowmapPass(Scene3D* scene)
-		:RenderPass(scene, RenderPassType::ShadowmapPassType)
+		:RenderPass(scene, RenderPassType::ShadowmapPassType), m_AllocateFramebuffer(true)
 	{
 		m_ShadowmapShader = ShaderLoader::loadShader("src/shaders/shadowmap.vert", "src/shaders/shadowmap.frag");
 		m_ShadowmapFramebuffer = new FrameBuffer(SHADOWMAP_RESOLUTION_X, SHADOWMAP_RESOLUTION_Y);
@@ -16,13 +16,17 @@ namespace OpenGL_Engine {
 
 	ShadowmapPass::ShadowmapPass(Scene3D* scene, FrameBuffer* customFramebuffer)
 		: RenderPass(scene, RenderPassType::ShadowmapPassType), 
-		m_ShadowmapFramebuffer(customFramebuffer)
+		m_ShadowmapFramebuffer(customFramebuffer), m_AllocateFramebuffer(false)
 	{
 		m_ShadowmapShader = ShaderLoader::loadShader("src/shaders/shadowmap.vert", "src/shaders/shadowmap.frag");
 	}
 
 	ShadowmapPass::~ShadowmapPass()
-	{	}
+	{	
+		if (m_AllocateFramebuffer) {
+			SAFE_DELETE(m_ShadowmapShader);
+		}
+	}
 
 	OpenGL_Engine::ShadowmapPassOutput ShadowmapPass::generateShadowmaps(ICamera* camera)
 	{

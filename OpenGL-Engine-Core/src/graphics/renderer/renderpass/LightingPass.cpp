@@ -4,8 +4,8 @@
 #include <utils/loaders/ShaderLoader.h>
 namespace OpenGL_Engine {
 	
-	LightingPass::LightingPass(Scene3D* scene, bool useIBL)
-		: RenderPass(scene, RenderPassType::LightingPassType), m_UseIBL(useIBL)
+	LightingPass::LightingPass(Scene3D* scene)
+		: RenderPass(scene, RenderPassType::LightingPassType), m_AllocatedFramebuffer(true)
 	{
 		m_ModelShader = ShaderLoader::loadShader("src/shaders/pbr_model.vert", "src/shaders/pbr_model.frag");
 		m_TerrainShader = ShaderLoader::loadShader("src/shaders/terrain.vert", "src/shaders/terrain.frag");
@@ -14,17 +14,23 @@ namespace OpenGL_Engine {
 		bool shouldMultisample = MSAA_SAMPLE_AMOUNT > 1.0 ? true : false;
 		m_Framebuffer->addTexture2DColorAttachment(shouldMultisample).addDepthStencilRBO(shouldMultisample).createFramebuffer();
 	}
-	LightingPass::LightingPass(Scene3D* scene, FrameBuffer* customFramebuffer, bool useIBL) 
-		: RenderPass(scene, RenderPassType::LightingPassType), m_Framebuffer(customFramebuffer), m_UseIBL(useIBL)
+	LightingPass::LightingPass(Scene3D* scene, FrameBuffer* customFramebuffer) 
+		: RenderPass(scene, RenderPassType::LightingPassType), m_Framebuffer(customFramebuffer), m_AllocatedFramebuffer(false)
+		
 	{
 		m_ModelShader = ShaderLoader::loadShader("src/shaders/pbr_model.vert", "src/shaders/pbr_model.frag");
 		m_TerrainShader = ShaderLoader::loadShader("src/shaders/terrain.vert", "src/shaders/terrain.frag");
 	}
 
 	LightingPass::~LightingPass()
-	{ }
+	{ 
+		if (m_AllocatedFramebuffer) {
+			SAFE_DELETE(m_Framebuffer);
+		}
+		
+	}
 
-	OpenGL_Engine::LightingPassOutput LightingPass::executeRenderPass(ShadowmapPassOutput& shadowmapData, ICamera* camera)
+	OpenGL_Engine::LightingPassOutput LightingPass::executeRenderPass(ShadowmapPassOutput& shadowmapData, ICamera* camera, bool useIBL)
 	{
 		glViewport(0, 0, m_Framebuffer->getWidth(), m_Framebuffer->getHeight());
 		m_Framebuffer->bind();
@@ -53,7 +59,7 @@ namespace OpenGL_Engine {
 		bindShadowmap(m_ModelShader, shadowmapData);
 
 		// IBL code
-		if (m_UseIBL) {
+		if (useIBL) {
 			m_ModelShader->setUniform1i("computeIBL", 1);
 			probeManager->bindProbe(glm::vec3(0.0, 0.0, 0.0), m_ModelShader);
 		}

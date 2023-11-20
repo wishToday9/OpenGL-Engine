@@ -31,6 +31,7 @@ namespace OpenGL_Engine {
 
 	void ProbePass::pregenerateProbes() {
 		generateBRDFLUT();
+		generateFallbackProbes();
 
 		m_SceneCaptureCubemap.generateMipMaps();
 
@@ -76,6 +77,84 @@ namespace OpenGL_Engine {
 		ReflectionProbe::setBRDFLUT(brdfLUT);
 	}
 
+	void ProbePass::generateFallbackProbes() {
+		ProbeManager* probeManager = m_ActiveScene->getProbeManager();
+		glm::vec3 origin(0.0f, 0.0f, 0.0f);
+		m_CubemapCamera.setCenterPosition(origin);
+
+
+		// Light probe generation
+		LightProbe* fallbackLightProbe = new LightProbe(origin, glm::vec2(LIGHT_PROBE_RESOLUTION, LIGHT_PROBE_RESOLUTION));
+		fallbackLightProbe->generate();
+
+		m_GLCache->switchShader(m_ConvolutionShader);
+		m_GLCache->setFaceCull(false);
+		m_GLCache->setDepthTest(false); // Important cause the depth buffer isn't cleared so it has zero depth
+
+		m_ConvolutionShader->setUniformMat4("projection", m_CubemapCamera.getProjectionMatrix());
+		m_ActiveScene->getSkybox()->getSkyboxCubemap()->bind(0);
+		m_ConvolutionShader->setUniform1i("sceneCaptureCubemap", 0);
+
+		m_LightProbeConvolutionFramebuffer.bind();
+		glViewport(0, 0, m_LightProbeConvolutionFramebuffer.getWidth(), m_LightProbeConvolutionFramebuffer.getHeight());
+		for (int i = 0; i < 6; i++) {
+			// Setup the camera's view
+			m_CubemapCamera.switchCameraToFace(i);
+			m_ConvolutionShader->setUniformMat4("view", m_CubemapCamera.getViewMatrix());
+
+			// Convolute the scene's capture and store it in the Light Probe's cubemap
+			m_LightProbeConvolutionFramebuffer.setColorAttachment(fallbackLightProbe->getIrradianceMap()->getCubemapID(), GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
+			m_ActiveScene->getModelRenderer()->NDC_Cube.Draw(); // Since we are sampling a cubemap, just use a cube
+			m_LightProbeConvolutionFramebuffer.setColorAttachment(0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
+		}
+		m_GLCache->setFaceCull(true);
+		m_GLCache->setDepthTest(true);
+
+
+		// Reflection probe generation
+		ReflectionProbe* fallbackReflectionProbe = new ReflectionProbe(origin, glm::vec2(REFLECTION_PROBE_RESOLUTION, REFLECTION_PROBE_RESOLUTION), true);
+		fallbackReflectionProbe->generate();
+
+		// Take the capture and perform importance sampling on the cubemap's mips that represent increased roughness levels
+		m_GLCache->switchShader(m_ImportanceSamplingShader);
+		m_GLCache->setFaceCull(false);
+		m_GLCache->setDepthTest(false); // Important cause the depth buffer isn't cleared so it has zero depth
+
+		m_ImportanceSamplingShader->setUniformMat4("projection", m_CubemapCamera.getProjectionMatrix());
+		m_ActiveScene->getSkybox()->getSkyboxCubemap()->bind(0);
+		m_ImportanceSamplingShader->setUniform1i("sceneCaptureCubemap", 0);
+
+		m_ReflectionProbeSamplingFramebuffer.bind();
+		for (int mip = 0; mip < REFLECTION_PROBE_MIP_COUNT; mip++) {
+			// Calculate the size of this mip and resize
+			unsigned int mipWidth = m_ReflectionProbeSamplingFramebuffer.getWidth() >> mip;
+			unsigned int mipHeight = m_ReflectionProbeSamplingFramebuffer.getHeight() >> mip;
+
+			glBindRenderbuffer(GL_RENDERBUFFER, m_ReflectionProbeSamplingFramebuffer.getDepthRBO());
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, mipWidth, mipHeight);
+			glViewport(0, 0, mipWidth, mipHeight);
+
+			float mipRoughnessLevel = (float)mip / (float)(REFLECTION_PROBE_MIP_COUNT - 1);
+			m_ImportanceSamplingShader->setUniform1f("roughness", mipRoughnessLevel);
+			for (int i = 0; i < 6; i++) {
+				// Setup the camera's view
+				m_CubemapCamera.switchCameraToFace(i);
+				m_ImportanceSamplingShader->setUniformMat4("view", m_CubemapCamera.getViewMatrix());
+
+				// Importance sample the scene's capture and store it in the Reflection Probe's cubemap
+				m_ReflectionProbeSamplingFramebuffer.setColorAttachment(fallbackReflectionProbe->getPrefilterMap()->getCubemapID(), GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, mip);
+				m_ActiveScene->getModelRenderer()->NDC_Cube.Draw(); // Since we are sampling a cubemap, just use a cube
+				m_ReflectionProbeSamplingFramebuffer.setColorAttachment(0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
+			}
+		}
+		m_GLCache->setFaceCull(true);
+		m_GLCache->setDepthTest(true);
+
+
+		probeManager->setLightProbeFallback(fallbackLightProbe);
+		probeManager->setReflectionProbeFallback(fallbackReflectionProbe);
+	}
+
 	void ProbePass::generateLightProbe(glm::vec3& probePosition) {
 		LightProbe* lightProbe = new LightProbe(probePosition, glm::vec2(LIGHT_PROBE_RESOLUTION, LIGHT_PROBE_RESOLUTION));
 		lightProbe->generate();
@@ -83,7 +162,7 @@ namespace OpenGL_Engine {
 		// Initialize step before rendering to the probe's cubemap
 		m_CubemapCamera.setCenterPosition(probePosition);
 		ShadowmapPass shadowPass(m_ActiveScene, &m_SceneCaptureShadowFramebuffer);
-		LightingPass lightingPass(m_ActiveScene, &m_SceneCaptureLightingFramebuffer, false);
+		LightingPass lightingPass(m_ActiveScene, &m_SceneCaptureLightingFramebuffer);
 
 		// Render the scene to the probe's cubemap
 		for (int i = 0; i < 6; i++) {
@@ -96,11 +175,11 @@ namespace OpenGL_Engine {
 			// Light pass
 			m_SceneCaptureLightingFramebuffer.bind();
 			m_SceneCaptureLightingFramebuffer.setColorAttachment(m_SceneCaptureCubemap.getCubemapID(), GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
-			lightingPass.executeRenderPass(shadowpassOutput, &m_CubemapCamera);
+			lightingPass.executeRenderPass(shadowpassOutput, &m_CubemapCamera, false);
 			m_SceneCaptureLightingFramebuffer.setColorAttachment(0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
 		}
 
-		// Take the capture and apply convolution for the irradiance map (indirect diffuse liing)
+		// Take the capture and apply convolution for the irradiance map (indirect diffuse)
 		m_GLCache->switchShader(m_ConvolutionShader);
 		m_GLCache->setFaceCull(false);
 		m_GLCache->setDepthTest(false); // Important cause the depth buffer isn't cleared so it has zero depth
@@ -135,7 +214,7 @@ namespace OpenGL_Engine {
 		// Initialize step before rendering to the probe's cubemap
 		m_CubemapCamera.setCenterPosition(probePosition);
 		ShadowmapPass shadowPass(m_ActiveScene, &m_SceneCaptureShadowFramebuffer);
-		LightingPass lightingPass(m_ActiveScene, &m_SceneCaptureLightingFramebuffer, false);
+		LightingPass lightingPass(m_ActiveScene, &m_SceneCaptureLightingFramebuffer);
 
 		// Render the scene to the probe's cubemap
 		for (int i = 0; i < 6; i++) {
@@ -148,7 +227,7 @@ namespace OpenGL_Engine {
 			// Light pass
 			m_SceneCaptureLightingFramebuffer.bind();
 			m_SceneCaptureLightingFramebuffer.setColorAttachment(m_SceneCaptureCubemap.getCubemapID(), GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
-			lightingPass.executeRenderPass(shadowpassOutput, &m_CubemapCamera);
+			lightingPass.executeRenderPass(shadowpassOutput, &m_CubemapCamera, false);
 			m_SceneCaptureLightingFramebuffer.setColorAttachment(0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
 		}
 
@@ -184,6 +263,9 @@ namespace OpenGL_Engine {
 				m_ReflectionProbeSamplingFramebuffer.setColorAttachment(0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
 			}
 		}
+
+		m_GLCache->setFaceCull(true);
+		m_GLCache->setDepthTest(true);
 
 		ProbeManager* probeManager = m_ActiveScene->getProbeManager();
 		probeManager->addProbe(reflectionProbe);
