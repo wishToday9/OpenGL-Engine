@@ -14,9 +14,8 @@ namespace OpenGL_Engine {
 		void bind(Shader* shader);
 
 		//get
-		inline Cubemap* getIrradianceMap() {
-			return m_IrradianceMap;
-		}
+		inline glm::vec3& getPosition() { return m_Position; }
+		inline Cubemap* getIrradianceMap() { return m_IrradianceMap; }
 	private:
 		Cubemap* m_IrradianceMap;
 

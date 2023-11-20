@@ -1,8 +1,7 @@
 #version 450 core
 /*
-	This IBL - BRDF Integration approach is based on the approach Epic made in their paper "Real Shading in Unreal Engine 4"
+This IBL - BRDF Integration approach is based on the approach Epic made in their paper "Real Shading in Unreal Engine 4"
 */
-
 struct Material {
 	sampler2D texture_albedo;
 	sampler2D texture_normal;
@@ -13,7 +12,6 @@ struct Material {
 
 struct DirLight {
 	vec3 direction;
-
 	vec3 lightColor; // radiant flux
 };
 
@@ -56,9 +54,7 @@ uniform sampler2D brdfLUT;
 
 //lighting
 uniform sampler2D shadowmap;
-uniform int numDirLights;
-uniform int numPointLights;
-uniform int numSpotLights;
+uniform ivec4 numDirPointSpotLights;
 
 uniform DirLight dirLights[MAX_DIR_LIGHTS];
 uniform PointLight pointLights[MAX_POINT_LIGHTS];
@@ -136,7 +132,7 @@ vec3 CalculateDirectionalLightRadiance(vec3 albedo, vec3 normal, float metallic,
 {
 	vec3 directLightIrradiance = vec3(0.0);
 
-	for (int i = 0; i < numDirLights; ++i) {
+	for (int i = 0; i < numDirPointSpotLights.x; ++i) {
 		vec3 lightDir = normalize(-dirLights[i].direction);
 		vec3 halfway = normalize(lightDir + fragToView);
 		vec3 radiance = dirLights[i].lightColor;
@@ -168,7 +164,7 @@ vec3 CalculateDirectionalLightRadiance(vec3 albedo, vec3 normal, float metallic,
 
 vec3 CalculatePointLightRadiance(vec3 albedo, vec3 normal, float metallic, float roughness, vec3 fragToView, vec3 baseReflectivity){
 	vec3 pointLightIrradiance = vec3(0.0);
-	for(int i = 0; i < numPointLights; ++i){
+	for(int i = 0; i < numDirPointSpotLights.y; ++i){
 		vec3 fragToLight = normalize(pointLights[i].position - FragPos);
 		vec3 halfway = normalize(fragToView + fragToLight);
 		float fragToLightDistance = length(pointLights[i].position - FragPos);
@@ -201,7 +197,7 @@ vec3 CalculatePointLightRadiance(vec3 albedo, vec3 normal, float metallic, float
 vec3 CalculateSpotLightRadiance(vec3 albedo, vec3 normal, float metallic, float roughness, vec3 fragToView, vec3 baseReflectivity){
 	vec3 spotLightIrradiance = vec3(0.0);
 
-	for(int i = 0; i < numSpotLights; ++i){
+	for(int i = 0; i < numDirPointSpotLights.z; ++i){
 		vec3 fragToLight = normalize(spotLights[i].position - FragPos);
 		vec3 halfway = normalize(fragToView + fragToLight);
 		float fragToLightDistance = length(spotLights[i].position - FragPos);
@@ -266,7 +262,8 @@ float GeometrySchlickGGX(float cosTheta, float roughness) {
 	return numerator / max(denominator, 0.001);
 }
 
-// Calculates the amount of specular light. Since diffuse(refraction) and specular(reflection) are mutually exclusive, 
+// Calculates the amount of specular light. Since diffuse(refraction) 
+// and specular(reflection) are mutually exclusive, 
 // we can also use this to determine the amount of diffuse light
 // Taken from UE4's implementation which is faster and basically identical to the usual Fresnel calculations: https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
 vec3 FresnelSchlick(float cosTheta, vec3 baseReflectivity) {

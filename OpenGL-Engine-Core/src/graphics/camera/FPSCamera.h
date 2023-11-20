@@ -20,7 +20,7 @@ namespace OpenGL_Engine {
 	// Default Camera Values
 	const float YAW = -90.0f;
 	const float PITCH = 0.0f;
-	const float SPEED = 10.0f;
+	const float SPEED = 20.0f;
 	const float SENSITIVITY = 0.10f;
 	const float FOV = 100.0f;
 

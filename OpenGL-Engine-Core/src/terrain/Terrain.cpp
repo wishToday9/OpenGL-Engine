@@ -7,12 +7,6 @@ namespace OpenGL_Engine{
 		{
 			m_ModelMatrix = glm::translate(m_ModelMatrix, worldPosition);
 
-			// Requirements to generate a mesh
-			std::vector<glm::vec3> positions;
-			std::vector<glm::vec2> uvs;
-			std::vector<glm::vec3> normals;
-			std::vector<unsigned int> indices;
-
 			// Height map
 			int mapWidth, mapHeight;
 			unsigned char* heightMapImage = stbi_load("res/terrain/heightMap.png", &mapWidth, &mapHeight, 0, 1);
@@ -22,35 +16,53 @@ namespace OpenGL_Engine{
 				return;
 			}
 
-			// Map Information
-			m_VertexSideCount = mapWidth;
-			m_TerrainSize = 4;
-			m_HeightMapScale = 220;
+
+			// Terrain information
+			m_HeightfieldTextureSize = mapWidth;
+			m_SideVertexCount = mapWidth * 0.25f;
+			m_TerrainSizeXZ = 2048.0;
+			m_TerrainSizeY = 400.0f;
+			m_SpaceBetweenVertices = m_TerrainSizeXZ / (float)m_SideVertexCount;
+			m_TerrainToHeightfieldTextureConversion = 1.0f / (m_TerrainSizeXZ / m_HeightfieldTextureSize);
+
+			// Requirements to generate a mesh
+			std::vector<glm::vec3> positions;
+			std::vector<glm::vec2> uvs;
+			std::vector<glm::vec3> normals;
+			std::vector<unsigned int> indices;
+			positions.reserve(m_SideVertexCount * m_SideVertexCount);
+			uvs.reserve(m_SideVertexCount * m_SideVertexCount);
+			normals.reserve(m_SideVertexCount * m_SideVertexCount);
+			indices.reserve(m_SideVertexCount * m_SideVertexCount * 6);
 
 			// Vertex generation
-			for (unsigned int z = 0; z < m_VertexSideCount; z++) {
-				for (unsigned int x = 0; x < m_VertexSideCount; x++) {
-					positions.push_back(glm::vec3(x * m_TerrainSize, getVertexHeight(x, z, heightMapImage), z * m_TerrainSize));
-					uvs.push_back(glm::vec2((float)x / ((float)m_VertexSideCount - 1.0f), (float)z / ((float)m_VertexSideCount - 1.0f)));
-					normals.push_back(calculateNormal(x, z, heightMapImage));
+			for (unsigned int z = 0; z < m_SideVertexCount; z++) {
+				for (unsigned int x = 0; x < m_SideVertexCount; x++) {
+					glm::vec2 positionXZ(x * m_SpaceBetweenVertices, z * m_SpaceBetweenVertices);
+
+					positions.push_back(glm::vec3(positionXZ.x, sampleHeightfieldBilinear(positionXZ.x, positionXZ.y, heightMapImage), positionXZ.y));
+					uvs.push_back(glm::vec2((float)x / (float)(m_SideVertexCount - 1), (float)z / (float)(m_SideVertexCount - 1)));
+					normals.push_back(calculateNormal(positionXZ.x, positionXZ.y, heightMapImage));
 				}
 			}
 			stbi_image_free(heightMapImage);
 
 			// Indices generation (ccw winding order for consistency which will allow back face culling)
-			for (unsigned int height = 0; height < m_VertexSideCount - 1; ++height) {
-				for (unsigned int width = 0; width < m_VertexSideCount - 1; ++width) {
+			for (unsigned int height = 0; height < m_SideVertexCount - 1; ++height) {
+				for (unsigned int width = 0; width < m_SideVertexCount - 1; ++width) {
 					// Triangle 1
-					indices.push_back(width + (height * m_VertexSideCount));
-					indices.push_back(1 + m_VertexSideCount + width + (height * m_VertexSideCount));
-					indices.push_back(1 + width + (height * m_VertexSideCount));
+					indices.push_back(width + (height * m_SideVertexCount));
+					indices.push_back(1 + m_SideVertexCount + width + (height * m_SideVertexCount));
+					indices.push_back(1 + width + (height * m_SideVertexCount));
 
 					// Triangle 2
-					indices.push_back(width + (height * m_VertexSideCount));
-					indices.push_back(m_VertexSideCount + width + (height * m_VertexSideCount));
-					indices.push_back(1 + m_VertexSideCount + width + (height * m_VertexSideCount));
+					indices.push_back(width + (height * m_SideVertexCount));
+					indices.push_back(m_SideVertexCount + width + (height * m_SideVertexCount));
+					indices.push_back(1 + m_SideVertexCount + width + (height * m_SideVertexCount));
 				}
 			}
+
+
 
 			// Textures
 			m_Textures[0] = TextureLoader::load2DTexture(std::string("res/terrain/grass.png"), true);
@@ -93,17 +105,17 @@ namespace OpenGL_Engine{
 				m_Textures[8]->bind(9);
 				shader->setUniform1i("material.texture_normal4", 9);
 			}
-
+			// Only set normal matrix for non shadowmap pass
 			shader->setUniformMat4("model", m_ModelMatrix);
 			m_Mesh->Draw();
 		}
 
 		// Bilinear filtering for the terrain's normal
-		glm::vec3 Terrain::calculateNormal(unsigned x, unsigned z, unsigned char* heightMapData) {
-			float heightR = getVertexHeight(x + 1, z, heightMapData);
-			float heightL = getVertexHeight(x - 1, z, heightMapData);
-			float heightU = getVertexHeight(x, z + 1, heightMapData);
-			float heightD = getVertexHeight(x, z - 1, heightMapData);
+		glm::vec3 Terrain::calculateNormal(float worldPosX, float worldPosZ, unsigned char* heightMapData) {
+			float heightR = sampleHeightfieldNearest(worldPosX + m_SpaceBetweenVertices * 2, worldPosZ, heightMapData);
+			float heightL = sampleHeightfieldNearest(worldPosX - m_SpaceBetweenVertices * 2, worldPosZ, heightMapData);
+			float heightU = sampleHeightfieldNearest(worldPosX, worldPosZ + m_SpaceBetweenVertices * 2, heightMapData);
+			float heightD = sampleHeightfieldNearest(worldPosX, worldPosZ - m_SpaceBetweenVertices * 2, heightMapData);
 
 			glm::vec3 normal(heightL - heightR, 2.0f, heightD - heightU);
 			normal = glm::normalize(normal);
@@ -111,12 +123,32 @@ namespace OpenGL_Engine{
 			return normal;
 		}
 
-		float Terrain::getVertexHeight(unsigned x, unsigned z, unsigned char* heightMapData) {
-			if (x < 0 || x >= m_VertexSideCount || z < 0 || z >= m_VertexSideCount) {
-				return 0.0f;
-			}
+		float Terrain::sampleHeightfieldBilinear(float worldPosX, float worldPosZ, unsigned char* heightMapData) {
+			// Calculate weights
+			glm::vec2 weightsXZ = glm::vec2(worldPosX / m_SpaceBetweenVertices, worldPosZ / m_SpaceBetweenVertices);
+			float xFrac = weightsXZ.x - (int)weightsXZ.x;
+			float zFrac = weightsXZ.y - (int)weightsXZ.y;
 
-			// Normalize height to [0, 1] then multiply it by the height map scale
-			return (heightMapData[x + (z * m_VertexSideCount)] / 255.0f) * m_HeightMapScale;
+			// Get the values that should be lerp between
+			float topLeft = sampleHeightfieldNearest(worldPosX, worldPosZ, heightMapData);
+			float topRight = sampleHeightfieldNearest(worldPosX + m_SpaceBetweenVertices, worldPosZ, heightMapData);
+			float bottomLeft = sampleHeightfieldNearest(worldPosX, worldPosZ + m_SpaceBetweenVertices, heightMapData);
+			float bottomRight = sampleHeightfieldNearest(worldPosX + m_SpaceBetweenVertices, worldPosZ + m_SpaceBetweenVertices, heightMapData);
+
+			// Do the bilinear filtering
+			float terrainHeight = glm::mix(glm::mix(topLeft, topRight, xFrac), glm::mix(bottomLeft, bottomRight, xFrac), zFrac);
+			return terrainHeight;
+		}
+
+		float Terrain::sampleHeightfieldNearest(float worldPosX, float worldPosZ, unsigned char* heightMapData) {
+			// Get the xz coordinates of the index after cutting off the decimal
+			glm::vec2 terrainXZ = glm::vec2(clamp(worldPosX * m_TerrainToHeightfieldTextureConversion, 0.0f, (float)m_HeightfieldTextureSize - 0.0f), clamp(worldPosZ * m_TerrainToHeightfieldTextureConversion, 0.0f, (float)m_HeightfieldTextureSize - 1.0f));
+
+			// Normalize height to [0, 1] then multiply it by the terrain's Y scale
+			return (heightMapData[(unsigned int)terrainXZ.x + ((unsigned int)terrainXZ.y * m_HeightfieldTextureSize)] / 255.0f) * m_TerrainSizeY;
+		}
+
+		float Terrain::clamp(float n, float lower, float upper) {
+			return std::max(lower, std::min(n, upper));
 		}
 }

@@ -16,6 +16,7 @@ namespace OpenGL_Engine {
 		void bind(Shader* shader);
 
 		// Getters
+		inline glm::vec3& getPosition() { return m_Position; }
 		inline Cubemap* getPrefilterMap() { return m_PrefilterMap; }
 		static Texture* getBRDFLUT() { return s_BRDF_LUT; }
 

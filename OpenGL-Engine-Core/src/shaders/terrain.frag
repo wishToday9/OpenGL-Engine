@@ -46,9 +46,7 @@ in vec4 FragPosLightClipSpace;
 out vec4 color;
 
 uniform sampler2D shadowmap;
-uniform int numDirLights;
-uniform int numPointLights;
-uniform int numSpotLights;
+uniform ivec4 numDirPointSpotLights;
 
 uniform DirLight dirLights[MAX_DIR_LIGHTS];
 uniform PointLight pointLights[MAX_POINT_LIGHTS];
@@ -81,15 +79,15 @@ void main() {
 
 	vec3 terrainColour = vec3(0.0);
 
-	for (int i = 0; i < numDirLights; ++i) {
+	for (int i = 0; i < numDirPointSpotLights.x; ++i) {
 		terrainColour += CalcDirLight(dirLights[i], norm, fragToCam);
 	}
 
-	for (int i = 0; i < numPointLights; ++i) {
+	for (int i = 0; i < numDirPointSpotLights.y; ++i) {
 		terrainColour += CalcPointLight(pointLights[i], norm, FragPos, fragToCam);
 	}
 
-	for (int i = 0; i < numSpotLights; ++i) {
+	for (int i = 0; i < numDirPointSpotLights.z; ++i) {
 		terrainColour += CalcSpotLight(spotLights[i], norm, FragPos);
 	}
 
