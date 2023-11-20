@@ -13,7 +13,7 @@ namespace OpenGL_Engine {
 		ShadowmapPass(Scene3D* scene, FrameBuffer* customFramebuffer);
 		virtual ~ShadowmapPass() override;
 
-		ShadowmapPassOutput generateShadowmaps(ICamera* camera);
+		ShadowmapPassOutput generateShadowmaps(ICamera* camera, bool renderOnlyStatic);
 	private:
 		bool m_AllocateFramebuffer;
 		FrameBuffer* m_ShadowmapFramebuffer;

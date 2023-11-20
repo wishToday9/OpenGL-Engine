@@ -18,6 +18,7 @@ namespace OpenGL_Engine {
 		inline const glm::vec3& getScale() const { return m_Scale; }
 		inline const glm::quat& getOrientation() const { return m_Orientation; }
 		inline const RenderableModel* getParent() const { return m_Parent; }
+		inline bool getStatic() const { return m_IsStatic; }
 
 
 		inline bool getTransparent() const { return m_IsTransparent; }
@@ -28,18 +29,17 @@ namespace OpenGL_Engine {
 		inline void setParent(RenderableModel* parent) { m_Parent = parent; }
 
 	private:
-
+		//transformation data
 		glm::vec3 m_Position, m_Scale;
-
 		glm::quat m_Orientation;
 
 		RenderableModel* m_Parent;
 		std::vector<RenderableModel*> m_Children;
 
-
-		bool m_IsTransparent;
-		bool m_IsStatic;
 		Model* m_Model;
+
+		bool m_IsTransparent; //should be true if model contains any translucent material
+		bool m_IsStatic; //should be true is the model will never have its transform modified
 
 	};
 

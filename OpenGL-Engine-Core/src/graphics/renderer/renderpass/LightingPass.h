@@ -10,11 +10,11 @@
 namespace OpenGL_Engine {
 	class LightingPass : public RenderPass {
 	public:
-		LightingPass(Scene3D* scene);
+		LightingPass(Scene3D* scene, bool shouldMultiSample);
 		LightingPass(Scene3D* scene, FrameBuffer* customFramebuffer);
 		virtual ~LightingPass() override;
 
-		LightingPassOutput executeRenderPass(ShadowmapPassOutput& shadowmapData, ICamera* camera, bool useIBL);
+		LightingPassOutput executeRenderPass(ShadowmapPassOutput& shadowmapData, ICamera* camera, bool renderOnlyStatic, bool useIBL);
 	private:
 		void bindShadowmap(Shader* shader, ShadowmapPassOutput& shadowmapData);
 

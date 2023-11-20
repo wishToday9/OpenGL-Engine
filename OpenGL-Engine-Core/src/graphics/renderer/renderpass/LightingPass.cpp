@@ -4,14 +4,13 @@
 #include <utils/loaders/ShaderLoader.h>
 namespace OpenGL_Engine {
 	
-	LightingPass::LightingPass(Scene3D* scene)
+	LightingPass::LightingPass(Scene3D* scene, bool shouldMultisample)
 		: RenderPass(scene, RenderPassType::LightingPassType), m_AllocatedFramebuffer(true)
 	{
 		m_ModelShader = ShaderLoader::loadShader("src/shaders/pbr_model.vert", "src/shaders/pbr_model.frag");
 		m_TerrainShader = ShaderLoader::loadShader("src/shaders/terrain.vert", "src/shaders/terrain.frag");
 
 		m_Framebuffer = new FrameBuffer(Window::getWidth(), Window::getHeight());
-		bool shouldMultisample = MSAA_SAMPLE_AMOUNT > 1.0 ? true : false;
 		m_Framebuffer->addTexture2DColorAttachment(shouldMultisample).addDepthStencilRBO(shouldMultisample).createFramebuffer();
 	}
 	LightingPass::LightingPass(Scene3D* scene, FrameBuffer* customFramebuffer) 
@@ -30,13 +29,18 @@ namespace OpenGL_Engine {
 		
 	}
 
-	OpenGL_Engine::LightingPassOutput LightingPass::executeRenderPass(ShadowmapPassOutput& shadowmapData, ICamera* camera, bool useIBL)
+	OpenGL_Engine::LightingPassOutput LightingPass::executeRenderPass(ShadowmapPassOutput& shadowmapData, ICamera* camera, bool renderOnlyStatic, bool useIBL)
 	{
 		glViewport(0, 0, m_Framebuffer->getWidth(), m_Framebuffer->getHeight());
 		m_Framebuffer->bind();
 		m_Framebuffer->clear();
 
-		// Setup
+		// view setup + lighting setup
+		auto lightBindFuncion = &DynamicLightManager::bindLightingUniforms;
+		if (renderOnlyStatic) {
+			lightBindFuncion = &DynamicLightManager::bindStaticLightingUniforms;
+		}
+
 		ModelRenderer* modelRenderer = m_ActiveScene->getModelRenderer();
 		Terrain* terrain = m_ActiveScene->getTerrain();
 		DynamicLightManager* lightManager = m_ActiveScene->getDynamicLightManager();
@@ -46,7 +50,7 @@ namespace OpenGL_Engine {
 
 		// Models
 		m_GLCache->switchShader(m_ModelShader);
-		lightManager->setupLightingUniforms(m_ModelShader);
+		(lightManager->*lightBindFuncion)(m_ModelShader);
 		m_ModelShader->setUniform3f("viewPos", camera->getPosition());
 		m_ModelShader->setUniformMat4("view", camera->getViewMatrix());
 		m_ModelShader->setUniformMat4("projection", camera->getProjectionMatrix());
@@ -67,15 +71,28 @@ namespace OpenGL_Engine {
 			m_ModelShader->setUniform1i("computeIBL", 0);
 		}
 
-		// Add objects to the renderer
-		m_ActiveScene->addModelsToRenderer();
+		//setup model renderer
+		if (renderOnlyStatic) {
+			m_ActiveScene->addStaticModelsToRenderer();
+		}
+		else {
+			m_ActiveScene->addModelsToRenderer();
+		}
+
+		// Setup model renderer
+		if (renderOnlyStatic) {
+			m_ActiveScene->addStaticModelsToRenderer();
+		}
+		else {
+			m_ActiveScene->addModelsToRenderer();
+		}
 		// Opaque objects
 		modelRenderer->flushOpaque(m_ModelShader, RenderPassType::LightingPassType);
 
 		// Terrain
 		m_GLCache->switchShader(m_TerrainShader->getShaderID());
 
-		lightManager->setupLightingUniforms(m_TerrainShader);
+		(lightManager->*lightBindFuncion)(m_TerrainShader);
 		m_TerrainShader->setUniform3f("viewPos", camera->getPosition());
 		glm::mat4 modelMatrix(1);
 		modelMatrix = glm::translate(modelMatrix, terrain->getPosition());
@@ -88,10 +105,10 @@ namespace OpenGL_Engine {
 		bindShadowmap(m_TerrainShader, shadowmapData);
 		terrain->Draw(m_TerrainShader, RenderPassType::LightingPassType);
 
-		// Skybox
+		//render Skybox
 		skybox->Draw(camera);
 
-		// Transparent objects
+		//render Transparent objects
 		m_GLCache->switchShader(m_ModelShader->getShaderID());
 		modelRenderer->flushTransparent(m_ModelShader, RenderPassType::LightingPassType);
 

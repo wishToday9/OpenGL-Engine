@@ -14,12 +14,14 @@ namespace OpenGL_Engine {
 		ProbePass(Scene3D* scene);
 		virtual ~ProbePass() override;
 
-
+		void pregenerateIBL();
 		void pregenerateProbes();
-		void generateBRDFLUT();
-		void generateFallbackProbes();
 		void generateLightProbe(glm::vec3& probePosition);
 		void generateReflectionProbe(glm::vec3& probePosition);
+	private:
+		void generateBRDFLUT();
+		void generateFallbackProbes();
+
 	private:
 		FrameBuffer m_SceneCaptureShadowFramebuffer, m_SceneCaptureLightingFramebuffer,
 			m_LightProbeConvolutionFramebuffer, m_ReflectionProbeSamplingFramebuffer;

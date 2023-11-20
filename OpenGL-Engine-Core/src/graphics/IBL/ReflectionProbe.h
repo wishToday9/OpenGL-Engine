@@ -7,7 +7,7 @@
 namespace OpenGL_Engine {
 	class ReflectionProbe {
 	public:
-		ReflectionProbe(glm::vec3& probePosition, glm::vec2& probeResolution, bool isStatic);
+		ReflectionProbe(glm::vec3& probePosition, glm::vec2& probeResolution);
 		~ReflectionProbe();
 
 		void generate();
@@ -27,7 +27,6 @@ namespace OpenGL_Engine {
 
 		glm::vec3 m_Position;
 		glm::vec2 m_ProbeResolution;
-		bool m_IsStatic;
 		bool m_Generated;
 	};
 }

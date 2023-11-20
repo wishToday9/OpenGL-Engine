@@ -17,13 +17,11 @@ struct Material {
 
 struct DirLight {
 	vec3 direction;
-
 	vec3 lightColor; // radiant flux
 };
 
 struct PointLight {
 	vec3 position;
-
 	vec3 lightColor; // radiant flux
 };
 
@@ -36,7 +34,9 @@ struct SpotLight {
 	vec3 lightColor; // radiant flux
 };
 
+#define MAX_DIR_LIGHTS 5
 #define MAX_POINT_LIGHTS 5
+#define MAX_SPOT_LIGHTS 5
 
 in vec2 TexCoords;
 in vec3 Normal;
@@ -46,10 +46,13 @@ in vec4 FragPosLightClipSpace;
 out vec4 color;
 
 uniform sampler2D shadowmap;
+uniform int numDirLights;
 uniform int numPointLights;
-uniform DirLight dirLight;
+uniform int numSpotLights;
+
+uniform DirLight dirLights[MAX_DIR_LIGHTS];
 uniform PointLight pointLights[MAX_POINT_LIGHTS];
-uniform SpotLight spotLight;
+uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
 
 uniform Material material;
 uniform vec3 viewPos;
@@ -74,16 +77,29 @@ void main() {
 	vec3 gTextureColour = texture(material.texture_diffuse3, tiledCoords).rgb * blendMapColour.g;
 	vec3 bTextureColour = texture(material.texture_diffuse4, tiledCoords).rgb * blendMapColour.b;
 	
-	vec3 terrainColour = (backgroundTextureColour + rTextureColour + gTextureColour + bTextureColour) * 
-						 (CalcDirLight(dirLight, norm, fragToCam) + CalcSpotLight(spotLight, norm, FragPos) + CalcPointLight(pointLights[0], norm, FragPos, fragToCam));
-	
-	
+	vec3 blendedTexture = backgroundTextureColour + rTextureColour + gTextureColour + bTextureColour;
+
+	vec3 terrainColour = vec3(0.0);
+
+	for (int i = 0; i < numDirLights; ++i) {
+		terrainColour += CalcDirLight(dirLights[i], norm, fragToCam);
+	}
+
+	for (int i = 0; i < numPointLights; ++i) {
+		terrainColour += CalcPointLight(pointLights[i], norm, FragPos, fragToCam);
+	}
+
+	for (int i = 0; i < numSpotLights; ++i) {
+		terrainColour += CalcSpotLight(spotLights[i], norm, FragPos);
+	}
+
+	terrainColour = terrainColour * blendedTexture;
+
 	// Result
 	color = vec4(terrainColour, 1.0);
-	//color = vec4(Normal, 1.0);
-	//color = vec4(vec3(gl_FragCoord.z), 1.0); //depth buffer display
 }
 
+//add mutiple shadows
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 fragToCam) {
 	vec3 fragToLight = normalize(-light.direction);
 
@@ -100,7 +116,6 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 fragToCam)
 
 	float diff = max(dot(fragToLight, normal), 0.0);
 
-	// Attenuation calculation
 	// Attenuation calculation
 	float fragToLightDistance = length(light.position - fragPos);
 	float attenuation = 1.0 / (fragToLightDistance * fragToLightDistance);

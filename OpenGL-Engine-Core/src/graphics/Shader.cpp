@@ -44,10 +44,12 @@ namespace OpenGL_Engine {
 			if (length > 0) {
 				std::vector<char> error(length);
 				glGetShaderInfoLog(vertex, length, &length, &error[0]);
-				Logger::getInstance().error("logged_files/shader_creation.txt", "shader initialization", "failed to compile vertex shader " + error[0]);
+				std::string errorString(error.begin(), error.end());
+
+				Logger::getInstance().error("logged_files/shader_compile_error.txt", m_VertPath, errorString);
 			}
 			else {
-				Logger::getInstance().error("logged_files/shader_creation.txt", "shader initialization", "failed to compile vertex shader");
+				Logger::getInstance().error("logged_files/shader_compile_error.txt", m_VertPath, "unknown error");
 			}
 			glDeleteShader(vertex);
 			return 0;
@@ -62,14 +64,15 @@ namespace OpenGL_Engine {
 		if (result == GL_FALSE) {
 			int length;
 			glGetShaderiv(vertex, GL_INFO_LOG_LENGTH, &length);
-			std::vector<char> error(length);
 			if (length > 0) {
+				std::vector<char> error(length);
 				glGetShaderInfoLog(fragment, length, &length, &error[0]);
-				std::cout << "Failed to Compile Fragment Shader" << std::endl << &error[0] << std::endl;
-				Logger::getInstance().error("logged_files/shader_creation.txt", "shader initialization", "failed to compile fragment shader " + error[0]);
+				std::string errorString(error.begin(), error.end());
+
+				Logger::getInstance().error("logged_files/shader_compile_error.txt", m_FragPath, errorString);
 			}
 			else {
-				Logger::getInstance().error("logged_files/shader_creation.txt", "shader initialization", "failed to compile fragment shader");
+				Logger::getInstance().error("logged_files/shader_compile_error.txt", m_FragPath, "error unknown");
 			}
 			glDeleteShader(fragment);
 			return 0;
@@ -96,10 +99,12 @@ namespace OpenGL_Engine {
 				if (length > 0) {
 					std::vector<char> error(length);
 					glGetShaderInfoLog(geometry, length, &length, &error[0]);
-					Logger::getInstance().error("logged_files/shader_creation.txt", "shader initialization", "failed to compile geometry shader " + error[0]);
+					std::string errorString(error.begin(), error.end());
+
+					Logger::getInstance().error("logged_files/shader_compile_error.txt", m_GeomPath, errorString);
 				}
 				else {
-					Logger::getInstance().error("logged_files/shader_creation.txt", "shader initialization", "failed to compile geometry shader");
+					Logger::getInstance().error("logged_files/shader_compile_error.txt", m_GeomPath, "error unknown");
 				}
 				glDeleteShader(geometry);
 				return 0;

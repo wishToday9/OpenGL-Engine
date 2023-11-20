@@ -28,7 +28,7 @@ namespace OpenGL_Engine {
 		}
 	}
 
-	OpenGL_Engine::ShadowmapPassOutput ShadowmapPass::generateShadowmaps(ICamera* camera)
+	OpenGL_Engine::ShadowmapPassOutput ShadowmapPass::generateShadowmaps(ICamera* camera, bool renderOnlyStatic)
 	{
 		glViewport(0, 0, m_ShadowmapFramebuffer->getWidth(), m_ShadowmapFramebuffer->getHeight());
 		m_ShadowmapFramebuffer->bind();
@@ -43,7 +43,7 @@ namespace OpenGL_Engine {
 		// Temporary location code for the shadowmap. Will move to a proper system with CSM (Cascaded shadow maps)
 		m_GLCache->switchShader(m_ShadowmapShader->getShaderID());
 		glm::vec3 dirLightShadowmapLookAtPos = camera->getPosition() + (glm::normalize(camera->getFront()) * 50.0f);
-		glm::vec3 dirLightShadowmapEyePos = dirLightShadowmapLookAtPos + (-lightManager->getDirectionalLightDirection() * 100.0f);
+		glm::vec3 dirLightShadowmapEyePos = dirLightShadowmapLookAtPos + (-lightManager->getDirectionalLightDirection(0) * 100.0f);
 
 		glm::mat4 directionalLightProjection = glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, SHADOWMAP_NEAR_PLANE, SHADOWMAP_FAR_PLANE);
 		glm::mat4 directionalLightView = glm::lookAt(dirLightShadowmapEyePos, dirLightShadowmapLookAtPos, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -51,7 +51,12 @@ namespace OpenGL_Engine {
 		m_ShadowmapShader->setUniformMat4("lightSpaceViewProjectionMatrix", directionalLightViewProjMatrix);
 
 		//render models
-		m_ActiveScene->addModelsToRenderer();
+		if (renderOnlyStatic) {
+			m_ActiveScene->addStaticModelsToRenderer();
+		}
+		else {
+			m_ActiveScene->addModelsToRenderer();
+		}
 
 		modelRenderer->flushOpaque(m_ShadowmapShader, RenderPassType::ShadowmapPassType);
 		modelRenderer->flushTransparent(m_ShadowmapShader, RenderPassType::ShadowmapPassType);

@@ -3,7 +3,7 @@
 #include <graphics/Skybox.h>
 #include <graphics/Window.h>
 #include <graphics/camera/FPSCamera.h>
-#include <graphics/dynamicLights/DynamicLightManager.h>
+#include <graphics/dynamicLights/lights/DynamicLightManager.h>
 #include <graphics/ibl/ProbeManager.h>
 #include <graphics/renderer/GLCache.h>
 #include <graphics/renderer/ModelRenderer.h>
@@ -20,11 +20,10 @@ namespace OpenGL_Engine {
 		~Scene3D();
 
 		void onUpdate(float deltaTime);
-		void onRender();
 
 
 		void addModelsToRenderer();
-
+		void addStaticModelsToRenderer();
 		inline ModelRenderer* getModelRenderer() { return &m_ModelRenderer; }
 		inline Terrain* getTerrain() { return &m_Terrain; }
 		inline DynamicLightManager* getDynamicLightManager() { return &m_DynamicLightManager; }
@@ -34,6 +33,7 @@ namespace OpenGL_Engine {
 	private:
 		void init();
 		void addObjectsToRenderQueue();
+
 	private:
 		// Global Data
 		GLCache* m_GLCache;
