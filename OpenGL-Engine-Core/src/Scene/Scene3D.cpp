@@ -41,6 +41,11 @@ namespace OpenGL_Engine {
 		//m_RenderableModels.push_back(new RenderableModel(glm::vec3(140, 90, 140), glm::vec3(10, 10, 10), glm::vec3(1, 0, 0), 0, new Model(Sphere()), nullptr, false, false));
 		//m_RenderableModels.push_back(new RenderableModel(glm::vec3(-20, 90, -20), glm::vec3(10, 10, 10), glm::vec3(1, 0, 0), 0, new Model(Quad()), nullptr, false, false));
 
+
+		Model* helmet = new OpenGL_Engine::Model("res/3D_Models/DamagedHelmet/DamagedHelmet.gltf");
+		m_RenderableModels.push_back(new RenderableModel(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(6.0f, 6.0f, 6.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::radians(90.0f), helmet, nullptr, false, false));
+		helmet->getMeshes()[0].getMaterial().setMetallicMap(TextureLoader::getFullMetallic());
+
 		// Temp code until I rewrite the model loader
 		Model* pbrGun = new OpenGL_Engine::Model("res/3D_Models/Cerberus_Gun/Cerberus_LP.FBX");
 		m_RenderableModels.push_back(new RenderableModel(glm::vec3(150.0f, 75.0f, 150.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::radians(-90.0f), pbrGun, nullptr, true, false));

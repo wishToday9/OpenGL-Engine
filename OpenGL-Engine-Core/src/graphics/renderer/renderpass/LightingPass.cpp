@@ -8,7 +8,7 @@ namespace OpenGL_Engine {
 		: RenderPass(scene, RenderPassType::LightingPassType), m_AllocatedFramebuffer(true)
 	{
 		m_ModelShader = ShaderLoader::loadShader("src/shaders/pbr_model.vert", "src/shaders/pbr_model.frag");
-		m_TerrainShader = ShaderLoader::loadShader("src/shaders/terrain.vert", "src/shaders/terrain.frag");
+		m_TerrainShader = ShaderLoader::loadShader("src/shaders/pbr_terrain.vert", "src/shaders/pbr_terrain.frag");
 
 		m_Framebuffer = new FrameBuffer(Window::getWidth(), Window::getHeight());
 		m_Framebuffer->addTexture2DColorAttachment(shouldMultisample).addDepthStencilRBO(shouldMultisample).createFramebuffer();
@@ -18,7 +18,7 @@ namespace OpenGL_Engine {
 		
 	{
 		m_ModelShader = ShaderLoader::loadShader("src/shaders/pbr_model.vert", "src/shaders/pbr_model.frag");
-		m_TerrainShader = ShaderLoader::loadShader("src/shaders/terrain.vert", "src/shaders/terrain.frag");
+		m_TerrainShader = ShaderLoader::loadShader("src/shaders/pbr_terrain.vert", "src/shaders/pbr_terrain.frag");
 	}
 
 	LightingPass::~LightingPass()
@@ -94,11 +94,7 @@ namespace OpenGL_Engine {
 
 		(lightManager->*lightBindFuncion)(m_TerrainShader);
 		m_TerrainShader->setUniform3f("viewPos", camera->getPosition());
-		glm::mat4 modelMatrix(1);
-		modelMatrix = glm::translate(modelMatrix, terrain->getPosition());
-		glm::mat3 normalMatrix = glm::mat3(glm::transpose(glm::inverse(modelMatrix)));
-		m_TerrainShader->setUniformMat3("normalMatrix", normalMatrix);
-		m_TerrainShader->setUniformMat4("model", modelMatrix);
+
 		m_TerrainShader->setUniformMat4("view", camera->getViewMatrix());
 		m_TerrainShader->setUniformMat4("projection", camera->getProjectionMatrix());
 		
