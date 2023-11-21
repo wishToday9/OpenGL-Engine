@@ -1,8 +1,9 @@
 #pragma once
-
-#include <graphics/renderer/renderpass/ProbePass.h>
-#include <graphics/renderer/renderpass/LightingPass.h>
-#include <graphics/renderer/renderpass/PostProcessPass.h>
+#include <graphics/renderer/renderpass/deferred/DeferredGeometryPass.h>
+#include <graphics/renderer/renderpass/deferred/DeferredLightingPass.h>
+#include <graphics/renderer/renderpass/forward/ForwardLightingPass.h>
+#include <graphics/renderer/renderpass/forward/ForwardProbePass.h>
+#include <graphics/renderer/renderpass/forward/ForwardPostProcessPass.h>
 #include <graphics/renderer/renderpass/ShadowmapPass.h>
 #include <scene/Scene3D.h>
 #include <utils/Timer.h>
@@ -18,11 +19,17 @@ namespace OpenGL_Engine {
 		GLCache* m_GLCache;
 		Scene3D* m_ActiveScene;
 
-		// Render passes
+		// passes
 		ShadowmapPass m_ShadowmapPass;
-		LightingPass m_LightingPass;
-		PostProcessPass m_PostProcessPass;
-		ProbePass m_EnvironmentProbePass;
+
+		// forward passes
+		ForwardLightingPass m_ForwardLightingPass;
+		ForwardPostProcessPass m_ForwardPostProcessPass;
+		ForwardProbePass m_EnvironmentProbePass;
+
+		// deferred passes
+		DeferredGeometryPass m_DeferredGeometryPass;
+		DeferredLightingPass m_DeferredLightingPass;
 
 		Timer m_Timer;
 	};

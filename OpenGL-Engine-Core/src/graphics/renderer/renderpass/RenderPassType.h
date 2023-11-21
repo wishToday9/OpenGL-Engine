@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <platform/OpenGL/Framebuffers/GBuffer.h>
 
 namespace OpenGL_Engine {
 	class FrameBuffer;
@@ -9,7 +10,8 @@ namespace OpenGL_Engine {
 		ShadowmapPassType,
 		LightingPassType,
 		PostProcessPassType,
-		ProbePassType
+		ProbePassType,
+		GeometryPassType
 	};
 
 	struct ShadowmapPassOutput {
@@ -19,5 +21,9 @@ namespace OpenGL_Engine {
 
 	struct LightingPassOutput {
 		FrameBuffer* outputFramebuffer;
+	};
+
+	struct GeometryPassOutput {
+		GBuffer* outputGBuffer;
 	};
 }

@@ -15,41 +15,44 @@ namespace OpenGL_Engine {
 	void TextureLoader::initializeDefaultTextures()
 	{
 		// Setup texture and minimal filtering because they are 1x1 textures so they require none
-		s_DefaultAlbedo = load2DTexture(std::string("res/textures/default/defaultAlbedo.png"), true);
+		TextureSettings srgbTextureSettings;
+		srgbTextureSettings.IsSRGB = true;
+
+		s_DefaultAlbedo = load2DTexture(std::string("res/textures/default/defaultAlbedo.png"), &srgbTextureSettings);
 		s_DefaultAlbedo->setAnisotropicFilteringMode(1.0f, true);
 		s_DefaultAlbedo->setTextureMinFilter(GL_NEAREST);
 		s_DefaultAlbedo->setTextureMagFilter(GL_NEAREST);
-		s_DefaultNormal = load2DTexture(std::string("res/textures/default/defaultNormal.png"), false);
+		s_DefaultNormal = load2DTexture(std::string("res/textures/default/defaultNormal.png"));
 		s_DefaultNormal->setAnisotropicFilteringMode(1.0f, true);
 		s_DefaultNormal->setTextureMinFilter(GL_NEAREST);
 		s_DefaultNormal->setTextureMagFilter(GL_NEAREST);
-		s_FullMetallic = load2DTexture(std::string("res/textures/default/white.png"), false);
+		s_FullMetallic = load2DTexture(std::string("res/textures/default/white.png"));
 		s_FullMetallic->setAnisotropicFilteringMode(1.0f, true);
 		s_FullMetallic->setTextureMinFilter(GL_NEAREST);
 		s_FullMetallic->setTextureMagFilter(GL_NEAREST);
-		s_NoMetallic = load2DTexture(std::string("res/textures/default/black.png"), false);
+		s_NoMetallic = load2DTexture(std::string("res/textures/default/black.png"));
 		s_NoMetallic->setAnisotropicFilteringMode(1.0f, true);
 		s_NoMetallic->setTextureMinFilter(GL_NEAREST);
 		s_NoMetallic->setTextureMagFilter(GL_NEAREST);
-		s_FullRoughness = load2DTexture(std::string("res/textures/default/white.png"), false);
+		s_FullRoughness = load2DTexture(std::string("res/textures/default/white.png"));
 		s_FullRoughness->setAnisotropicFilteringMode(1.0f, true);
 		s_FullRoughness->setTextureMinFilter(GL_NEAREST);
 		s_FullRoughness->setTextureMagFilter(GL_NEAREST);
-		s_NoRoughness = load2DTexture(std::string("res/textures/default/black.png"), false);
+		s_NoRoughness = load2DTexture(std::string("res/textures/default/black.png"));
 		s_NoRoughness->setAnisotropicFilteringMode(1.0f, true);
 		s_NoRoughness->setTextureMinFilter(GL_NEAREST);
 		s_NoRoughness->setTextureMagFilter(GL_NEAREST);
-		s_DefaultAO = load2DTexture(std::string("res/textures/default/white.png"), false);
+		s_DefaultAO = load2DTexture(std::string("res/textures/default/white.png"));
 		s_DefaultAO->setAnisotropicFilteringMode(1.0f, true);
 		s_DefaultAO->setTextureMinFilter(GL_NEAREST);
 		s_DefaultAO->setTextureMagFilter(GL_NEAREST);
-		s_DefaultEmission = load2DTexture(std::string("res/textures/default/black.png"), true);
+		s_DefaultEmission = load2DTexture(std::string("res/textures/default/black.png"), &srgbTextureSettings);
 		s_DefaultEmission->setAnisotropicFilteringMode(1.0f, true);
 		s_DefaultEmission->setTextureMinFilter(GL_NEAREST);
 		s_DefaultEmission->setTextureMagFilter(GL_NEAREST);
 	}
 
-	OpenGL_Engine::Texture* TextureLoader::load2DTexture(std::string& path, bool isSRGB, TextureSettings* settings)
+	OpenGL_Engine::Texture* TextureLoader::load2DTexture(std::string& path, TextureSettings* settings)
 	{
 		//check the cache
 		auto iter = m_TextureCache.find(path);
@@ -75,18 +78,14 @@ namespace OpenGL_Engine {
 		case 4: dataFormat = GL_RGBA; break;
 		}
 
-		GLenum textureFormat = dataFormat;
-		if (isSRGB) {
-			switch (dataFormat) {
-			case GL_RGB: textureFormat = GL_SRGB; break;
-			case GL_RGBA: textureFormat = GL_SRGB_ALPHA; break;
-			}
+		Texture* texture = nullptr;
+		if (settings != nullptr) {
+			texture = new Texture(*settings);
 		}
-
-		Texture* texture = new Texture();
-		if (settings != nullptr)
-			texture->setTextureSettings(*settings);
-		texture->generate2DTexture(width, height, textureFormat, dataFormat, data);
+		else {
+			texture = new Texture();
+		}
+		texture->generate2DTexture(width, height, dataFormat, data);
 
 		m_TextureCache.insert(std::pair<std::string, Texture*>(path, texture));
 		return m_TextureCache[path];

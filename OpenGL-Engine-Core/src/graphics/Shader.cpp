@@ -48,7 +48,7 @@ namespace OpenGL_Engine {
 		glCompileShader(vertex);
 		// Check to see if it was successful
 		glGetShaderiv(vertex, GL_COMPILE_STATUS, &result);
-		if (result == GL_FALSE) {
+		if (result == GL_FALSE || vertSourceString.empty()) {
 			int length;
 			glGetShaderiv(vertex, GL_INFO_LOG_LENGTH, &length);
 			if (length > 0) {
@@ -74,7 +74,7 @@ namespace OpenGL_Engine {
 
 		// Check to see if it was successful
 		glGetShaderiv(fragment, GL_COMPILE_STATUS, &result);
-		if (result == GL_FALSE) {
+		if (result == GL_FALSE || fragSourceString.empty()) {
 			int length;
 			glGetShaderiv(vertex, GL_INFO_LOG_LENGTH, &length);
 			if (length > 0) {
@@ -106,7 +106,7 @@ namespace OpenGL_Engine {
 
 			// Check to see if it was successful
 			glGetShaderiv(geometry, GL_COMPILE_STATUS, &result);
-			if (result == GL_FALSE) {
+			if (result == GL_FALSE || geomSourceString.empty()) {
 				int length;
 				glGetShaderiv(geometry, GL_INFO_LOG_LENGTH, &length);
 				std::vector<char> error(length);
@@ -135,7 +135,7 @@ namespace OpenGL_Engine {
 			glCompileShader(hull);
 
 			glGetShaderiv(hull, GL_COMPILE_STATUS, &result);
-			if (result == GL_FALSE) {
+			if (result == GL_FALSE || hullSourceString.empty()) {
 				int length;
 				glGetShaderiv(hull, GL_INFO_LOG_LENGTH, &length);
 				if (length > 0) {
@@ -164,7 +164,7 @@ namespace OpenGL_Engine {
 			glCompileShader(domain);
 
 			glGetShaderiv(domain, GL_COMPILE_STATUS, &result);
-			if (result == GL_FALSE) {
+			if (result == GL_FALSE || domainSourceString.empty()) {
 				int length;
 				glGetShaderiv(domain, GL_INFO_LOG_LENGTH, &length);
 				if (length > 0) {

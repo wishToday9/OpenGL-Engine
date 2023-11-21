@@ -7,7 +7,7 @@ namespace OpenGL_Engine {
 	class FrameBuffer {
 	public:
 		FrameBuffer(unsigned int width, unsigned int height);
-		~FrameBuffer();
+		virtual ~FrameBuffer();
 
 		void createFramebuffer();
 		FrameBuffer& addTexture2DColorAttachment(bool multisampledBuffer);
@@ -32,7 +32,7 @@ namespace OpenGL_Engine {
 		inline unsigned int getDepthStencilRBO() { return m_DepthStencilRBO; }
 		inline unsigned int getDepthTexture() { return m_DepthTexture; }
 		inline bool isMultisampledColourBuffer() { return m_IsMultiSampledColorBuffer; }
-	private:
+	protected:
 		unsigned int m_FBO;
 
 		bool m_IsMultiSampledColorBuffer;

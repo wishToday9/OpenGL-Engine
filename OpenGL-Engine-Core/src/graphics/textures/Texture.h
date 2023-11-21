@@ -4,6 +4,11 @@
 namespace OpenGL_Engine { 
 
 	struct TextureSettings {
+		//texture format
+		GLenum TextureFormat = GL_NONE; //if set to none, the data format will be used
+
+		bool IsSRGB = false;
+
 		//texture wrapping options
 		GLenum TextureWrapSMode = GL_REPEAT;
 		GLenum TextureWrapTMode = GL_REPEAT;
@@ -22,13 +27,13 @@ namespace OpenGL_Engine {
 
 	class Texture {
 	public:
-		Texture();
+		//default setting
+		Texture(TextureSettings& settings = TextureSettings());
 
-		Texture(TextureSettings& settings);
 		~Texture();
 
 		//generation functions
-		void generate2DTexture(unsigned int width, unsigned int height, GLenum textureFormat, GLenum dataFormat, const void* data);	
+		void generate2DTexture(unsigned int width, unsigned int height, GLenum dataFormat, const void* data);	
 
 		void bind(int uint = -1);
 		void unbind();
@@ -49,13 +54,12 @@ namespace OpenGL_Engine {
 		unsigned int getTextureId() { return m_TextureId; }
 		unsigned int getWidth() { return m_Width; }
 		unsigned int getHeight() { return m_Height; }
+		const TextureSettings& getTextureSettings() { return m_TextureSettings; }
 	private:
 		// TODO: Need support for deletion/cleanup of cubemap
 		unsigned int m_TextureId;
 		GLenum m_TextureTarget;
-
 		unsigned int m_Width, m_Height;
-		GLenum m_TextureFormat;
 
 		TextureSettings m_TextureSettings;
 	};

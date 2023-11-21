@@ -162,9 +162,12 @@
     <ClCompile Include="src\graphics\camera\FPSCamera.cpp" />
     <ClCompile Include="src\graphics\mesh\Material.cpp" />
     <ClCompile Include="src\graphics\renderer\MasterRenderer.cpp" />
-    <ClCompile Include="src\graphics\renderer\renderpass\LightingPass.cpp" />
-    <ClCompile Include="src\graphics\renderer\renderpass\PostProcessPass.cpp" />
-    <ClCompile Include="src\graphics\renderer\renderpass\ProbePass.cpp" />
+    <ClCompile Include="src\graphics\renderer\renderpass\deferred\DeferredGeometryPass.cpp" />
+    <ClCompile Include="src\graphics\renderer\renderpass\deferred\DeferredLightingPass.cpp" />
+    <ClCompile Include="src\graphics\renderer\renderpass\deferred\DeferredPostProcessPass.cpp" />
+    <ClCompile Include="src\graphics\renderer\renderpass\forward\ForwardLightingPass.cpp" />
+    <ClCompile Include="src\graphics\renderer\renderpass\forward\ForwardPostProcessPass.cpp" />
+    <ClCompile Include="src\graphics\renderer\renderpass\forward\ForwardProbePass.cpp" />
     <ClCompile Include="src\graphics\renderer\renderpass\RenderPass.cpp" />
     <ClCompile Include="src\graphics\renderer\renderpass\ShadowmapPass.cpp" />
     <ClCompile Include="src\input\InputManager.cpp" />
@@ -173,6 +176,7 @@
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\platform\OpenGL\Framebuffers\GBuffer.cpp" />
     <ClCompile Include="src\Scene\RenderableModel.cpp" />
     <ClCompile Include="src\graphics\textures\Cubemap.cpp" />
     <ClCompile Include="src\terrain\TerrainNode.cpp" />
@@ -221,9 +225,12 @@
     <ClInclude Include="src\graphics\mesh\Material.h" />
     <ClInclude Include="src\graphics\mesh\Mesh.h" />
     <ClInclude Include="src\graphics\renderer\MasterRenderer.h" />
-    <ClInclude Include="src\graphics\renderer\renderpass\LightingPass.h" />
-    <ClInclude Include="src\graphics\renderer\renderpass\PostProcessPass.h" />
-    <ClInclude Include="src\graphics\renderer\renderpass\ProbePass.h" />
+    <ClInclude Include="src\graphics\renderer\renderpass\deferred\DeferredGeometryPass.h" />
+    <ClInclude Include="src\graphics\renderer\renderpass\deferred\DeferredLightingPass.h" />
+    <ClInclude Include="src\graphics\renderer\renderpass\deferred\DeferredPostProcessPass.h" />
+    <ClInclude Include="src\graphics\renderer\renderpass\forward\ForwardLightingPass.h" />
+    <ClInclude Include="src\graphics\renderer\renderpass\forward\ForwardPostProcessPass.h" />
+    <ClInclude Include="src\graphics\renderer\renderpass\forward\ForwardProbePass.h" />
     <ClInclude Include="src\graphics\renderer\renderpass\RenderPass.h" />
     <ClInclude Include="src\graphics\renderer\renderpass\RenderPassType.h" />
     <ClInclude Include="src\graphics\renderer\renderpass\ShadowmapPass.h" />
@@ -231,6 +238,7 @@
     <ClInclude Include="src\input\JoystickInputData.h" />
     <ClInclude Include="src\input\JoystickManager.h" />
     <ClInclude Include="src\pch.h" />
+    <ClInclude Include="src\platform\OpenGL\Framebuffers\GBuffer.h" />
     <ClInclude Include="src\Scene\RenderableModel.h" />
     <ClInclude Include="src\graphics\textures\Cubemap.h" />
     <ClInclude Include="src\terrain\TerrainNode.h" />
@@ -262,15 +270,21 @@
   <ItemGroup>
     <None Include="src\shaders\brdf_integration.frag" />
     <None Include="src\shaders\brdf_integration.vert" />
+    <None Include="src\shaders\deferred\pbr_lighting_pass.frag" />
+    <None Include="src\shaders\deferred\pbr_lighting_pass.vert" />
+    <None Include="src\shaders\deferred\pbr_model_geometry.frag" />
+    <None Include="src\shaders\deferred\pbr_model_geometry.vert" />
+    <None Include="src\shaders\deferred\pbr_terrain_geometry.frag" />
+    <None Include="src\shaders\deferred\pbr_terrain_geometry.vert" />
     <None Include="src\shaders\directionalLight.frag" />
     <None Include="src\shaders\lightprobe_convolution.frag" />
     <None Include="src\shaders\lightprobe_convolution.vert" />
     <None Include="src\shaders\oldModel.frag" />
     <None Include="src\shaders\reflectionprobe_importance_sampling.frag" />
     <None Include="src\shaders\reflectionprobe_importance_sampling.vert" />
-    <None Include="src\shaders\pbr_terrain.vert" />
-    <None Include="src\shaders\pbr_model.frag" />
-    <None Include="src\shaders\pbr_model.vert" />
+    <None Include="src\shaders\forward\pbr_terrain.vert" />
+    <None Include="src\shaders\forward\pbr_model.frag" />
+    <None Include="src\shaders\forward\pbr_model.vert" />
     <None Include="src\shaders\postprocess.frag" />
     <None Include="src\shaders\postprocess.vert" />
     <None Include="src\shaders\pointlight.frag" />
@@ -279,7 +293,7 @@
     <None Include="src\shaders\skybox.frag" />
     <None Include="src\shaders\skybox.vert" />
     <None Include="src\shaders\spotlight.frag" />
-    <None Include="src\shaders\pbr_terrain.frag" />
+    <None Include="src\shaders\forward\pbr_terrain.frag" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\awesomeface.png" />

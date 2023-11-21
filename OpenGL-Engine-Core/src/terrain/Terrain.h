@@ -1,9 +1,10 @@
 #pragma once
 
-#include <graphics/Shader.h>
 #include <graphics/mesh/Mesh.h>
 #include <graphics/mesh/Model.h>
 #include <utils/loaders/TextureLoader.h>
+#include <graphics/renderer/GLCache.h>
+#include <graphics/Shader.h>
 
 namespace OpenGL_Engine { 
 	class Terrain {
@@ -22,6 +23,8 @@ namespace OpenGL_Engine {
 
 		float Terrain::clamp(float n, float lower, float upper);
 	private:
+		GLCache* m_GLCache;
+
 		//Tweakable Terrain Variables
 		float m_TextureTilingAmount;
 		float m_TerrainSizeXZ, m_TerrainSizeY;
