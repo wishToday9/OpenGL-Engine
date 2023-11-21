@@ -76,6 +76,8 @@ vec3 FresnelSchlick(float cosTheta, vec3 baseReflectivity);
 
 // Other function prototypes
 float CalculateShadow(vec3 normal, vec3 fragToDirLight);
+// Unpacks the normal from the texture and returns the normal in tangent space
+vec3 UnpackNormal(vec3 textureNormal);
 
 
 void main() {
@@ -89,9 +91,8 @@ void main() {
 
 	float ao = texture(material.texture_ao, TexCoords).r;
 
-	//normal mapping 
-	normal = normalize(normal * 2.0 - 1.0f);
-	normal = normalize(TBN * normal);
+	/// Normal mapping code. Opted out of tangent space normal mapping since I would have to convert all of my lights to tangent space
+	normal = normalize(TBN * UnpackNormal(normal));
 
 	vec3 fragToView = normalize(viewPos - FragPos);
 	vec3 reflectionVec = reflect(-fragToView, normal);
@@ -296,3 +297,8 @@ float CalculateShadow(vec3 normal, vec3 fragToLight) {
 	return shadow;
 }
 
+
+// Unpacks the normal from the texture and returns the normal in tangent space
+vec3 UnpackNormal(vec3 textureNormal) {
+	return normalize(textureNormal * 2.0 - 1.0);
+}
