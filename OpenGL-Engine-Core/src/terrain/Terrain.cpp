@@ -165,7 +165,7 @@ namespace OpenGL_Engine{
 			// Texture unit 2 is reserved for the prefilterMap
 			// Texture unit 3 is reserved for the brdfLUT
 			if (pass != RenderPassType::ShadowmapPassType) {
-				unsigned int currentTextureUnit = 4;
+				unsigned int currentTextureUnit = 1;
 				// Textures
 				m_Textures[0]->bind(currentTextureUnit);
 				shader->setUniform1i("material.texture_albedo1", currentTextureUnit++);
@@ -227,6 +227,7 @@ namespace OpenGL_Engine{
 			shader->setUniformMat4("model", m_ModelMatrix);
 
 			m_GLCache->setDepthTest(true);
+			m_GLCache->setDepthFunc(GL_LESS);
 			m_GLCache->setBlend(false);
 			m_GLCache->setFaceCull(true);
 			m_GLCache->setCullFace(GL_BACK);

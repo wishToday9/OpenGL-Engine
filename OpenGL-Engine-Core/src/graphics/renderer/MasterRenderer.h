@@ -1,6 +1,7 @@
 #pragma once
 #include <graphics/renderer/renderpass/deferred/DeferredGeometryPass.h>
 #include <graphics/renderer/renderpass/deferred/DeferredLightingPass.h>
+#include <graphics/renderer/renderpass/deferred/DeferredPostProcessPass.h>
 #include <graphics/renderer/renderpass/forward/ForwardLightingPass.h>
 #include <graphics/renderer/renderpass/forward/ForwardProbePass.h>
 #include <graphics/renderer/renderpass/forward/ForwardPostProcessPass.h>
@@ -30,6 +31,7 @@ namespace OpenGL_Engine {
 		// deferred passes
 		DeferredGeometryPass m_DeferredGeometryPass;
 		DeferredLightingPass m_DeferredLightingPass;
+		DeferredPostProcessPass m_DeferredPostProcessPass;
 
 		Timer m_Timer;
 	};

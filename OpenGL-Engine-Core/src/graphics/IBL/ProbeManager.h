@@ -28,7 +28,7 @@ namespace OpenGL_Engine {
 		inline void setReflectionProbeFallback(ReflectionProbe* probe) { m_ReflectionProbeFallback = probe; }
 
 		//Assumes shader is bound
-		void bindProbe(glm::vec3& renderPosition, Shader* shader);
+		void bindProbes(glm::vec3& renderPosition, Shader* shader);
 	private:
 		ProbeBlendSetting m_ProbeBlendSetting;
 

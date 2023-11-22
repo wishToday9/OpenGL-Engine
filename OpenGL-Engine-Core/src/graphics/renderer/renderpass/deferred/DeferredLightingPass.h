@@ -8,18 +8,18 @@ namespace OpenGL_Engine {
 	class DeferredLightingPass : public RenderPass {
 	public:
 		DeferredLightingPass(Scene3D* scene);
-		DeferredLightingPass(Scene3D* scene, FrameBuffer* framebuffer);
+		DeferredLightingPass(Scene3D* scene, Framebuffer* framebuffer);
 
 		virtual ~DeferredLightingPass() override;
 
-		LightingPassOutput executeRenderPass(ShadowmapPassOutput& shadowmapData,
+		LightingPassOutput executePostLightingPass(ShadowmapPassOutput& shadowmapData,
 			GeometryPassOutput& geometryData, ICamera* camera, bool useIBL);
 	private:
 		void bindShadowmap(Shader* shader, ShadowmapPassOutput& shadowmapData);
 
 	private:
 		bool m_AllocatedFramebuffer;
-		FrameBuffer* m_Framebuffer;
+		Framebuffer* m_Framebuffer;
 		Shader* m_LightingShader;
 	};
 

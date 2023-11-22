@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "GLCache.h"
 
-namespace OpenGL_Engine {  
+namespace OpenGL_Engine {
 
 	GLCache::GLCache() : m_ActiveShaderID(0) {
 		// Initialize cache values to ensure garbage data doesn't mess with my GL state
@@ -64,6 +64,16 @@ namespace OpenGL_Engine {
 		}
 	}
 
+	void GLCache::setMultisample(bool choice) {
+		if (m_Multisample != choice) {
+			m_Multisample = choice;
+			if (m_Multisample)
+				glEnable(GL_MULTISAMPLE);
+			else
+				glDisable(GL_MULTISAMPLE);
+		}
+	}
+
 	void GLCache::setDepthFunc(GLenum depthFunc) {
 		if (m_DepthFunc != depthFunc) {
 			m_DepthFunc = depthFunc;
@@ -73,8 +83,8 @@ namespace OpenGL_Engine {
 
 	void GLCache::setStencilFunc(GLenum testFunc, int stencilFragValue, unsigned int stencilBitmask) {
 		if (m_StencilTestFunc != testFunc || m_StencilFragValue != stencilFragValue || m_StencilFuncBitmask != stencilBitmask) {
-			m_StencilTestFunc = testFunc; 
-			m_StencilFragValue = stencilFragValue; 
+			m_StencilTestFunc = testFunc;
+			m_StencilFragValue = stencilFragValue;
 			m_StencilFuncBitmask = stencilBitmask;
 
 			glStencilFuncSeparate(GL_FRONT_AND_BACK, m_StencilTestFunc, m_StencilFragValue, m_StencilFuncBitmask);
@@ -113,19 +123,7 @@ namespace OpenGL_Engine {
 		}
 	}
 
-	void GLCache::setMultisample(bool choice)
-	{
-		if (m_Multisample != choice) {
-			m_Multisample = choice;
-			if (m_Multisample)
-				glEnable(GL_MULTISAMPLE);
-			else
-				glDisable(GL_MULTISAMPLE);
-		}
-	}
-
-	void GLCache::switchShader(Shader* shader)
-	{
+	void GLCache::switchShader(Shader* shader) {
 		if (m_ActiveShaderID != shader->getShaderID()) {
 			m_ActiveShaderID = shader->getShaderID();
 			shader->enable();
@@ -139,4 +137,4 @@ namespace OpenGL_Engine {
 		}
 	}
 
-} 
+}

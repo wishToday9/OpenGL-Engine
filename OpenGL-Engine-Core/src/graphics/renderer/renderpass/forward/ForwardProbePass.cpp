@@ -61,7 +61,7 @@ namespace OpenGL_Engine {
 		brdfLUT->generate2DTexture(BRDF_LUT_RESOLUTION, BRDF_LUT_RESOLUTION, GL_RGB, 0);
 
 		// Setup the framebuffer that we are using to generate our BRDF LUT
-		FrameBuffer brdfFramebuffer(BRDF_LUT_RESOLUTION, BRDF_LUT_RESOLUTION);
+		Framebuffer brdfFramebuffer(BRDF_LUT_RESOLUTION, BRDF_LUT_RESOLUTION);
 		brdfFramebuffer.addTexture2DColorAttachment(false).addDepthRBO(false).createFramebuffer();
 		brdfFramebuffer.bind();
 
@@ -178,7 +178,7 @@ namespace OpenGL_Engine {
 			// Light pass
 			m_SceneCaptureLightingFramebuffer.bind();
 			m_SceneCaptureLightingFramebuffer.setColorAttachment(m_SceneCaptureCubemap.getCubemapID(), GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
-			lightingPass.executeRenderPass(shadowpassOutput, &m_CubemapCamera, true, false);
+			lightingPass.executePostLightingPass(shadowpassOutput, &m_CubemapCamera, true, false);
 			m_SceneCaptureLightingFramebuffer.setColorAttachment(0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
 		}
 
@@ -230,7 +230,7 @@ namespace OpenGL_Engine {
 			// Light pass
 			m_SceneCaptureLightingFramebuffer.bind();
 			m_SceneCaptureLightingFramebuffer.setColorAttachment(m_SceneCaptureCubemap.getCubemapID(), GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
-			lightingPass.executeRenderPass(shadowpassOutput, &m_CubemapCamera, true, false);
+			lightingPass.executePostLightingPass(shadowpassOutput, &m_CubemapCamera, true, false);
 			m_SceneCaptureLightingFramebuffer.setColorAttachment(0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i);
 		}
 

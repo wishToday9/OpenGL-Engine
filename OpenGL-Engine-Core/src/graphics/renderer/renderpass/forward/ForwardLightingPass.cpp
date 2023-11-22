@@ -10,10 +10,10 @@ namespace OpenGL_Engine {
 		m_ModelShader = ShaderLoader::loadShader("src/shaders/forward/pbr_model.vert", "src/shaders/forward/pbr_model.frag");
 		m_TerrainShader = ShaderLoader::loadShader("src/shaders/forward/pbr_terrain.vert", "src/shaders/forward/pbr_terrain.frag");
 
-		m_Framebuffer = new FrameBuffer(Window::getWidth(), Window::getHeight());
+		m_Framebuffer = new Framebuffer(Window::getWidth(), Window::getHeight());
 		m_Framebuffer->addTexture2DColorAttachment(shouldMultisample).addDepthStencilRBO(shouldMultisample).createFramebuffer();
 	}
-	ForwardLightingPass::ForwardLightingPass(Scene3D* scene, FrameBuffer* customFramebuffer) 
+	ForwardLightingPass::ForwardLightingPass(Scene3D* scene, Framebuffer* customFramebuffer) 
 		: RenderPass(scene, RenderPassType::LightingPassType), m_Framebuffer(customFramebuffer), m_AllocatedFramebuffer(false)
 		
 	{
@@ -29,7 +29,7 @@ namespace OpenGL_Engine {
 		
 	}
 
-	OpenGL_Engine::LightingPassOutput ForwardLightingPass::executeRenderPass(ShadowmapPassOutput& shadowmapData, ICamera* camera, bool renderOnlyStatic, bool useIBL)
+	OpenGL_Engine::LightingPassOutput ForwardLightingPass::executePostLightingPass(ShadowmapPassOutput& shadowmapData, ICamera* camera, bool renderOnlyStatic, bool useIBL)
 	{
 		glViewport(0, 0, m_Framebuffer->getWidth(), m_Framebuffer->getHeight());
 		m_Framebuffer->bind();
@@ -65,7 +65,7 @@ namespace OpenGL_Engine {
 		// IBL code
 		if (useIBL) {
 			m_ModelShader->setUniform1i("computeIBL", 1);
-			probeManager->bindProbe(glm::vec3(0.0, 0.0, 0.0), m_ModelShader);
+			probeManager->bindProbes(glm::vec3(0.0, 0.0, 0.0), m_ModelShader);
 		}
 		else {
 			m_ModelShader->setUniform1i("computeIBL", 0);

@@ -9,6 +9,7 @@
 #include <platform/OpenGL/IndexBuffer.h>
 #include <platform/OpenGL/VertexArray.h>
 #include <utils/loaders/TextureLoader.h>
+#include <graphics/mesh/common/Cube.h>
 
 namespace OpenGL_Engine {  
 	class Skybox {
@@ -24,9 +25,7 @@ namespace OpenGL_Engine {
 		Shader* m_SkyboxShader;
 		GLCache* m_GLCache;
 
-		VertexArray m_SkyboxVAO;
-		IndexBuffer m_SkyboxIBO;
-		Buffer  m_SkyboxVBO;
+		Cube cube;
 		Cubemap* m_SkyboxCubemap; // Cubemap 
 	};
 } 

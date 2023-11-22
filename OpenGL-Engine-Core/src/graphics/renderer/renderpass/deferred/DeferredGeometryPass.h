@@ -5,6 +5,11 @@
 #include <Scene/Scene3D.h>
 
 namespace OpenGL_Engine {
+	enum DeferredStencilValue : int {
+		ModelStencilValue = 0x01,
+		TerrainStencilValue = 0x02
+	};
+
 	class DeferredGeometryPass : public RenderPass {
 	public:
 		DeferredGeometryPass(Scene3D* scene);
@@ -12,7 +17,7 @@ namespace OpenGL_Engine {
 
 		virtual ~DeferredGeometryPass();
 
-		GeometryPassOutput executeRenderPass(ICamera* camera, bool renderOnlyStatic);
+		GeometryPassOutput executePostLightingPass(ICamera* camera, bool renderOnlyStatic);
 	private:
 		bool m_AllocatedGBuffer;
 		GBuffer* m_GBuffer;

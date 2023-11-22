@@ -10,13 +10,13 @@ namespace OpenGL_Engine {
 	class ShadowmapPass : public RenderPass {
 	public:
 		ShadowmapPass(Scene3D* scene);
-		ShadowmapPass(Scene3D* scene, FrameBuffer* customFramebuffer);
+		ShadowmapPass(Scene3D* scene, Framebuffer* customFramebuffer);
 		virtual ~ShadowmapPass() override;
 
 		ShadowmapPassOutput generateShadowmaps(ICamera* camera, bool renderOnlyStatic);
 	private:
 		bool m_AllocateFramebuffer;
-		FrameBuffer* m_ShadowmapFramebuffer;
+		Framebuffer* m_ShadowmapFramebuffer;
 		Shader* m_ShadowmapShader;
 	};
 }

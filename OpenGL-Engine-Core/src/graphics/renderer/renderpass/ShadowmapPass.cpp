@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ShadowmapPass.h"
 
-#include <platform/OpenGL/Framebuffers/FrameBuffer.h>
+#include <platform/OpenGL/Framebuffers/Framebuffer.h>
 #include <utils/loaders/ShaderLoader.h>
 
 
@@ -10,11 +10,11 @@ namespace OpenGL_Engine {
 		:RenderPass(scene, RenderPassType::ShadowmapPassType), m_AllocateFramebuffer(true)
 	{
 		m_ShadowmapShader = ShaderLoader::loadShader("src/shaders/shadowmap.vert", "src/shaders/shadowmap.frag");
-		m_ShadowmapFramebuffer = new FrameBuffer(SHADOWMAP_RESOLUTION_X, SHADOWMAP_RESOLUTION_Y);
+		m_ShadowmapFramebuffer = new Framebuffer(SHADOWMAP_RESOLUTION_X, SHADOWMAP_RESOLUTION_Y);
 		m_ShadowmapFramebuffer->addDepthAttachment(false).createFramebuffer();
 	}
 
-	ShadowmapPass::ShadowmapPass(Scene3D* scene, FrameBuffer* customFramebuffer)
+	ShadowmapPass::ShadowmapPass(Scene3D* scene, Framebuffer* customFramebuffer)
 		: RenderPass(scene, RenderPassType::ShadowmapPassType), 
 		m_ShadowmapFramebuffer(customFramebuffer), m_AllocateFramebuffer(false)
 	{

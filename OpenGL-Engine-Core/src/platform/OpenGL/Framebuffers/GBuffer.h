@@ -1,9 +1,9 @@
 #pragma once
 
-#include <platform/OpenGL/Framebuffers/FrameBuffer.h>
+#include <platform/OpenGL/Framebuffers/Framebuffer.h>
 
 namespace OpenGL_Engine {
-	class GBuffer :public FrameBuffer {
+	class GBuffer :public Framebuffer {
 	public:
 		GBuffer(unsigned int width, unsigned int height);
 		~GBuffer();

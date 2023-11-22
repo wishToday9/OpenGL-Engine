@@ -18,12 +18,12 @@ namespace OpenGL_Engine
 
 	ForwardPostProcessPass::~ForwardPostProcessPass() {	}
 
-	void ForwardPostProcessPass::executeRenderPass(FrameBuffer* framebufferToProcess) {
+	void ForwardPostProcessPass::executePostLightingPass(Framebuffer* framebufferToProcess) {
 
 		glViewport(0, 0, Window::getWidth(), Window::getHeight());
 
 
-		FrameBuffer* target = framebufferToProcess;
+		Framebuffer* target = framebufferToProcess;
 		if (framebufferToProcess->isMultisampledColourBuffer()) {
 			glBindFramebuffer(GL_READ_FRAMEBUFFER, framebufferToProcess->getFramebuffer());
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_ScreenRenderTarget.getFramebuffer());

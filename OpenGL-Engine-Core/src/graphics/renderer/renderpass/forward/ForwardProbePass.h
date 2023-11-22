@@ -5,7 +5,7 @@
 #include <graphics/renderer/renderpass/ShadowmapPass.h>
 #include <graphics/Shader.h>
 #include <scene/Scene3D.h>>
-#include <platform/OpenGL/Framebuffers/FrameBuffer.h>
+#include <platform/OpenGL/Framebuffers/Framebuffer.h>
 
 namespace OpenGL_Engine {
 	class ForwardProbePass : public RenderPass {
@@ -23,7 +23,7 @@ namespace OpenGL_Engine {
 		void generateFallbackProbes();
 
 	private:
-		FrameBuffer m_SceneCaptureShadowFramebuffer, m_SceneCaptureLightingFramebuffer,
+		Framebuffer m_SceneCaptureShadowFramebuffer, m_SceneCaptureLightingFramebuffer,
 			m_LightProbeConvolutionFramebuffer, m_ReflectionProbeSamplingFramebuffer;
 		CubemapCamera m_CubemapCamera;
 		CubemapSettings m_SceneCaptureSettings;

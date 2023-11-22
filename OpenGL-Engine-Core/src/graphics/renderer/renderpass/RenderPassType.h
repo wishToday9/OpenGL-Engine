@@ -4,7 +4,7 @@
 #include <platform/OpenGL/Framebuffers/GBuffer.h>
 
 namespace OpenGL_Engine {
-	class FrameBuffer;
+	class Framebuffer;
 	enum RenderPassType
 	{
 		ShadowmapPassType,
@@ -16,11 +16,11 @@ namespace OpenGL_Engine {
 
 	struct ShadowmapPassOutput {
 		glm::mat4 directionalLightViewProjMatrix;
-		FrameBuffer* shadowmapFramebuffer;
+		Framebuffer* shadowmapFramebuffer;
 	};
 
 	struct LightingPassOutput {
-		FrameBuffer* outputFramebuffer;
+		Framebuffer* outputFramebuffer;
 	};
 
 	struct GeometryPassOutput {

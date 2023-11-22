@@ -4,16 +4,17 @@
 #include <utils/loaders/TextureLoader.h>
 
 namespace OpenGL_Engine {
-	class FrameBuffer {
+	class Framebuffer {
 	public:
-		FrameBuffer(unsigned int width, unsigned int height);
-		virtual ~FrameBuffer();
+		Framebuffer(unsigned int width, unsigned int height);
+		virtual ~Framebuffer();
 
 		void createFramebuffer();
-		FrameBuffer& addTexture2DColorAttachment(bool multisampledBuffer);
-		FrameBuffer& addDepthRBO(bool multisampledBuffer);
-		FrameBuffer& addDepthStencilRBO(bool multisampledBuffer);
-		FrameBuffer& addDepthAttachment(bool multisampledBuffer);
+		Framebuffer& addTexture2DColorAttachment(bool multisampledBuffer);
+		Framebuffer& addDepthRBO(bool multisampledBuffer);
+		Framebuffer& addDepthStencilRBO(bool multisampledBuffer);
+		Framebuffer& addDepthAttachment(bool multisampledBuffer);
+		Framebuffer& addDepthStencilAttachment(bool multisampledBuffer);
 
 		void bind();
 		void unbind();
