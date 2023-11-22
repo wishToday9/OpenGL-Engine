@@ -25,6 +25,10 @@ namespace OpenGL_Engine {
 		TextureSettings srgbTextureSettings;
 		srgbTextureSettings.IsSRGB = true;
 
+		Model* window = new OpenGL_Engine::Model(Quad());
+		m_RenderableModels.push_back(new RenderableModel(glm::vec3(150.0f, 60.0f, 150.0f), glm::vec3(25.0f, 25.0f, 25.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::radians(90.0f), window, nullptr, true, true));
+		window->getMeshes()[0].getMaterial().setAlbedoMap(TextureLoader::load2DTexture(std::string("res/textures/window.png")));
+
 		Model* helmet = new OpenGL_Engine::Model("res/3D_Models/DamagedHelmet/DamagedHelmet.gltf");
 		m_RenderableModels.push_back(new RenderableModel(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(6.0f, 6.0f, 6.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::radians(90.0f), helmet, nullptr, false, false));
 		helmet->getMeshes()[0].getMaterial().setMetallicMap(TextureLoader::getFullMetallic());
@@ -110,4 +114,47 @@ namespace OpenGL_Engine {
 		}
 	}
 
+	void Scene3D::addTransparentModelsToRenderer() {
+		auto iter = m_RenderableModels.begin();
+		while (iter != m_RenderableModels.end()) {
+			RenderableModel* curr = *iter;
+			if (curr->getTransparent()) {
+				m_ModelRenderer.submitTransparent(curr);
+			}
+			iter++;
+		}
+	}
+
+	void Scene3D::addTransparentStaticModelsToRenderer() {
+		auto iter = m_RenderableModels.begin();
+		while (iter != m_RenderableModels.end()) {
+			RenderableModel* curr = *iter;
+			if (curr->getStatic() && curr->getTransparent()) {
+				m_ModelRenderer.submitTransparent(curr);
+			}
+			iter++;
+		}
+	}
+
+	void Scene3D::addOpaqueModelsToRenderer() {
+		auto iter = m_RenderableModels.begin();
+		while (iter != m_RenderableModels.end()) {
+			RenderableModel* curr = *iter;
+			if (!curr->getTransparent()) {
+				m_ModelRenderer.submitOpaque(curr);
+			}
+			iter++;
+		}
+	}
+
+	void Scene3D::addOpaqueStaticModelsToRenderer() {
+		auto iter = m_RenderableModels.begin();
+		while (iter != m_RenderableModels.end()) {
+			RenderableModel* curr = *iter;
+			if (curr->getStatic() && !curr->getTransparent()) {
+				m_ModelRenderer.submitOpaque(curr);
+			}
+			iter++;
+		}
+	}
 }

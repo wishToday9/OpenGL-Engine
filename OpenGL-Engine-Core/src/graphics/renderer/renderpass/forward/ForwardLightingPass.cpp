@@ -29,7 +29,7 @@ namespace OpenGL_Engine {
 		
 	}
 
-	OpenGL_Engine::LightingPassOutput ForwardLightingPass::executePostLightingPass(ShadowmapPassOutput& shadowmapData, ICamera* camera, bool renderOnlyStatic, bool useIBL)
+	OpenGL_Engine::LightingPassOutput ForwardLightingPass::executeLightingPass(ShadowmapPassOutput& shadowmapData, ICamera* camera, bool renderOnlyStatic, bool useIBL)
 	{
 		glViewport(0, 0, m_Framebuffer->getWidth(), m_Framebuffer->getHeight());
 		m_Framebuffer->bind();

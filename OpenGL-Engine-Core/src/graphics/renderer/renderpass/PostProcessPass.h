@@ -6,13 +6,13 @@
 #include <platform/OpenGL/Framebuffers/Framebuffer.h>
 
 namespace OpenGL_Engine {
-	class ForwardPostProcessPass : public RenderPass {
+	class PostProcessPass : public RenderPass {
 		  
 	public:
-		ForwardPostProcessPass(Scene3D* scene);
-		~ForwardPostProcessPass();
+		PostProcessPass(Scene3D* scene);
+		~PostProcessPass();
 
-		void executePostLightingPass(Framebuffer* framebufferToProcess);
+		void executePostProcessPass(Framebuffer* framebufferToProcess);
 
 		inline void EnableBlur(bool choice) { m_Blur = choice; }
 	private:

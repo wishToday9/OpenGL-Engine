@@ -24,6 +24,12 @@ namespace OpenGL_Engine {
 
 		void addModelsToRenderer();
 		void addStaticModelsToRenderer();
+		void addTransparentModelsToRenderer();
+		void addTransparentStaticModelsToRenderer();
+		void addOpaqueModelsToRenderer();
+		void addOpaqueStaticModelsToRenderer();
+
+
 		inline ModelRenderer* getModelRenderer() { return &m_ModelRenderer; }
 		inline Terrain* getTerrain() { return &m_Terrain; }
 		inline DynamicLightManager* getDynamicLightManager() { return &m_DynamicLightManager; }

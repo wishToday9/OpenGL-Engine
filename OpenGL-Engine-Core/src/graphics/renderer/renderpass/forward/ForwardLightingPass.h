@@ -14,7 +14,7 @@ namespace OpenGL_Engine {
 		ForwardLightingPass(Scene3D* scene, Framebuffer* customFramebuffer);
 		virtual ~ForwardLightingPass() override;
 
-		LightingPassOutput executePostLightingPass(ShadowmapPassOutput& shadowmapData, ICamera* camera, bool renderOnlyStatic, bool useIBL);
+		LightingPassOutput executeLightingPass(ShadowmapPassOutput& shadowmapData, ICamera* camera, bool renderOnlyStatic, bool useIBL);
 	private:
 		void bindShadowmap(Shader* shader, ShadowmapPassOutput& shadowmapData);
 

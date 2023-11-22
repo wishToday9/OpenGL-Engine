@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "ForwardPostProcessPass.h"
+#include "PostProcessPass.h"
 
 #include <utils/loaders/ShaderLoader.h>
 
@@ -7,7 +7,7 @@
 namespace OpenGL_Engine
 {
 
-	ForwardPostProcessPass::ForwardPostProcessPass(Scene3D* scene) :
+	PostProcessPass::PostProcessPass(Scene3D* scene) :
 		RenderPass(scene, RenderPassType::PostProcessPassType),
 		m_ScreenRenderTarget(Window::getWidth(), Window::getHeight())
 	{
@@ -16,9 +16,9 @@ namespace OpenGL_Engine
 		DebugPane::bindGammaCorrectionValue(&m_GammaCorrection);
 	}
 
-	ForwardPostProcessPass::~ForwardPostProcessPass() {	}
+	PostProcessPass::~PostProcessPass() {	}
 
-	void ForwardPostProcessPass::executePostLightingPass(Framebuffer* framebufferToProcess) {
+	void PostProcessPass::executePostProcessPass(Framebuffer* framebufferToProcess) {
 
 		glViewport(0, 0, Window::getWidth(), Window::getHeight());
 
