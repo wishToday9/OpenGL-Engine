@@ -10,7 +10,7 @@ namespace OpenGL_Engine {
 	{
 		m_LightingShader = ShaderLoader::loadShader("src/shaders/deferred/pbr_lighting_pass.vert", "src/shaders/deferred/pbr_lighting_pass.frag");
 
-		m_Framebuffer = new Framebuffer(Window::getWidth(), Window::getHeight(), false);
+		m_Framebuffer = new Framebuffer(Window::getResolutionWidth(), Window::getResolutionHeight(), false);
 		m_Framebuffer->addColorTexture(FloatingPoint16).addDepthStencilTexture(NormalizedDepthStencil).createFramebuffer();
 	}
 
@@ -54,20 +54,16 @@ namespace OpenGL_Engine {
 		m_LightingShader->setUniformMat4("projectionInverse", glm::inverse(camera->getProjectionMatrix()));
 
 		// Bind GBuffer data
-		glActiveTexture(GL_TEXTURE4);
-		glBindTexture(GL_TEXTURE_2D, geometryData.outputGBuffer->getAlbedo());
+		geometryData.outputGBuffer->getAlbedo()->bind(4);
 		m_LightingShader->setUniform1i("albedoTexture", 4);
 
-		glActiveTexture(GL_TEXTURE5);
-		glBindTexture(GL_TEXTURE_2D, geometryData.outputGBuffer->getNormal());
+		geometryData.outputGBuffer->getNormal()->bind(5);
 		m_LightingShader->setUniform1i("normalTexture", 5);
 
-		glActiveTexture(GL_TEXTURE6);
-		glBindTexture(GL_TEXTURE_2D, geometryData.outputGBuffer->getMaterialInfo());
+		geometryData.outputGBuffer->getMaterialInfo()->bind(6);
 		m_LightingShader->setUniform1i("materialInfoTexture", 6);
 
-		glActiveTexture(GL_TEXTURE7);
-		glBindTexture(GL_TEXTURE_2D, geometryData.outputGBuffer->getDepthStencilTexture());
+		geometryData.outputGBuffer->getDepthStencilTexture()->bind(7);
 		m_LightingShader->setUniform1i("depthTexture", 7);
 
 		m_LightingShader->setUniform1f("nearPlane", NEAR_PLANE);
@@ -106,8 +102,7 @@ namespace OpenGL_Engine {
 	}
 
 	void DeferredLightingPass::bindShadowmap(Shader* shader, ShadowmapPassOutput& shadowmapData) {
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, shadowmapData.shadowmapFramebuffer->getDepthStencilTexture());
+		shadowmapData.shadowmapFramebuffer->getDepthStencilTexture()->bind();
 		shader->setUniform1i("shadowmap", 0);
 		shader->setUniformMat4("lightSpaceViewProjectionMatrix", shadowmapData.directionalLightViewProjMatrix);
 	}

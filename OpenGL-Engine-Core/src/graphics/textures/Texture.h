@@ -12,6 +12,8 @@ namespace OpenGL_Engine {
 		//texture wrapping options
 		GLenum TextureWrapSMode = GL_REPEAT;
 		GLenum TextureWrapTMode = GL_REPEAT;
+		bool HasBorder = false;
+		glm::vec4 BorderColour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
 		//texture filtering options
 		GLenum TextureMinificationFilterMode = GL_LINEAR_MIPMAP_LINEAR;// Filtering mode when the texture moves further away and multiple texels map to one pixel (trilinear for best quality)
@@ -34,24 +36,29 @@ namespace OpenGL_Engine {
 
 		//generation functions
 		void generate2DTexture(unsigned int width, unsigned int height, GLenum dataFormat, const void* data);	
+		void generate2DMutisampleTexture(unsigned int width, unsigned int height);
 
-		void bind(int uint = -1);
+		void bind(int uint = 0);
 		void unbind();
 
-		//textures tuning functions(Works for pre-generation and post-generation)
-		void setTextureWrapS(GLenum textureWarpMode, bool shouldBind = false);
-		void setTextureWrapT(GLenum textureWarpMode, bool shouldBind = false);
-		void setTextureMinFilter(GLenum textureMinFilter, bool shouldBind = false);
-		void setTextureMagFilter(GLenum textureMagFilter, bool shouldBind = false);
-		void setAnisotropicFilteringMode(float textureAnisotropyLevel, bool shouldBind = false);
+		// Texture Tuning Functions (Works for pre-generation and post-generation)
+		void setTextureWrapS(GLenum textureWrapMode);
+		void setTextureWrapT(GLenum textureWrapMode);
+		void setHasBorder(bool hasBorder);
+		void setBorderColour(glm::vec4& borderColour);
+		void setTextureMinFilter(GLenum textureFilterMode);
+		void setTextureMagFilter(GLenum textureFilterMode);
+		void setAnisotropicFilteringMode(float textureAnisotropyLevel);
+		void setMipBias(int mipBias);
 
 		// Pre-generation controls only
-		void setMipMode(bool shouldGenMips, int mipBias);
+		void setHasMips(bool hasMips);
 		void setTextureSettings(TextureSettings settings) {
 			m_TextureSettings = settings;
 		}
 
 		unsigned int getTextureId() { return m_TextureId; }
+		inline bool isGenerated() { return m_TextureId != 0; }
 		unsigned int getWidth() { return m_Width; }
 		unsigned int getHeight() { return m_Height; }
 		const TextureSettings& getTextureSettings() { return m_TextureSettings; }

@@ -55,8 +55,8 @@ namespace OpenGL_Engine {
 
 	void Cubemap::bind(int unit /*= -1*/)
 	{
-		if (unit >= 0)
-			glActiveTexture(GL_TEXTURE0 + unit);
+
+		glActiveTexture(GL_TEXTURE0 + unit);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, m_CubemapID);
 
 	}

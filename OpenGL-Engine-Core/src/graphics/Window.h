@@ -10,12 +10,6 @@ namespace OpenGL_Engine {
 	static InputManager g_InputManager;
 
 	class Window {
-	private:
-		const char *m_Title;
-		GLFWwindow *m_Window;
-		static bool s_HideCursor;
-		
-		static int s_Width, s_Height;
 	public:
 
 		Window(const char *title, int width, int height);
@@ -39,6 +33,8 @@ namespace OpenGL_Engine {
 		static inline bool getHideCursor() { return s_HideCursor; }
 		static inline int getWidth() { return s_Width; }
 		static inline int getHeight() { return s_Height; }
+		static inline int getResolutionWidth() { return s_Width * SUPERSAMPLING_FACTOR; }
+		static inline int getResolutionHeight() { return s_Height * SUPERSAMPLING_FACTOR; }
 	private:
 		bool init();
 
@@ -56,6 +52,12 @@ namespace OpenGL_Engine {
 		static friend void joystick_callback(int joystick, int event);
 		static friend void GLAPIENTRY DebugMessageCallback(GLenum source, GLenum type, GLuint id,
 			GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
+	private:
+		const char* m_Title;
+		GLFWwindow* m_Window;
+		static bool s_HideCursor;
+
+		static int s_Width, s_Height;
 	};
 
 } 
