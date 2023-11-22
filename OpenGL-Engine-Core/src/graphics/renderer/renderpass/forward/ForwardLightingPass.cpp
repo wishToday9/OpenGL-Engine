@@ -87,7 +87,7 @@ namespace OpenGL_Engine {
 			m_ActiveScene->addModelsToRenderer();
 		}
 		// Opaque objects
-		modelRenderer->flushOpaque(m_ModelShader, RenderPassType::LightingPassType);
+		modelRenderer->flushOpaque(m_ModelShader, m_RenderPassType);
 
 		// Terrain
 		m_GLCache->switchShader(m_TerrainShader->getShaderID());
@@ -99,14 +99,18 @@ namespace OpenGL_Engine {
 		m_TerrainShader->setUniformMat4("projection", camera->getProjectionMatrix());
 		
 		bindShadowmap(m_TerrainShader, shadowmapData);
-		terrain->Draw(m_TerrainShader, RenderPassType::LightingPassType);
+		terrain->Draw(m_TerrainShader, m_RenderPassType);
 
 		//render Skybox
 		skybox->Draw(camera);
 
 		//render Transparent objects
 		m_GLCache->switchShader(m_ModelShader->getShaderID());
-		modelRenderer->flushTransparent(m_ModelShader, RenderPassType::LightingPassType);
+		if (useIBL) {
+			probeManager->bindProbes(glm::vec3(0.0f, 0.0f, 0.0f), m_ModelShader);
+		}
+		
+		modelRenderer->flushTransparent(m_ModelShader, m_RenderPassType);
 
 		// Render pass output
 		LightingPassOutput passOutput;

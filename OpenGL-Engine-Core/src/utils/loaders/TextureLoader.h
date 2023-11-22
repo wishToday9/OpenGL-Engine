@@ -11,7 +11,7 @@ namespace OpenGL_Engine {
 
 		static Cubemap* loadCubemapTexture(const std::string& right, const std::string& left,
 			const std::string& top, const std::string& bottom, const std::string& back, const std::string& front,
-			bool isSRGB, CubemapSettings* settings = nullptr);
+			CubemapSettings* settings = nullptr);
 
 
 

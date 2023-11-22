@@ -43,12 +43,12 @@ namespace OpenGL_Engine {
 		m_ModelShader->setUniformMat4("view", camera->getViewMatrix());
 		m_ModelShader->setUniformMat4("projection", camera->getProjectionMatrix());
 
-		// Setup model renderer
+		// Setup model renderer  (only for opaque objects)
 		if (renderOnlyStatic) {
-			m_ActiveScene->addStaticModelsToRenderer();
+			m_ActiveScene->addOpaqueStaticModelsToRenderer();
 		}
 		else {
-			m_ActiveScene->addModelsToRenderer();
+			m_ActiveScene->addOpaqueModelsToRenderer();
 		}
 
 		// Render opaque objects (use stencil to denote models for the deferred lighting pass)

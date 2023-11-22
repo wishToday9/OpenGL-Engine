@@ -10,6 +10,11 @@ namespace OpenGL_Engine {
 		CubemapSettings(bool hashMips) {
 			HasMips = hashMips;
 		}
+
+		//Texture format
+		GLenum TextureFormat = GL_NONE; // If set to GL_NONE, the data format will be used
+		bool IsSRGB = false;
+
 		//texture wrapping options
 		GLenum TextureWrapSMode = GL_CLAMP_TO_EDGE;
 		GLenum TextureWrapTMode = GL_CLAMP_TO_EDGE;
@@ -24,18 +29,19 @@ namespace OpenGL_Engine {
 	
 		//Mip Settings
 		bool HasMips = false;
+		int MipBias = 0; // positive means blurrier texture selected, negative means sharper texture which can show texture aliasing 
 	};
 
 
 
 	class Cubemap {
 	public:
-		Cubemap();
-		Cubemap(CubemapSettings& settings);
+		Cubemap(CubemapSettings& settings = CubemapSettings());
+
 		~Cubemap();
 
 		void generateCubemapFace(GLenum face, unsigned int faceWidth, unsigned int faceHeight,
-			GLenum textureFormat, GLenum dataFormat, const unsigned char* data);
+			GLenum dataFormat, const unsigned char* data);
 
 		void bind(int unit = -1);
 		void unbind();

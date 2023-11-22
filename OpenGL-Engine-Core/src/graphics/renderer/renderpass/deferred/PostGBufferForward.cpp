@@ -29,9 +29,9 @@ namespace OpenGL_Engine {
 
 		// View setup + lighting setup
 		auto lightBindFunction = &DynamicLightManager::bindLightingUniforms;
-		if (renderOnlyStatic)
+		if (renderOnlyStatic) {
 			lightBindFunction = &DynamicLightManager::bindStaticLightingUniforms;
-
+		}
 		m_GLCache->switchShader(m_ModelShader);
 		(lightManager->*lightBindFunction) (m_ModelShader);
 		m_ModelShader->setUniform3f("viewPos", camera->getPosition());
