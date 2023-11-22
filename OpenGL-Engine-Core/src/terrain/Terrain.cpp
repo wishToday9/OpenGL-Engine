@@ -164,7 +164,7 @@ namespace OpenGL_Engine{
 			// Texture unit 1 is reserved for the irradianceMap used for indirect diffuse IBL
 			// Texture unit 2 is reserved for the prefilterMap
 			// Texture unit 3 is reserved for the brdfLUT
-			if (pass != RenderPassType::ShadowmapPassType) {
+			if (pass == RenderPassType::MaterialRequired) {
 				unsigned int currentTextureUnit = 1;
 				// Textures
 				m_Textures[0]->bind(currentTextureUnit);

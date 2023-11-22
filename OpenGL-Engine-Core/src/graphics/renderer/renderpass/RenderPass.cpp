@@ -3,8 +3,8 @@
 
 
 namespace OpenGL_Engine {
-	RenderPass::RenderPass(Scene3D* scene, RenderPassType passType)
-		:m_ActiveScene(scene), m_RenderPassType(passType) 
+	RenderPass::RenderPass(Scene3D* scene)
+		:m_ActiveScene(scene) 
 	{
 		m_GLCache = GLCache::getInstance();
 	}

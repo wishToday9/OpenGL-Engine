@@ -3,7 +3,7 @@
 
 namespace OpenGL_Engine {
 	
-	GBuffer::GBuffer(unsigned int width, unsigned int height) : Framebuffer(width, height) {
+	GBuffer::GBuffer(unsigned int width, unsigned int height) : Framebuffer(width, height, false) {
 		init();
 	}
 
@@ -16,7 +16,7 @@ namespace OpenGL_Engine {
 	}
 
 	void GBuffer::init() {
-		addDepthStencilAttachment(false);
+		addDepthStencilTexture(NormalizedDepthStencil);
 
 		bind();
 

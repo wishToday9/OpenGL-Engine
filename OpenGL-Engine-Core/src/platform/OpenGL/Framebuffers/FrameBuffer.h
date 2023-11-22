@@ -1,20 +1,34 @@
 #pragma once
-
-
 #include <utils/loaders/TextureLoader.h>
 
+
 namespace OpenGL_Engine {
+	
+	enum ColorAttachmentFormat
+	{
+		Normalized8 = GL_RGBA8,
+		Nomralized16 = GL_RGBA16,
+		FloatingPoint16 = GL_RGBA16F,
+		FloatingPoint32 = GL_RGBA32F
+	};
+
+	enum DepthStencilAttachmentFormat
+	{
+		NormalizedDepthOnly = GL_DEPTH_COMPONENT,
+		NormalizedDepthStencil = GL_DEPTH24_STENCIL8,
+		FloatingPointDepthStencil = GL_DEPTH32F_STENCIL8
+	};
+
+
 	class Framebuffer {
 	public:
-		Framebuffer(unsigned int width, unsigned int height);
+		Framebuffer(unsigned int width, unsigned int height, bool isMultisampled);
 		virtual ~Framebuffer();
 
 		void createFramebuffer();
-		Framebuffer& addTexture2DColorAttachment(bool multisampledBuffer);
-		Framebuffer& addDepthRBO(bool multisampledBuffer);
-		Framebuffer& addDepthStencilRBO(bool multisampledBuffer);
-		Framebuffer& addDepthAttachment(bool multisampledBuffer);
-		Framebuffer& addDepthStencilAttachment(bool multisampledBuffer);
+		Framebuffer& addColorTexture(ColorAttachmentFormat textureFormat);
+		Framebuffer& addDepthStencilTexture(DepthStencilAttachmentFormat textureFormat);
+		Framebuffer& addDepthStencilRBO(DepthStencilAttachmentFormat rboFormat);
 
 		void bind();
 		void unbind();
@@ -24,24 +38,25 @@ namespace OpenGL_Engine {
 
 		void clear();
 
+		// Getters
+		inline bool isMultisampled() { return m_IsMultisampled; }
+		inline unsigned int getFramebuffer() { return m_FBO; }
 		inline unsigned int getWidth() { return m_Width; }
 		inline unsigned int getHeight() { return m_Height; }
-
-		inline unsigned int getFramebuffer() { return m_FBO; }
-		inline unsigned int getColourBufferTexture() { return m_ColourTexture; }
-		inline unsigned int getDepthRBO() { return m_DepthRBO; }
+		inline unsigned int getColourTexture() { return m_ColourTexture; }
+		inline unsigned int getDepthStencilTexture() { return m_DepthStencilTexture; }
 		inline unsigned int getDepthStencilRBO() { return m_DepthStencilRBO; }
-		inline unsigned int getDepthTexture() { return m_DepthTexture; }
-		inline bool isMultisampledColourBuffer() { return m_IsMultiSampledColorBuffer; }
+
 	protected:
 		unsigned int m_FBO;
 
-		bool m_IsMultiSampledColorBuffer;
+		unsigned int m_Width, m_Height;
+		bool m_IsMultisampled;
+
+
 		// render targets(attachments)
 		unsigned int m_ColourTexture;
-		unsigned int m_DepthRBO;
+		unsigned int m_DepthStencilTexture;
 		unsigned int m_DepthStencilRBO;
-		unsigned int m_DepthTexture;
-		unsigned int m_Width, m_Height;
 	};
 }

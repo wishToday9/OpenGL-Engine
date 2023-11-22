@@ -7,11 +7,8 @@ namespace OpenGL_Engine {
 	class Framebuffer;
 	enum RenderPassType
 	{
-		ShadowmapPassType,
-		LightingPassType,
-		PostProcessPassType,
-		ProbePassType,
-		GeometryPassType
+		MaterialRequired,
+		NoMaterialRequired
 	};
 
 	struct ShadowmapPassOutput {

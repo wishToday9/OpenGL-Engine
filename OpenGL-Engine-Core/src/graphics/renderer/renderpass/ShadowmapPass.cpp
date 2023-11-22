@@ -7,15 +7,15 @@
 
 namespace OpenGL_Engine {
 	ShadowmapPass::ShadowmapPass(Scene3D* scene)
-		:RenderPass(scene, RenderPassType::ShadowmapPassType), m_AllocateFramebuffer(true)
+		:RenderPass(scene), m_AllocateFramebuffer(true)
 	{
 		m_ShadowmapShader = ShaderLoader::loadShader("src/shaders/shadowmap.vert", "src/shaders/shadowmap.frag");
-		m_ShadowmapFramebuffer = new Framebuffer(SHADOWMAP_RESOLUTION_X, SHADOWMAP_RESOLUTION_Y);
-		m_ShadowmapFramebuffer->addDepthAttachment(false).createFramebuffer();
+		m_ShadowmapFramebuffer = new Framebuffer(SHADOWMAP_RESOLUTION_X, SHADOWMAP_RESOLUTION_Y, false);
+		m_ShadowmapFramebuffer->addDepthStencilTexture(NormalizedDepthOnly).createFramebuffer();
 	}
 
 	ShadowmapPass::ShadowmapPass(Scene3D* scene, Framebuffer* customFramebuffer)
-		: RenderPass(scene, RenderPassType::ShadowmapPassType), 
+		: RenderPass(scene), 
 		m_ShadowmapFramebuffer(customFramebuffer), m_AllocateFramebuffer(false)
 	{
 		m_ShadowmapShader = ShaderLoader::loadShader("src/shaders/shadowmap.vert", "src/shaders/shadowmap.frag");
@@ -58,9 +58,9 @@ namespace OpenGL_Engine {
 			m_ActiveScene->addModelsToRenderer();
 		}
 
-		modelRenderer->flushOpaque(m_ShadowmapShader, RenderPassType::ShadowmapPassType);
-		modelRenderer->flushTransparent(m_ShadowmapShader, RenderPassType::ShadowmapPassType);
-		terrain->Draw(m_ShadowmapShader, m_RenderPassType);
+		modelRenderer->flushOpaque(m_ShadowmapShader, RenderPassType::NoMaterialRequired);
+		modelRenderer->flushTransparent(m_ShadowmapShader, RenderPassType::NoMaterialRequired);
+		terrain->Draw(m_ShadowmapShader, RenderPassType::NoMaterialRequired);
 		
 		//render pass output
 		ShadowmapPassOutput passOutput;

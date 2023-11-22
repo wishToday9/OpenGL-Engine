@@ -5,7 +5,7 @@
 
 namespace OpenGL_Engine {
 
-	PostGBufferForward::PostGBufferForward(Scene3D* scene) : RenderPass(scene, RenderPassType::LightingPassType)
+	PostGBufferForward::PostGBufferForward(Scene3D* scene) : RenderPass(scene)
 	{
 		m_ModelShader = ShaderLoader::loadShader("src/shaders/forward/pbr_model.vert", "src/shaders/forward/pbr_model.frag");
 	}
@@ -59,7 +59,7 @@ namespace OpenGL_Engine {
 		}
 
 		// Render transparent objects
-		modelRenderer->flushTransparent(m_ModelShader, m_RenderPassType);
+		modelRenderer->flushTransparent(m_ModelShader, RenderPassType::MaterialRequired);
 
 		// Render pass output
 		LightingPassOutput passOutput;
@@ -69,7 +69,7 @@ namespace OpenGL_Engine {
 
 	void PostGBufferForward::bindShadowmap(Shader* shader, ShadowmapPassOutput& shadowmapData) {
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, shadowmapData.shadowmapFramebuffer->getDepthTexture());
+		glBindTexture(GL_TEXTURE_2D, shadowmapData.shadowmapFramebuffer->getDepthStencilTexture());
 		shader->setUniform1i("shadowmap", 0);
 		shader->setUniformMat4("lightSpaceViewProjectionMatrix", shadowmapData.directionalLightViewProjMatrix);
 	}
