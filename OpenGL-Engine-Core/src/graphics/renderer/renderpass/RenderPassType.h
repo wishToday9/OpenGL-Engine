@@ -23,4 +23,8 @@ namespace OpenGL_Engine {
 	struct GeometryPassOutput {
 		GBuffer* outputGBuffer;
 	};
+
+	struct PreLightingPassOutput {
+		Framebuffer* ssaoFramebuffer;
+	};
 }

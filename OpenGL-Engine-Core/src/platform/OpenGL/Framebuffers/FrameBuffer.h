@@ -6,6 +6,7 @@ namespace OpenGL_Engine {
 	
 	enum ColorAttachmentFormat
 	{
+		NormalizedSingleChannel8 = GL_RED,
 		Normalized8 = GL_RGBA8,
 		Nomralized16 = GL_RGBA16,
 		FloatingPoint16 = GL_RGBA16F,

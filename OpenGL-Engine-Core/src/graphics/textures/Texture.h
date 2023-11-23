@@ -35,7 +35,8 @@ namespace OpenGL_Engine {
 		~Texture();
 
 		//generation functions
-		void generate2DTexture(unsigned int width, unsigned int height, GLenum dataFormat, const void* data);	
+		void generate2DTexture(unsigned int width, unsigned int height, GLenum dataFormat, 
+			const void* data = nullptr, GLenum pixelDataType = GL_UNSIGNED_BYTE);	
 		void generate2DMutisampleTexture(unsigned int width, unsigned int height);
 
 		void bind(int uint = 0);

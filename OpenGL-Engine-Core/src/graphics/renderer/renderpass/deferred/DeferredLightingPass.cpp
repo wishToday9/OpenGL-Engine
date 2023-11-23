@@ -87,7 +87,7 @@ namespace OpenGL_Engine {
 		if (useIBL) {
 			m_LightingShader->setUniform1i("computeIBL", 1);
 		}
-		glStencilFunc(GL_NOTEQUAL, DeferredStencilValue::TerrainStencilValue, 0xFF);
+		glStencilFunc(GL_EQUAL, DeferredStencilValue::ModelStencilValue, 0xFF);
 		modelRenderer->NDC_Plane.Draw();
 
 

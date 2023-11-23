@@ -24,7 +24,8 @@
 #define LIGHT_PROBE_RESOLUTION 32
 #define REFLECTION_PROBE_MIP_COUNT 5
 #define REFLECTION_PROBE_RESOLUTION 128
-#define IBL_CAPTURE_RESOLUTION 256 //should always be greater than the light and reflection probe resolution
+//should always be greater than the light and reflection probe resolution
+#define IBL_CAPTURE_RESOLUTION 256 
 #define BRDF_LUT_RESOLUTION 512
 
 // Frustum Options
@@ -37,6 +38,9 @@
 #define  SHADOWMAP_NEAR_PLANE 0.1f
 #define  SHADOWMAP_FAR_PLANE 400.0f
 
+//SSAO Options
+// Maximum amount is restricted by the shader. Only supports a maximum of 64
+#define SSAO_KERNEL_SIZE 32
 
 #define SAFE_DELETE(p) if(p){delete p;p = nullptr;} void(0)
 #define SAFE_DELETE_ARRAY(p) if(p){delete[] p;p = nullptr;}

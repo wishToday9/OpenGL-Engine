@@ -3,7 +3,7 @@
 
 
 namespace OpenGL_Engine {
-	 
+		float* DebugPane::s_SsaoSampleRadius = nullptr;
 
 		DebugPane::DebugPane(glm::vec2& panePosition)
 			:Pane(std::string("Debug Controls"), panePosition)
@@ -18,6 +18,8 @@ namespace OpenGL_Engine {
 				ImGui::Text("Camera Pos x:%.1f y:%.1f z:%.1f", s_CameraPosition->x, s_CameraPosition->y, s_CameraPosition->z);
 			if (s_GammaCorrectionValue != nullptr)
 				ImGui::SliderFloat("Gamma", s_GammaCorrectionValue, 0.5f, 3.0f, "%.2f");
+			if (s_SsaoSampleRadius != nullptr)
+				ImGui::SliderFloat("SSAO Radius", s_SsaoSampleRadius, 0.1f, 2.0f, "%.2f");
 #if DEBUG_ENABLED
 			ImGui::Text("Hit \"P\" to show/hide the cursor");
 			ImGui::Checkbox("Wireframe mode", &s_WireframeMode);
