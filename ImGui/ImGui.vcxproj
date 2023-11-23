@@ -78,8 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>E:\C++Project\OpenGL-Engine\GLAD\include;E:\C++Project\OpenGL-Engine\GLFW\include;D:\C++project\OpenGLEngine\OpenGL-Engine\GLFW\include;D:\C++project\OpenGLEngine\OpenGL-Engine\GLAD\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\C++project\OpenGLEngine\OpenGL-Engine\GLFW\lib-vc2019;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)GLAD\include;$(SolutionDir)GLFW\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)GLFW\lib-vc2019;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>

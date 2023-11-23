@@ -7,12 +7,13 @@
 #define WINDOW_X_RESOLUTION 1366
 #define WINDOW_Y_RESOLUTION 768
 #define V_SYNC 1
-#define FULLSCREEN_MODE 0
+#define FULLSCREEN_MODE 0 // If set, window resolution is maximized to your screen resolution
 
 // render settings
 #define FORWARD_RENDER 0
 
 // AA Settings
+#define FXAA_ENABLE 1 // Used for forward and deferred
 #define SUPERSAMPLING_FACTOR 1 //Should be a multiple of 2 (1 means window resolution will be the render resolution)
 #define MSAA_SAMPLE_AMOUNT 4  //only used in forward rendering
 

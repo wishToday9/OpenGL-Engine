@@ -1,55 +1,56 @@
-#version 450 core
+#version 430 core
 
-// FXAA variable tuning
-const float FXAA_EDGE_THRESHOLD = 0.125;
-const float FXAA_EDGE_THRESHOLD_MIN = 0.0625;
+
+#define FXAA_REDUCE_MIN (1.0 / 128.0)
+#define FXAA_REDUCE_MUL (1.0 / 8.0)
+#define FXAA_SPAN_MAX 8.0
 
 in vec2 TexCoords;
 
 out vec4 FragColour;
 
-uniform sampler2D screen_texture;
-uniform vec2 read_offset;
-
-// function prototypes
-vec3 FxaaPass();
-float FxaaLuma(vec3 rgb);
+uniform sampler2D color_texture;
+uniform vec2 inverse_resolution;
+uniform int enable_FXAA;
 
 void main() {
-	FragColour = vec4(FxaaPass(), 1.0);
-}
-
-vec3 FxaaPass() {
-	/*
-	 *	Local Contrast Check
-	 *	Check surrounding texel's and their luminosity, if the difference between the local max and min luma (contrast) is lower
-	 *	than a threshold proportional to the maximum luma, the the shader can early out (no visible aliasing)
-	*/
-	vec3 rgbN = texture(screen_texture, TexCoords + vec2(0.0,				read_offset.y	)).rgb;
-	vec3 rgbW = texture(screen_texture, TexCoords + vec2(-read_offset.x,	0.0				)).rgb;
-	vec3 rgbM = texture(screen_texture, TexCoords + vec2(0.0,				0.0				)).rgb;
-	vec3 rgbE = texture(screen_texture, TexCoords + vec2(read_offset.x,		0.0				)).rgb;
-	vec3 rgbS = texture(screen_texture, TexCoords + vec2(0.0,				-read_offset.y	)).rgb;
-	float lumaN = FxaaLuma(rgbN);
-	float lumaW = FxaaLuma(rgbW);
-	float lumaM = FxaaLuma(rgbM);
-	float lumaE = FxaaLuma(rgbE);
-	float lumaS = FxaaLuma(rgbS);
-	float rangeMin = min(lumaM, min(min(lumaN, lumaW), min(lumaS, lumaE)));
-	float rangeMax = max(lumaM, max(max(lumaN, lumaW), max(lumaS, lumaE)));
-	float range = rangeMax - rangeMin;
-	if (range < max(FXAA_EDGE_THRESHOLD_MIN, rangeMax * FXAA_EDGE_THRESHOLD)) {
-		return rgbM;
+	// if FXAA is disabled early out
+	vec3 rgbM  = texture2D(color_texture, TexCoords).xyz;
+	if (enable_FXAA == 0) {
+		FragColour = vec4(rgbM, 1.0);
+		return;
 	}
 
-	/*
-	 *	Sub-pixel Aliasing Test
-	 *	Used to detect sub-pixel aliasing. Pixel contrast is estimated as the absolute difference in pixel luma from a lowpass luma (computed as the average of the surrounding texels)
-	 *	This ratio approaches 1.0 in the presence of single pixel dots, and otherwise begins to fall off towards 0.0 as more pixels contribute to an edge.
-	*/
+	// Samples the texels around and calculate their corresponding luminosity
+	vec3 calculateLuma = vec3(0.299, 0.587, 0.114);
+	vec3 rgbNW = texture2D(color_texture, TexCoords + (vec2(-1.0,-1.0)) * inverse_resolution).xyz;
+	vec3 rgbNE = texture2D(color_texture, TexCoords + (vec2(1.0,-1.0)) * inverse_resolution).xyz;
+	vec3 rgbSW = texture2D(color_texture, TexCoords + (vec2(-1.0,1.0)) * inverse_resolution).xyz;
+	vec3 rgbSE = texture2D(color_texture, TexCoords + (vec2(1.0,1.0)) * inverse_resolution).xyz;
 
-}
+	float lumaM  = dot(rgbM,  calculateLuma);
+	float lumaNW = dot(rgbNW, calculateLuma);
+	float lumaNE = dot(rgbNE, calculateLuma);
+	float lumaSW = dot(rgbSW, calculateLuma);
+	float lumaSE = dot(rgbSE, calculateLuma);
+	float lumaMin = min(lumaM, min(min(lumaNW, lumaNE), min(lumaSW, lumaSE)));
+	float lumaMax = max(lumaM, max(max(lumaNW, lumaNE), max(lumaSW, lumaSE))); 
 
-float FxaaLuma(vec3 rgb) {
-	return (0.2126 * rgb.r) + (0.7152 * rgb.g) + (0.0722 * rgb.b);
+	// Calculate sample direction
+	vec2 dir;
+	dir.x = -((lumaNW + lumaNE) - (lumaSW + lumaSE));
+	dir.y =  ((lumaNW + lumaSW) - (lumaNE + lumaSE));
+	float dirReduce = max((lumaNW + lumaNE + lumaSW + lumaSE) * (0.25 * FXAA_REDUCE_MUL), FXAA_REDUCE_MIN);
+	float rcpDirMin = 1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce);
+	dir = min(vec2(FXAA_SPAN_MAX, FXAA_SPAN_MAX), max(vec2(-FXAA_SPAN_MAX, -FXAA_SPAN_MAX), dir * rcpDirMin)) * inverse_resolution;
+
+	// Perform the samples and calculate the new texel colour
+	vec3 rgbA = 0.5 * (texture2D(color_texture, TexCoords + dir * ((1.0 / 3.0) - 0.5)).xyz + texture2D(color_texture, TexCoords + dir * ((2.0 / 3.0) - 0.5)).xyz);
+	vec3 rgbB = rgbA * 0.5 + 0.25 * (texture2D(color_texture, TexCoords + dir * - 0.5).xyz + texture2D(color_texture, TexCoords + dir * 0.5).xyz);
+	float lumaB = dot(rgbB, calculateLuma);
+	if ((lumaB < lumaMin) || (lumaB > lumaMax)) {
+		FragColour = vec4(rgbA, 1.0);
+	} else {
+		FragColour = vec4(rgbB, 1.0);
+	}
 }

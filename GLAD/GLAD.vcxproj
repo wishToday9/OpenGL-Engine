@@ -78,7 +78,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\C++project\OpenGLEngine\OpenGL-Engine\GLAD\include;E:\C++Project\OpenGLEngineOpenGL-Engine\GLAD\include;E:\C++Project\OpenGLEngine\OpenGL-Engine\GLFW\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)GLAD\include;$(SolutionDir)GLFW\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
