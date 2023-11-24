@@ -40,7 +40,9 @@ int main() {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 #endif
 
-		window.clear();
+		OpenGL_Engine::Window::bind();
+		OpenGL_Engine::Window::clear();
+
 		ImGui_ImplGlfwGL3_NewFrame();
 
 		//manager.Update();
@@ -49,7 +51,8 @@ int main() {
 		renderer.render();
 
 		// Display panes
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		OpenGL_Engine::Window::bind();
+
 		runtimePane.render();
 		debugPane.render();
 

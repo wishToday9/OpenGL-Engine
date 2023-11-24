@@ -13,7 +13,6 @@
 #define FORWARD_RENDER 0
 
 // AA Settings
-#define FXAA_ENABLE 1 // Used for forward and deferred
 #define SUPERSAMPLING_FACTOR 1 //Should be a multiple of 2 (1 means window resolution will be the render resolution)
 #define MSAA_SAMPLE_AMOUNT 4  //only used in forward rendering
 

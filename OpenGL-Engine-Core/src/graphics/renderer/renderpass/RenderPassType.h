@@ -25,6 +25,6 @@ namespace OpenGL_Engine {
 	};
 
 	struct PreLightingPassOutput {
-		Framebuffer* ssaoFramebuffer;
+		Texture* ssaoTexture;
 	};
 }

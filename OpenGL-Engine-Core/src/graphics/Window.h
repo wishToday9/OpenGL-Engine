@@ -22,7 +22,7 @@ namespace OpenGL_Engine {
 
 		void update();
 		static void clear();
-
+		static void bind();
 
 		bool closed() const;
 

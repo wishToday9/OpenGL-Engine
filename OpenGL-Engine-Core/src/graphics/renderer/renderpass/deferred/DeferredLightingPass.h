@@ -13,7 +13,7 @@ namespace OpenGL_Engine {
 		virtual ~DeferredLightingPass() override;
 
 		LightingPassOutput executeLightingPass(ShadowmapPassOutput& shadowmapData,
-			GeometryPassOutput& geometryData, ICamera* camera, bool useIBL);
+			GeometryPassOutput& geometryData, PreLightingPassOutput& preLightOutput, ICamera* camera, bool useIBL);
 	private:
 		void bindShadowmap(Shader* shader, ShadowmapPassOutput& shadowmapData);
 

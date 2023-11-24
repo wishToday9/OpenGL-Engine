@@ -7,10 +7,7 @@ namespace OpenGL_Engine {
 	std::unordered_map<std::string, Texture*> TextureLoader::m_TextureCache;
 	Texture* TextureLoader::s_DefaultAlbedo;
 	Texture* TextureLoader::s_DefaultNormal;
-	Texture* TextureLoader::s_FullMetallic, * TextureLoader::s_NoMetallic;
-	Texture* TextureLoader::s_FullRoughness, * TextureLoader::s_NoRoughness;
-	Texture* TextureLoader::s_DefaultAO;
-	Texture* TextureLoader::s_DefaultEmission;
+	Texture* TextureLoader::s_WhiteTexture; Texture* TextureLoader::s_BlackTexture;
 
 	void TextureLoader::initializeDefaultTextures()
 	{
@@ -28,36 +25,16 @@ namespace OpenGL_Engine {
 		s_DefaultNormal->setAnisotropicFilteringMode(1.0f);
 		s_DefaultNormal->setTextureMinFilter(GL_NEAREST);
 		s_DefaultNormal->setTextureMagFilter(GL_NEAREST);
-		s_FullMetallic = load2DTexture(std::string("res/textures/default/white.png"));
-		s_FullMetallic->bind();
-		s_FullMetallic->setAnisotropicFilteringMode(1.0f);
-		s_FullMetallic->setTextureMinFilter(GL_NEAREST);
-		s_FullMetallic->setTextureMagFilter(GL_NEAREST);
-		s_NoMetallic = load2DTexture(std::string("res/textures/default/black.png"));
-		s_NoMetallic->bind();
-		s_NoMetallic->setAnisotropicFilteringMode(1.0f);
-		s_NoMetallic->setTextureMinFilter(GL_NEAREST);
-		s_NoMetallic->setTextureMagFilter(GL_NEAREST);
-		s_FullRoughness = load2DTexture(std::string("res/textures/default/white.png"));
-		s_FullRoughness->bind();
-		s_FullRoughness->setAnisotropicFilteringMode(1.0f);
-		s_FullRoughness->setTextureMinFilter(GL_NEAREST);
-		s_FullRoughness->setTextureMagFilter(GL_NEAREST);
-		s_NoRoughness = load2DTexture(std::string("res/textures/default/black.png"));
-		s_NoRoughness->bind();
-		s_NoRoughness->setAnisotropicFilteringMode(1.0f);
-		s_NoRoughness->setTextureMinFilter(GL_NEAREST);
-		s_NoRoughness->setTextureMagFilter(GL_NEAREST);
-		s_DefaultAO = load2DTexture(std::string("res/textures/default/white.png"));
-		s_DefaultAO->bind();
-		s_DefaultAO->setAnisotropicFilteringMode(1.0f);
-		s_DefaultAO->setTextureMinFilter(GL_NEAREST);
-		s_DefaultAO->setTextureMagFilter(GL_NEAREST);
-		s_DefaultEmission = load2DTexture(std::string("res/textures/default/black.png"), &srgbTextureSettings);
-		s_DefaultEmission->bind();
-		s_DefaultEmission->setAnisotropicFilteringMode(1.0f);
-		s_DefaultEmission->setTextureMinFilter(GL_NEAREST);
-		s_DefaultEmission->setTextureMagFilter(GL_NEAREST);
+		s_WhiteTexture = load2DTexture(std::string("res/textures/default/white.png"));
+		s_WhiteTexture->bind();
+		s_WhiteTexture->setAnisotropicFilteringMode(1.0f);
+		s_WhiteTexture->setTextureMinFilter(GL_NEAREST);
+		s_WhiteTexture->setTextureMagFilter(GL_NEAREST);
+		s_BlackTexture = load2DTexture(std::string("res/textures/default/black.png"));
+		s_BlackTexture->bind();
+		s_BlackTexture->setAnisotropicFilteringMode(1.0f);
+		s_BlackTexture->setTextureMinFilter(GL_NEAREST);
+		s_BlackTexture->setTextureMagFilter(GL_NEAREST);
 	}
 
 	OpenGL_Engine::Texture* TextureLoader::load2DTexture(std::string& path, TextureSettings* settings)
@@ -93,7 +70,7 @@ namespace OpenGL_Engine {
 		else {
 			texture = new Texture();
 		}
-		texture->generate2DTexture(width, height, dataFormat, data);
+		texture->generate2DTexture(width, height, dataFormat, GL_UNSIGNED_BYTE, data);
 		stbi_image_free(data);
 
 		m_TextureCache.insert(std::pair<std::string, Texture*>(path, texture));

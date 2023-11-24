@@ -1,16 +1,20 @@
-#version 450 core
+#version 430 core
 
 in vec2 TexCoords;
+
 out float FragColour;
+
 uniform sampler2D normalTexture;
 uniform sampler2D depthTexture;
 uniform sampler2D texNoise;
+
 // tile noise texture over screen based on screen dimensions divided by noise size
 uniform vec2 noiseScale;
+
+uniform float ssaoStrength;
+uniform float sampleRadius;
 uniform int numKernelSamples;
 uniform vec3 samples[64];
-
-uniform float sampleRadius;
 
 uniform mat4 view;
 uniform mat4 projection;
@@ -18,12 +22,12 @@ uniform mat4 viewInverse;
 uniform mat4 projectionInverse;
 
 // Other function prototypes
-vec3 WorldPosFromDepth();
+vec3 WorldPosFromDepth(vec2 textureCoordinates);
 
 void main() {
-	vec3 fragPos = WorldPosFromDepth();
+	vec3 fragPos = WorldPosFromDepth(TexCoords);
 	vec3 normal = texture(normalTexture, TexCoords).xyz;
-	vec3 randomVec = texture(texNoise, TexCoords).xyz * sampleRadius;
+	vec3 randomVec = texture(texNoise, TexCoords * noiseScale).xyz;
 
 	// Make a TBN matrix to go from tangent -> world space (so we can put our hemipshere tangent sample points into world space)
 	// Since our normal is already in world space, this TBN matrix will take our tangent space vector and put it into world space
@@ -45,17 +49,22 @@ void main() {
 
 		// Check if our current samples depth is behind the screen space geometry's depth, if so then we know it is occluded in screenspace
 		float sceneDepth = texture(depthTexture, sampleScreenSpace.xy).r;
-		occlusion += (sampleScreenSpace.z > sceneDepth ? 1.0 : 0.0);
+
+		// Peform a range check on the current fragment we are calculating the occlusion factor for, and the occlusion position
+		vec3 occlusionPos = WorldPosFromDepth(sampleScreenSpace.xy);
+		if (length(fragPos - occlusionPos) <= sampleRadius) {
+			occlusion += ((sampleScreenSpace.z > sceneDepth) ? 1.0 : 0.0);
+		}
 	}
 	// Finally we need to normalize our occlusion factor
 	occlusion = 1.0 - (occlusion / numKernelSamples);
 
-	FragColour = occlusion;
+	FragColour = pow(occlusion, ssaoStrength);
 }
 
-vec3 WorldPosFromDepth() {
-	float z = 2.0 * texture(depthTexture, TexCoords).r - 1.0; // [-1, 1]
-	vec4 clipSpacePos = vec4(TexCoords * 2.0 - 1.0 , z, 1.0);
+vec3 WorldPosFromDepth(vec2 textureCoordinates) {
+	float z = 2.0 * texture(depthTexture, textureCoordinates).r - 1.0; // [-1, 1]
+	vec4 clipSpacePos = vec4(textureCoordinates * 2.0 - 1.0 , z, 1.0);
 	vec4 viewSpacePos = projectionInverse * clipSpacePos;
 
 	viewSpacePos /= viewSpacePos.w; // Perspective division

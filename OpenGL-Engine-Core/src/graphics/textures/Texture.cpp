@@ -16,7 +16,7 @@ namespace OpenGL_Engine {
 	}
 
 	void Texture::generate2DTexture(unsigned int width, unsigned int height, GLenum dataFormat, 
-		const void* data, GLenum pixelDataType)
+		GLenum pixelDataType, const void* data)
 	{
 		m_TextureTarget = GL_TEXTURE_2D;
 		m_Width = width;

@@ -20,8 +20,8 @@ namespace OpenGL_Engine {
 
 		m_SceneCaptureShadowFramebuffer.addDepthStencilTexture(NormalizedDepthOnly).createFramebuffer();
 		m_SceneCaptureLightingFramebuffer.addColorTexture(FloatingPoint16).addDepthStencilRBO(NormalizedDepthOnly).createFramebuffer();
-		m_LightProbeConvolutionFramebuffer.addColorTexture(FloatingPoint16).addDepthStencilRBO(NormalizedDepthOnly).createFramebuffer();
-		m_ReflectionProbeSamplingFramebuffer.addColorTexture(FloatingPoint16).addDepthStencilRBO(NormalizedDepthOnly).createFramebuffer();
+		m_LightProbeConvolutionFramebuffer.addColorTexture(FloatingPoint16).createFramebuffer();
+		m_ReflectionProbeSamplingFramebuffer.addColorTexture(FloatingPoint16).createFramebuffer();
 
 		for (int i = 0; i < 6; i++) {
 			m_SceneCaptureCubemap.generateCubemapFace(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, IBL_CAPTURE_RESOLUTION, IBL_CAPTURE_RESOLUTION, GL_RGB, nullptr);
@@ -62,11 +62,11 @@ namespace OpenGL_Engine {
 		textureSettings.HasMips = false;
 
 		Texture* brdfLUT = new Texture(textureSettings);
-		brdfLUT->generate2DTexture(BRDF_LUT_RESOLUTION, BRDF_LUT_RESOLUTION, GL_RGB, 0);
+		brdfLUT->generate2DTexture(BRDF_LUT_RESOLUTION, BRDF_LUT_RESOLUTION, GL_RGB);
 
 		// Setup the framebuffer that we are using to generate our BRDF LUT
 		Framebuffer brdfFramebuffer(BRDF_LUT_RESOLUTION, BRDF_LUT_RESOLUTION, false);
-		brdfFramebuffer.addColorTexture(Normalized8).addDepthStencilRBO(NormalizedDepthOnly).createFramebuffer();
+		brdfFramebuffer.addColorTexture(Normalized8).createFramebuffer();
 		brdfFramebuffer.bind();
 
 		// Render state
@@ -137,8 +137,6 @@ namespace OpenGL_Engine {
 			unsigned int mipWidth = m_ReflectionProbeSamplingFramebuffer.getWidth() >> mip;
 			unsigned int mipHeight = m_ReflectionProbeSamplingFramebuffer.getHeight() >> mip;
 
-			glBindRenderbuffer(GL_RENDERBUFFER, m_ReflectionProbeSamplingFramebuffer.getDepthStencilRBO());
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, mipWidth, mipHeight);
 			glViewport(0, 0, mipWidth, mipHeight);
 
 			float mipRoughnessLevel = (float)mip / (float)(REFLECTION_PROBE_MIP_COUNT - 1);
@@ -253,8 +251,7 @@ namespace OpenGL_Engine {
 			unsigned int mipWidth = m_ReflectionProbeSamplingFramebuffer.getWidth() >> mip;
 			unsigned int mipHeight = m_ReflectionProbeSamplingFramebuffer.getHeight() >> mip;
 
-			glBindRenderbuffer(GL_RENDERBUFFER, m_ReflectionProbeSamplingFramebuffer.getDepthStencilRBO());
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, mipWidth, mipHeight);
+
 			glViewport(0, 0, mipWidth, mipHeight);
 
 			float mipRoughnessLevel = (float)mip / (float)(REFLECTION_PROBE_MIP_COUNT - 1);
