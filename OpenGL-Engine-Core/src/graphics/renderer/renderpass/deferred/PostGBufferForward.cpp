@@ -59,6 +59,7 @@ namespace OpenGL_Engine {
 		}
 
 		// Render transparent objects
+		modelRenderer->setupTransparentRenderState();
 		modelRenderer->flushTransparent(m_ModelShader, RenderPassType::MaterialRequired);
 
 		// Render pass output

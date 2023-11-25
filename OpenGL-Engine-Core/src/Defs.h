@@ -34,7 +34,7 @@
 //Shadowmap options
 #define  SHADOWMAP_RESOLUTION_X 2048
 #define  SHADOWMAP_RESOLUTION_Y 2048
-#define  SHADOWMAP_NEAR_PLANE 0.1f
+#define  SHADOWMAP_NEAR_PLANE 1.0f
 #define  SHADOWMAP_FAR_PLANE 400.0f
 
 //SSAO Options

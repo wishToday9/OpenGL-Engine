@@ -51,8 +51,13 @@ namespace OpenGL_Engine {
 			m_ActiveScene->addModelsToRenderer();
 		}
 
+
 		// Render models
+		m_GLCache->setDepthTest(true);
+		m_GLCache->setBlend(false);
+		m_GLCache->setFaceCull(false);
 		modelRenderer->flushOpaque(m_ShadowmapShader, NoMaterialRequired);
+
 		modelRenderer->flushTransparent(m_ShadowmapShader, NoMaterialRequired);
 
 		// Render terrain

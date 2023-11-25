@@ -278,7 +278,7 @@ float CalculateShadow(vec3 normal, vec3 fragPos, vec3 fragToLight) {
 
 	// Add shadow bias to avoid shadow acne, and more shadow bias is needed depending on the angle between the normal and light direction
 	// However too much bias can cause peter panning
-	float shadowBias = max(0.01, 0.1 * (1.0 - dot(normal, fragToLight)));
+	float shadowBias = max(0.001, 0.003 * (1.0 - dot(normal, fragToLight)));
 
 	// Perform Percentage Closer Filtering (PCF) in order to produce soft shadows
 	vec2 texelSize = 1.0 / textureSize(shadowmap, 0);

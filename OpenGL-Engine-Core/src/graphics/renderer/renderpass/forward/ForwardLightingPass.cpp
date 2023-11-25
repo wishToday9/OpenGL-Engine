@@ -87,14 +87,8 @@ namespace OpenGL_Engine {
 			m_ActiveScene->addModelsToRenderer();
 		}
 
-		// Setup model renderer
-		if (renderOnlyStatic) {
-			m_ActiveScene->addStaticModelsToRenderer();
-		}
-		else {
-			m_ActiveScene->addModelsToRenderer();
-		}
 		// Opaque objects
+		modelRenderer->setupOpaqueRenderState();
 		modelRenderer->flushOpaque(m_ModelShader, RenderPassType::MaterialRequired);
 
 		// Terrain
@@ -118,6 +112,7 @@ namespace OpenGL_Engine {
 			probeManager->bindProbes(glm::vec3(0.0f, 0.0f, 0.0f), m_ModelShader);
 		}
 		
+		modelRenderer->setupTransparentRenderState();
 		modelRenderer->flushTransparent(m_ModelShader, RenderPassType::MaterialRequired);
 
 		// Render pass output

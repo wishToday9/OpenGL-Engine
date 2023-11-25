@@ -46,8 +46,8 @@ namespace OpenGL_Engine {
 
 
 		//Scene parameters
-		ProbeBlendSetting m_SceneProbeBlendingSetting = PROBES_SIMPLE;
-
+		ProbeBlendSetting m_SceneProbeBlendSetting = PROBES_SIMPLE;
+						  
 		// Scene Specific Data
 		FPSCamera m_SceneCamera;
 		Skybox* m_Skybox;
