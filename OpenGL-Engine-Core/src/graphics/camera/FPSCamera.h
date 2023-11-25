@@ -18,11 +18,9 @@ namespace OpenGL_Engine {
 	};
 
 	// Default Camera Values
-	const float YAW = -90.0f;
-	const float PITCH = 0.0f;
-	const float SPEED = 20.0f;
-	const float SENSITIVITY = 0.10f;
-	const float FOV = 100.0f;
+#define FPSCAMERA_MAX_SPEED 40.0f
+#define FPSCAMERA_ROTATION_SENSITIVITY 0.1f
+#define FPSCAMERA_MAX_FOV 90.0f
 
 	class FPSCamera : public ICamera{
 	private:
@@ -39,7 +37,7 @@ namespace OpenGL_Engine {
 		float m_FOV;
 	public:
 		
-		FPSCamera(glm::vec3 position, glm::vec3 up, float yaw, float pitch);
+		FPSCamera(glm::vec3& position, glm::vec3& up, float yaw, float pitch);
 
 
 		FPSCamera(float xPos, float yPos, float zPos, float xUp, float yUp, float zUp, float yaw, float pitch);

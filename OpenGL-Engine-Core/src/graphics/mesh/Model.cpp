@@ -108,11 +108,11 @@ namespace OpenGL_Engine {
 		// Process Materials (textures in this case)
 		if (mesh->mMaterialIndex >= 0) {
 			aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
-			// Only colour data for the renderer is considered sRGB, all other type of non-colour texture data shouldn't be corrected by the hardware
+			// Only color data for the renderer is considered sRGB, all other type of non-color texture data shouldn't be corrected by the hardware
 			newMesh.m_Material.setAlbedoMap(loadMaterialTexture(material, aiTextureType_DIFFUSE, true));
 			newMesh.m_Material.setNormalMap(loadMaterialTexture(material, aiTextureType_NORMALS, false));
 			newMesh.m_Material.setAmbientOcclusionMap(loadMaterialTexture(material, aiTextureType_AMBIENT, false));
-			newMesh.m_Material.setEmissionMap(loadMaterialTexture(material, aiTextureType_EMISSIVE, true));
+			newMesh.m_Material.setDisplacementMap(loadMaterialTexture(material, aiTextureType_DISPLACEMENT, true));
 		}
 
 		return newMesh;

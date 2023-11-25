@@ -5,8 +5,8 @@
 
 namespace OpenGL_Engine {	 
 
-	FPSCamera::FPSCamera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH)
-		: m_Front(glm::vec3(0.0f, 0.0f, -1.0f)), m_MovementSpeed(SPEED), m_MouseSensitivity(SENSITIVITY), m_FOV(FOV)
+	FPSCamera::FPSCamera(glm::vec3& position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3& up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = -90.0f, float pitch = 0.0f)
+		: m_Front(glm::vec3(0.0f, 0.0f, -1.0f)), m_MovementSpeed(FPSCAMERA_MAX_SPEED), m_MouseSensitivity(FPSCAMERA_ROTATION_SENSITIVITY), m_FOV(FPSCAMERA_MAX_FOV)
 	{
 		m_Position = position;
 		m_WorldUp = up;
@@ -18,8 +18,8 @@ namespace OpenGL_Engine {
 		DebugPane::bindCameraPositionValue(&m_Position);
 	}
 
-	FPSCamera::FPSCamera(float xPos, float yPos, float zPos, float xUp, float yUp, float zUp, float yaw = YAW, float pitch = PITCH)
-		: m_Front(glm::vec3(0.0f, 0.0f, -1.0f)), m_MovementSpeed(SPEED), m_MouseSensitivity(SENSITIVITY), m_FOV(FOV)
+	FPSCamera::FPSCamera(float xPos, float yPos, float zPos, float xUp, float yUp, float zUp, float yaw = -90.0f, float pitch = 0.0f)
+		: m_Front(glm::vec3(0.0f, 0.0f, -1.0f)), m_MovementSpeed(FPSCAMERA_MAX_SPEED), m_FOV(FPSCAMERA_MAX_FOV)
 	{
 		m_Position = glm::vec3(xPos, yPos, zPos);
 		m_WorldUp = glm::vec3(xUp, yUp, zUp);
@@ -51,11 +51,11 @@ namespace OpenGL_Engine {
 		if (InputManager::isKeyPressed(GLFW_KEY_LEFT_CONTROL))
 			processKeyboard(OpenGL_Engine::DOWNWARDS, deltaTime);
 		if (InputManager::isKeyPressed(GLFW_KEY_LEFT_SHIFT))
-			m_MovementSpeed = SPEED * 4.0f;
+			m_MovementSpeed = FPSCAMERA_MAX_SPEED * 4.0f;
 		else if (InputManager::isKeyPressed(GLFW_KEY_LEFT_ALT))
-			m_MovementSpeed = SPEED / 4.0f;
+			m_MovementSpeed = FPSCAMERA_MAX_SPEED / 4.0f;
 		else
-			m_MovementSpeed = SPEED;
+			m_MovementSpeed = FPSCAMERA_MAX_SPEED;
 
 		// Mouse scrolling
 		processMouseScroll(InputManager::getScrollY() * 6.0);
@@ -114,14 +114,14 @@ namespace OpenGL_Engine {
 	}
 
 	void FPSCamera::processMouseScroll(double offset) {
-		if (offset != 0 && m_FOV >= 1.0 && m_FOV <= FOV) {
+		if (offset != 0 && m_FOV >= 1.0 && m_FOV <= FPSCAMERA_MAX_FOV) {
 			m_FOV -= (float)offset;
 		}
 		if (m_FOV < 1.0f) {
 			m_FOV = 1.0f;
 		}
-		else if (m_FOV > FOV) {
-			m_FOV = FOV;
+		else if (m_FOV > FPSCAMERA_MAX_FOV) {
+			m_FOV = FPSCAMERA_MAX_FOV;
 		}
 	}
 

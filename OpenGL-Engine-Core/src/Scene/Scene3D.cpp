@@ -32,7 +32,7 @@ namespace OpenGL_Engine {
 		window->getMeshes()[0].getMaterial().setAlbedoMap(TextureLoader::load2DTexture(std::string("res/textures/bricks2.jpg"), &srgbTextureSettings));
 		window->getMeshes()[0].getMaterial().setNormalMap(TextureLoader::load2DTexture(std::string("res/textures/bricks2_normal.jpg")));
 		window->getMeshes()[0].getMaterial().setRoughnessMap(TextureLoader::getWhiteTexture());
-		//window->getMeshes()[0].getMaterial().setDisplacementMap(TextureLoader::load2DTexture(std::string("res/textures/bricks2_disp.jpg")));
+		window->getMeshes()[0].getMaterial().setDisplacementMap(TextureLoader::load2DTexture(std::string("res/textures/bricks2_disp.jpg")));
 
 		Model* window2 = new OpenGL_Engine::Model(Quad());
 		m_RenderableModels.push_back(new RenderableModel(glm::vec3(150.0f, 60.0f, 205.0f), glm::vec3(25.0f, 25.0f, 25.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::radians(-90.0f), window2, nullptr, true, true));
@@ -41,7 +41,8 @@ namespace OpenGL_Engine {
 		window2->getMeshes()[0].getMaterial().setNormalMap(TextureLoader::load2DTexture(std::string("res/textures/Pebles_001_NRM.png")));
 		window2->getMeshes()[0].getMaterial().setAmbientOcclusionMap(TextureLoader::load2DTexture(std::string("res/textures/Pebles_001_OCC.png")));
 		window2->getMeshes()[0].getMaterial().setRoughnessMap(TextureLoader::getWhiteTexture());
-		//window2->getMeshes()[0].getMaterial().setDisplacementMap(TextureLoader::load2DTexture(std::string("res/textures/Pebles_Displace.png")));
+		window2->getMeshes()[0].getMaterial().setDisplacementMap(TextureLoader::load2DTexture(std::string("res/textures/Pebles_Displace.png")));
+
 
 		//Model *pbrGun = new arcane::Model("res/3D_Models/Cerberus_Gun/Cerberus_LP.FBX");
 		//m_RenderableModels.push_back(new RenderableModel(glm::vec3(120.0f, 75.0f, 120.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::radians(-90.0f), pbrGun, nullptr, true, false));

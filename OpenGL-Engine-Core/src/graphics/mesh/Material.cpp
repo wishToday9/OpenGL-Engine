@@ -2,12 +2,14 @@
 #include "Material.h"
 
 #include <graphics/Window.h>
+#include <ui/DebugPane.h>
 
 
 namespace OpenGL_Engine {  
-	Material::Material(Texture* albedoMap, Texture* normalMap, Texture* metallicMap, Texture* roughnessMap, Texture* ambientOcclusionMap, Texture* emissionMap)
-		: m_AlbedoMap(albedoMap), m_NormalMap(normalMap), m_MetallicMap(metallicMap), m_RoughnessMap(roughnessMap),
-		m_AmbientOcclusionMap(ambientOcclusionMap), m_EmissionMap(emissionMap) {}
+	Material::Material(Texture* albedoMap, Texture* normalMap, Texture* metallicMap, Texture* roughnessMap, Texture* ambientOcclusionMap, Texture* displacementMap)
+		: m_AlbedoMap(albedoMap), m_NormalMap(normalMap), m_MetallicMap(metallicMap), m_RoughnessMap(roughnessMap), m_AmbientOcclusionMap(ambientOcclusionMap), m_DisplacementMap(displacementMap),
+		m_ParallaxStrength(0.07f), m_ParallaxMinSteps(PARALLAX_MIN_STEPS), m_ParallelMaxSteps(PARALLAX_MAX_STEPS)
+	{	}
 
 	void Material::BindMaterialInformation(Shader *shader) const{
 		// Texture unit 0 is reserved for the shadow map
@@ -54,6 +56,17 @@ namespace OpenGL_Engine {
 		}
 		else {
 			TextureLoader::getDefaultAO()->bind(currentTextureUnit++);
+		}
+
+		shader->setUniform("material.texture_displacement", currentTextureUnit);
+		if (m_DisplacementMap) {
+			shader->setUniform("hasDisplacement", true);
+			shader->setUniform("minMaxDisplacementSteps", glm::vec2(m_ParallaxMinSteps, m_ParallelMaxSteps));
+			shader->setUniform("parallaxStrength", m_ParallaxStrength);
+			m_DisplacementMap->bind(currentTextureUnit++);
+		}
+		else {
+			shader->setUniform("hasDisplacement", false);
 		}
 
 	}

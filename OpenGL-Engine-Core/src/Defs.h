@@ -45,3 +45,7 @@
 #define SAFE_DELETE_ARRAY(p) if(p){delete[] p;p = nullptr;}
 #define MACRO_STRING(p) #p
 
+// Parallax Options
+#define PARALLAX_MIN_STEPS 1
+#define PARALLAX_MAX_STEPS 20
+
