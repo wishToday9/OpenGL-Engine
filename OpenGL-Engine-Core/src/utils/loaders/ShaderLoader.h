@@ -5,8 +5,7 @@
 namespace OpenGL_Engine {
 	class ShaderLoader {
 	public:
-		static Shader* loadShader(const char* vertPath, const char* fragPath);
-		static Shader* loadShader(const char* vertPath, const char* fragPath, const char* geoPath);
+		static Shader* loadShader(const std::string& path);
 
 	private:
 		static std::unordered_map<std::size_t, Shader*> s_ShaderCache;

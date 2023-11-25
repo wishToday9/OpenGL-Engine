@@ -7,15 +7,10 @@ namespace OpenGL_Engine {
 	std::unordered_map<std::size_t, Shader*> ShaderLoader::s_ShaderCache;
 	std::hash<std::string> ShaderLoader::s_Hasher;
 
-	OpenGL_Engine::Shader* ShaderLoader::loadShader(const char* vertPath, const char* fragPath)
+	
+	Shader* ShaderLoader::loadShader(const std::string& path)
 	{
-		return loadShader(vertPath, fragPath, "");
-	}
-
-	OpenGL_Engine::Shader* ShaderLoader::loadShader(const char* vertPath, const char* fragPath, const char* geoPath)
-	{
-		std::string shaderName = std::string(vertPath) + std::string(fragPath) + std::string(geoPath);
-		std::size_t hash = s_Hasher(shaderName);
+		std::size_t hash = s_Hasher(path);
 
 		// Check the cache
 		auto iter = s_ShaderCache.find(hash);
@@ -24,7 +19,7 @@ namespace OpenGL_Engine {
 		}
 
 		// Load the shader
-		Shader* shader = new Shader(vertPath, fragPath, geoPath);
+		Shader* shader = new Shader(path);
 
 		s_ShaderCache.insert(std::pair<std::size_t, Shader*>(hash, shader));
 		return s_ShaderCache[hash];

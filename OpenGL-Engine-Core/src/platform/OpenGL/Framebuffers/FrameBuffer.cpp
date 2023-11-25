@@ -53,7 +53,7 @@ namespace OpenGL_Engine {
 
 		// Generate colour texture attachment
 		if (m_IsMultisampled) {
-			m_ColourTexture.generate2DMutisampleTexture(m_Width, m_Height);
+			m_ColourTexture.generate2DMultisampleTexture(m_Width, m_Height);
 			setColorAttachment(m_ColourTexture.getTextureId(), GL_TEXTURE_2D_MULTISAMPLE);
 		}
 		else {
@@ -94,7 +94,7 @@ namespace OpenGL_Engine {
 
 		// Generate depth attachment
 		if (m_IsMultisampled) {
-			m_DepthStencilTexture.generate2DMutisampleTexture(m_Width, m_Height);
+			m_DepthStencilTexture.generate2DMultisampleTexture(m_Width, m_Height);
 			glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, GL_TEXTURE_2D_MULTISAMPLE, m_DepthStencilTexture.getTextureId(), 0);
 		}
 		else {

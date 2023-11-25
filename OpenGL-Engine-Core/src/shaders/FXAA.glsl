@@ -1,6 +1,19 @@
-#version 430 core
+#shader-type vertex
+#version 450 core
+
+layout(location = 0) in vec3 position;
+layout(location = 2) in vec2 texCoord;
+
+out vec2 TexCoords;
+
+void main() {
+	gl_Position = vec4(position, 1.0);
+	TexCoords = texCoord;
+}
 
 
+#shader-type fragment
+#version 450 core
 #define FXAA_REDUCE_MIN (1.0 / 128.0)
 #define FXAA_REDUCE_MUL (1.0 / 8.0)
 #define FXAA_SPAN_MAX 8.0

@@ -35,6 +35,7 @@ namespace OpenGL_Engine {
 		float m_GammaCorrection = 2.2f;
 		float m_SsaoSampleRadius = 1.0f;
 		float m_SsaoStrength = 3.0;
+		float m_Exposure = 1.0f;
 
 		//SSAO Kernels
 		std::array<glm::vec3, SSAO_KERNEL_SIZE> m_SsaoKernel;

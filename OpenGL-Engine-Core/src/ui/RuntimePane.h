@@ -20,6 +20,10 @@ namespace OpenGL_Engine {
 		static float s_ShadowmapTimer;
 		static float s_SsaoTimer;
 		static float s_FxaaTimer;
+
+		int m_ValueOffset;
+		float m_MaxFrametime;
+		std::array<float, 300> m_Frametimes;
 	};
 
 }

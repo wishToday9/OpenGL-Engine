@@ -7,8 +7,8 @@ namespace OpenGL_Engine {
 	ForwardLightingPass::ForwardLightingPass(Scene3D* scene, bool shouldMultisample)
 		: RenderPass(scene), m_AllocatedFramebuffer(true)
 	{
-		m_ModelShader = ShaderLoader::loadShader("src/shaders/forward/pbr_model.vert", "src/shaders/forward/pbr_model.frag");
-		m_TerrainShader = ShaderLoader::loadShader("src/shaders/forward/pbr_terrain.vert", "src/shaders/forward/pbr_terrain.frag");
+		m_ModelShader = ShaderLoader::loadShader("src/shaders/forward/PBR_Model.glsl");
+		m_TerrainShader = ShaderLoader::loadShader("src/shaders/forward/PBR_Terrain.glsl");
 
 		m_Framebuffer = new Framebuffer(Window::getResolutionWidth(), Window::getResolutionHeight(), shouldMultisample);
 		m_Framebuffer->addColorTexture(FloatingPoint16).addDepthStencilRBO(NormalizedDepthStencil).createFramebuffer();
@@ -17,8 +17,8 @@ namespace OpenGL_Engine {
 		: RenderPass(scene), m_Framebuffer(customFramebuffer), m_AllocatedFramebuffer(false)
 		
 	{
-		m_ModelShader = ShaderLoader::loadShader("src/shaders/forward/pbr_model.vert", "src/shaders/forward/pbr_model.frag");
-		m_TerrainShader = ShaderLoader::loadShader("src/shaders/forward/pbr_terrain.vert", "src/shaders/forward/pbr_terrain.frag");
+		m_ModelShader = ShaderLoader::loadShader("src/shaders/forward/PBR_Model.glsl");
+		m_TerrainShader = ShaderLoader::loadShader("src/shaders/forward/PBR_Terrain.glsl");
 	}
 
 	ForwardLightingPass::~ForwardLightingPass()
@@ -70,14 +70,8 @@ namespace OpenGL_Engine {
 		// Shadow map code
 		bindShadowmap(m_ModelShader, shadowmapData);
 
-		// IBL code
-		if (useIBL) {
-			m_ModelShader->setUniform("computeIBL", 1);
-			probeManager->bindProbes(glm::vec3(0.0, 0.0, 0.0), m_ModelShader);
-		}
-		else {
-			m_ModelShader->setUniform("computeIBL", 0);
-		}
+		// IBL Binding
+		probeManager->bindProbes(glm::vec3(0.0f, 0.0f, 0.0f), m_ModelShader);
 
 		//setup model renderer
 		if (renderOnlyStatic) {
@@ -85,6 +79,14 @@ namespace OpenGL_Engine {
 		}
 		else {
 			m_ActiveScene->addModelsToRenderer();
+		}
+
+		// Render opaque objects
+		if (useIBL) {
+			m_ModelShader->setUniform("computeIBL", 1);
+		}
+		else {
+			m_ModelShader->setUniform("computeIBL", 0);
 		}
 
 		// Opaque objects

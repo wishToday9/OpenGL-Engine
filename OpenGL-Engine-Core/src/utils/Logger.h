@@ -67,7 +67,7 @@ namespace OpenGL_Engine {
 		enum {
 			DEBUG, INFO, WARNING, ERROR
 		};
-		std::vector<std::string> filePaths;
+		std::set<std::string> filePaths;
 
 		std::ofstream filestream;
 		std::string file; // Default value set to: "logged_files/log.txt"

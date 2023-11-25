@@ -6,7 +6,7 @@
 namespace OpenGL_Engine {  
 	Skybox::Skybox(const std::vector<std::string>& filePaths)
 	{
-		m_SkyboxShader = ShaderLoader::loadShader("src/shaders/skybox.vert", "src/shaders/skybox.frag");
+		m_SkyboxShader = ShaderLoader::loadShader("src/shaders/Skybox.glsl");
 
 		CubemapSettings srgbCubemap;
 		srgbCubemap.IsSRGB = true;

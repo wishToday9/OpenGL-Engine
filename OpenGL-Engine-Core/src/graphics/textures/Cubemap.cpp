@@ -35,19 +35,7 @@ namespace OpenGL_Engine {
 		++m_FacesGenerated;
 
 		if (m_FacesGenerated >= 6) {
-			// Texture filtering
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, m_CubemapSettings.TextureMagnificationFilterMode);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, m_CubemapSettings.TextureMinificationFilterMode);
-			// Texture wrapping
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, m_CubemapSettings.TextureWrapSMode);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, m_CubemapSettings.TextureWrapTMode);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, m_CubemapSettings.TextureWrapRMode);
-
-			// Mip settings
-			if (m_CubemapSettings.HasMips) {
-				glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-				glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_LOD_BIAS, m_CubemapSettings.MipBias);
-			}
+			applyCubemapSettings();
 		}
 
 		unbind();
@@ -70,6 +58,30 @@ namespace OpenGL_Engine {
 	{
 		glBindTexture(GL_TEXTURE_CUBE_MAP, m_CubemapID);
 		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+	}
+
+	void Cubemap::applyCubemapSettings()
+	{
+		// Texture wrapping
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, m_CubemapSettings.TextureWrapSMode);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, m_CubemapSettings.TextureWrapTMode);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, m_CubemapSettings.TextureWrapRMode);
+
+		// Texture filtering
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, m_CubemapSettings.TextureMagnificationFilterMode);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, m_CubemapSettings.TextureMinificationFilterMode);
+
+		// Mipmapping
+		if (m_CubemapSettings.HasMips) {
+			glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_LOD_BIAS, m_CubemapSettings.MipBias);
+		}
+
+		// Anisotropic filtering (TODO: Move the anistropyAmount calculation to Defs.h to avoid querying the OpenGL driver everytime)
+		float maxAnisotropy;
+		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
+		float anistropyAmount = glm::min(maxAnisotropy, m_CubemapSettings.TextureAnisotropyLevel);
+		glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_ANISOTROPY_EXT, anistropyAmount);
 	}
 
 }

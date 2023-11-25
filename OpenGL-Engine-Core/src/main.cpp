@@ -19,8 +19,8 @@ int main() {
 
 
 	// Prepare the UI
-	OpenGL_Engine::RuntimePane runtimePane(glm::vec2(256.0f, 90.0f));
-	OpenGL_Engine::DebugPane debugPane(glm::vec2(256.0f, 115.0f));
+	OpenGL_Engine::RuntimePane runtimePane(glm::vec2(270.0f, 175.0f));
+	OpenGL_Engine::DebugPane debugPane(glm::vec2(270.0f, 230.0f));
 
 	// Initialize the renderer
 	renderer.init();

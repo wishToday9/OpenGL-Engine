@@ -1,15 +1,74 @@
+#shader-type vertex
 #version 450 core
+
+layout(location = 0) in vec3 position;
+layout(location = 1) in vec3 normal;
+layout(location = 2) in vec2 texCoords;
+layout(location = 3) in vec3 tangent;
+layout(location = 4) in vec3 bitangent;
+
+out mat3 TBN;
+out vec3 FragPos;
+out vec4 FragPosLightClipSpace;
+out vec2 TexCoords;
+
+out vec3 FragPosTangentSpace;
+out vec3 ViewPosTangentSpace;
+
+uniform bool hasDisplacement;
+uniform vec3 viewPos;
+
+uniform mat3 normalMatrix;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+uniform mat4 lightSpaceViewProjectionMatrix;
+
+void main() {
+	//use the normal matrix 
+	vec3 T = normalize(normalMatrix * tangent);
+	vec3 B = normalize(normalMatrix * bitangent);
+	vec3 N = normalize(normalMatrix * normal);
+
+	TBN = mat3(T, B, N);
+
+	TexCoords = texCoords;
+	FragPos = vec3(model * vec4(position, 1.0f));
+	FragPosLightClipSpace = lightSpaceViewProjectionMatrix * vec4(FragPos, 1.0);
+	if (hasDisplacement) {
+		mat3 inverseTBN = transpose(TBN); // Calculate matrix to go from world -> tangent (orthogonal matrix's transpose = inverse)
+		FragPosTangentSpace = inverseTBN * FragPos;
+		ViewPosTangentSpace = inverseTBN * viewPos;
+	}
+
+	gl_Position = projection * view * vec4(FragPos, 1.0);
+}
+
+
+
+#shader-type fragment
+#version 450 core
+/*
+This IBL - BRDF Integration approach is based on the approach Epic made in their paper "Real Shading in Unreal Engine 4"
+*/
+struct Material {
+	sampler2D texture_albedo;
+	sampler2D texture_normal;
+	sampler2D texture_metallic;
+	sampler2D texture_roughness;
+	sampler2D texture_ao;
+	sampler2D texture_displacement;
+};
 
 struct DirLight {
 	vec3 direction;
-
-	vec3 lightColor;
+	vec3 lightColor; // radiant flux
 };
 
 struct PointLight {
 	vec3 position;
 
-	vec3 lightColor;
+	vec3 lightColor; // radiant flux
 };
 
 struct SpotLight {
@@ -19,24 +78,21 @@ struct SpotLight {
 	float cutOff;
 	float outerCutOff;
 
-	vec3 lightColor;
+	vec3 lightColor; // radiant flux
 };
-
 #define MAX_DIR_LIGHTS 5
 #define MAX_POINT_LIGHTS 5
 #define MAX_SPOT_LIGHTS 5
+
 const float PI = 3.14159265359;
 
+in mat3 TBN;
+in vec3 FragPos;
+in vec4 FragPosLightClipSpace;
 in vec2 TexCoords;
 
 out vec4 color;
-
-// GBuffer
-uniform sampler2D albedoTexture;
-uniform sampler2D normalTexture;
-uniform sampler2D materialInfoTexture;
-uniform sampler2D ssaoTexture;
-uniform sampler2D depthTexture;
+uniform vec3 viewPos;
 
 // IBL
 uniform int reflectionProbeMipCount;
@@ -45,81 +101,99 @@ uniform samplerCube irradianceMap;
 uniform samplerCube prefilterMap;
 uniform sampler2D brdfLUT;
 
-// Lighting
+//lighting
 uniform sampler2D shadowmap;
 uniform ivec4 numDirPointSpotLights;
+
 uniform DirLight dirLights[MAX_DIR_LIGHTS];
 uniform PointLight pointLights[MAX_POINT_LIGHTS];
 uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
 
-uniform vec3 viewPos;
-uniform mat4 viewInverse;
-uniform mat4 projectionInverse;
-uniform mat4 lightSpaceViewProjectionMatrix;
+
+in vec3 FragPosTangentSpace;
+in vec3 ViewPosTangentSpace;
+uniform bool hasDisplacement;
+uniform vec2 minMaxDisplacementSteps;
+uniform float parallaxStrength;
+
+uniform Material material;
+
 
 // Light radiance calculations
-vec3 CalculateDirectionalLightRadiance(vec3 albedo, vec3 normal, float metallic, float roughness, vec3 fragPos, vec3 fragToView, vec3 baseReflectivity);
-vec3 CalculatePointLightRadiance(vec3 albedo, vec3 normal, float metallic, float roughness, vec3 fragPos, vec3 fragToView, vec3 baseReflectivity);
-vec3 CalculateSpotLightRadiance(vec3 albedo, vec3 normal, float metallic, float roughness, vec3 fragPos, vec3 fragToView, vec3 baseReflectivity);
+vec3 CalculateDirectionalLightRadiance(vec3 albedo, vec3 normal, float metallic, float roughness, vec3 fragToView, vec3 baseReflectivity);
+vec3 CalculatePointLightRadiance(vec3 albedo, vec3 normal, float metallic, float roughness, vec3 fragToView, vec3 baseReflectivity);
+vec3 CalculateSpotLightRadiance(vec3 albedo, vec3 normal, float metallic, float roughness, vec3 fragToView, vec3 baseReflectivity);
 
-// Cook-Torrance BRDF functions adopted by Epic for UE4
+// Cook-Torrance BRDF function prototypes
 float NormalDistributionGGX(vec3 normal, vec3 halfway, float roughness);
 float GeometrySmith(vec3 normal, vec3 viewDir, vec3 lightDir, float roughness);
 float GeometrySchlickGGX(float cosTheta, float roughness);
 vec3 FresnelSchlick(float cosTheta, vec3 baseReflectivity);
 
 // Other function prototypes
-float CalculateShadow(vec3 normal, vec3 fragPos, vec3 fragToDirLight);
-vec3 WorldPosFromDepth();
+float CalculateShadow(vec3 normal, vec3 fragToDirLight);
+// Unpacks the normal from the texture and returns the normal in tangent space
+vec3 UnpackNormal(vec3 textureNormal);
+vec2 ParallaxMapping(vec2 texCoords, vec3 viewDirTangentSpace);
+
 
 void main() {
-	// Sample textures
-	vec3 albedo = texture(albedoTexture, TexCoords).rgb;
-	float albedoAlpha = texture(albedoTexture, TexCoords).w;
-	vec3 normal = texture(normalTexture, TexCoords).rgb;
-	float metallic = texture(materialInfoTexture, TexCoords).r;
-	float unclampedRoughness = texture(materialInfoTexture, TexCoords).g; // Used for indirect specular (reflections)
+	// Parallax mapping
+	vec2 textureCoordinates = TexCoords;
+	if (hasDisplacement) {
+		vec3 viewDirTangentSpace = normalize(ViewPosTangentSpace - FragPosTangentSpace);
+		textureCoordinates = ParallaxMapping(TexCoords, viewDirTangentSpace);
+	}
+	//smple textures
+	vec3 albedo = texture(material.texture_albedo, textureCoordinates).rgb;
+	float albedoAlpha = texture(material.texture_albedo, textureCoordinates).w;
+	vec3 normal = texture(material.texture_normal, textureCoordinates).rgb;
+	float metallic = texture(material.texture_metallic, textureCoordinates).r;
+	float unclampedRoughness = texture(material.texture_roughness, textureCoordinates).r; // Used for indirect specular (reflections)
 	float roughness = max(unclampedRoughness, 0.04); // Used for calculations since specular highlights will be too fine, and will cause flicker
-	float materialAO = texture(materialInfoTexture, TexCoords).b;
-	float sceneAO = texture(ssaoTexture, TexCoords).r;
-	float ao = min(materialAO, sceneAO);
 
-	// Reconstruct fragPos
-	vec3 fragPos = WorldPosFromDepth();
+	float ao = texture(material.texture_ao, textureCoordinates).r;
 
-	vec3 fragToView = normalize(viewPos - fragPos);
+	/// Normal mapping code. Opted out of tangent space normal mapping since I would have to convert all of my lights to tangent space
+	normal = normalize(TBN * UnpackNormal(normal));
+
+	vec3 fragToView = normalize(viewPos - FragPos);
 	vec3 reflectionVec = reflect(-fragToView, normal);
 
-	// Dielectrics have an average base specular reflectivity around 0.04, and metals absorb all of their diffuse (refraction) lighting so their albedo is used instead for their specular lighting (reflection)
 	vec3 baseReflectivity = vec3(0.04);
 	baseReflectivity = mix(baseReflectivity, albedo, metallic);
 
 	// Calculate per light radiance for all of the direct lighting
 	vec3 directLightIrradiance = vec3(0.0);
-	directLightIrradiance += CalculateDirectionalLightRadiance(albedo, normal, metallic, roughness, fragPos, fragToView, baseReflectivity);
-	directLightIrradiance += CalculatePointLightRadiance(albedo, normal, metallic, roughness, fragPos, fragToView, baseReflectivity);
-	directLightIrradiance += CalculateSpotLightRadiance(albedo, normal, metallic, roughness, fragPos, fragToView, baseReflectivity);
+	directLightIrradiance += CalculateDirectionalLightRadiance(albedo, normal, metallic, roughness, fragToView, baseReflectivity);
+	directLightIrradiance += CalculatePointLightRadiance(albedo, normal, metallic, roughness, fragToView, baseReflectivity);
+	directLightIrradiance += CalculateSpotLightRadiance(albedo, normal, metallic, roughness, fragToView, baseReflectivity);
 
+	//IBL for both diffuse and specular
 	// Calcualte ambient IBL for both diffuse and specular
-	vec3 ambient = vec3(0.05) * albedo * ao; // TODO: Set ambient back to 0.03
-	
+	vec3 ambient = vec3(0.05) * albedo * ao;
 	if (computeIBL) {
 		vec3 specularRatio = FresnelSchlick(max(dot(normal, fragToView), 0.0), baseReflectivity);
 		vec3 diffuseRatio = vec3(1.0) - specularRatio;
 		diffuseRatio *= 1.0 - metallic;
+
 		vec3 indirectDiffuse = texture(irradianceMap, normal).rgb * albedo * diffuseRatio;
+
 		vec3 prefilterColour = textureLod(prefilterMap, reflectionVec, unclampedRoughness * (reflectionProbeMipCount - 1)).rgb;
 		vec2 brdfIntegration = texture(brdfLUT, vec2(max(dot(normal, fragToView), 0.0), roughness)).rg;
 		vec3 indirectSpecular = prefilterColour * (specularRatio * brdfIntegration.x + brdfIntegration.y);
-		ambient = ( indirectDiffuse + indirectSpecular) * ao;
-	}
-	
 
-	color = vec4(ambient + directLightIrradiance, 1.0);
+		ambient = (indirectDiffuse + indirectSpecular) * ao;
+	}
+
+	color = vec4(ambient + directLightIrradiance, albedoAlpha);
 }
 
-// TODO: Need to also add multiple shadow support
-vec3 CalculateDirectionalLightRadiance(vec3 albedo, vec3 normal, float metallic, float roughness, vec3 fragPos, vec3 fragToView, vec3 baseReflectivity) {
+
+// Light radiance calculations
+vec3 CalculateDirectionalLightRadiance(vec3 albedo, vec3 normal, float metallic,
+	float roughness, vec3 fragToView, vec3 baseReflectivity)
+{
 	vec3 directLightIrradiance = vec3(0.0);
 
 	for (int i = 0; i < numDirPointSpotLights.x; ++i) {
@@ -146,24 +220,22 @@ vec3 CalculateDirectionalLightRadiance(vec3 albedo, vec3 normal, float metallic,
 		vec3 diffuse = diffuseRatio * albedo / PI;
 
 		// Add the light's radiance to the irradiance sum
-		directLightIrradiance += (diffuse + specular) * radiance * max(dot(normal, lightDir), 0.0) * (1.0 - CalculateShadow(normal, fragPos, lightDir));
+		directLightIrradiance += (diffuse + specular) * radiance * max(dot(normal, lightDir), 0.0) * (1.0 - CalculateShadow(normal, lightDir));
 	}
 
 	return directLightIrradiance;
 }
 
-
-vec3 CalculatePointLightRadiance(vec3 albedo, vec3 normal, float metallic, float roughness, vec3 fragPos, vec3 fragToView, vec3 baseReflectivity) {
+vec3 CalculatePointLightRadiance(vec3 albedo, vec3 normal, float metallic, float roughness, vec3 fragToView, vec3 baseReflectivity){
 	vec3 pointLightIrradiance = vec3(0.0);
-
-	for (int i = 0; i < numDirPointSpotLights.y; ++i) {
-		vec3 fragToLight = normalize(pointLights[i].position - fragPos);
+	for(int i = 0; i < numDirPointSpotLights.y; ++i){
+		vec3 fragToLight = normalize(pointLights[i].position - FragPos);
 		vec3 halfway = normalize(fragToView + fragToLight);
-		float fragToLightDistance = length(pointLights[i].position - fragPos);
+		float fragToLightDistance = length(pointLights[i].position - FragPos);
 		float attenuation = 1.0 / (fragToLightDistance * fragToLightDistance);
 		vec3 radiance = pointLights[i].lightColor * attenuation;
 
-		// Cook-Torrance Specular BRDF calculations
+		//Cook-Torrance Specular BRDF calculations
 		float normalDistribution = NormalDistributionGGX(normal, halfway, roughness);
 		vec3 fresnel = FresnelSchlick(max(dot(halfway, fragToView), 0.0), baseReflectivity);
 		float geometry = GeometrySmith(normal, fragToView, fragToLight, roughness);
@@ -173,7 +245,7 @@ vec3 CalculatePointLightRadiance(vec3 albedo, vec3 normal, float metallic, float
 		vec3 diffuseRatio = vec3(1.0) - specularRatio;
 		diffuseRatio *= 1.0 - metallic;
 
-		// Finally calculate the specular part of the Cook-Torrance BRDF (max 0.1 stops any visual artifacts)
+		// Finally calculate the specular part of the Cook-Torrance BRDF
 		vec3 numerator = specularRatio * normalDistribution * geometry;
 		float denominator = 4 * max(dot(fragToView, normal), 0.1) * max(dot(fragToLight, normal), 0.0) + 0.001; // Prevents any division by zero
 		vec3 specular = numerator / denominator;
@@ -181,21 +253,18 @@ vec3 CalculatePointLightRadiance(vec3 albedo, vec3 normal, float metallic, float
 		// Also calculate the diffuse, a lambertian calculation will be added onto the final radiance calculation
 		vec3 diffuse = diffuseRatio * albedo / PI;
 
-		// Add the light's radiance to the irradiance sum
+		// Add light radiance to the irradiance sum
 		pointLightIrradiance += (diffuse + specular) * radiance * max(dot(normal, fragToLight), 0.0);
 	}
-
-	return pointLightIrradiance;
+	return pointLightIrradiance;	
 }
-
-
-vec3 CalculateSpotLightRadiance(vec3 albedo, vec3 normal, float metallic, float roughness,  vec3 fragPos, vec3 fragToView, vec3 baseReflectivity) {
+vec3 CalculateSpotLightRadiance(vec3 albedo, vec3 normal, float metallic, float roughness, vec3 fragToView, vec3 baseReflectivity){
 	vec3 spotLightIrradiance = vec3(0.0);
 
-	for (int i = 0; i < numDirPointSpotLights.z; ++i) {
-		vec3 fragToLight = normalize(spotLights[i].position - fragPos);
+	for(int i = 0; i < numDirPointSpotLights.z; ++i){
+		vec3 fragToLight = normalize(spotLights[i].position - FragPos);
 		vec3 halfway = normalize(fragToView + fragToLight);
-		float fragToLightDistance = length(spotLights[i].position - fragPos);
+		float fragToLightDistance = length(spotLights[i].position - FragPos);
 
 		// Check if it is in the spotlight's circle
 		float theta = dot(normalize(spotLights[i].direction), -fragToLight);
@@ -214,7 +283,7 @@ vec3 CalculateSpotLightRadiance(vec3 albedo, vec3 normal, float metallic, float 
 		vec3 diffuseRatio = vec3(1.0) - specularRatio;
 		diffuseRatio *= 1.0 - metallic;
 
-		// Finally calculate the specular part of the Cook-Torrance BRDF (max 0.1 stops any visual artifacts)
+		// Finally calculate the specular part of the Cook-Torrance BRDF
 		vec3 numerator = specularRatio * normalDistribution * geometry;
 		float denominator = 4 * max(dot(fragToView, normal), 0.1) * max(dot(fragToLight, normal), 0.0) + 0.001; // Prevents any division by zero
 		vec3 specular = numerator / denominator;
@@ -222,10 +291,9 @@ vec3 CalculateSpotLightRadiance(vec3 albedo, vec3 normal, float metallic, float 
 		// Also calculate the diffuse, a lambertian calculation will be added onto the final radiance calculation
 		vec3 diffuse = diffuseRatio * albedo / PI;
 
-		// Add the light's radiance to the irradiance sum
-		spotLightIrradiance += (diffuse + specular) * radiance * max(dot(normal, fragToLight), 0.0);
+		//add the light's radiance to the irradiance calculation
+		 spotLightIrradiance += (diffuse + specular) * radiance * max(dot(normal, fragToLight), 0.0);
 	}
-
 	return spotLightIrradiance;
 }
 
@@ -244,7 +312,6 @@ float NormalDistributionGGX(vec3 normal, vec3 halfway, float roughness) {
 	return numerator / denominator;
 }
 
-
 // Approximates the geometry obstruction and geometry shadowing respectively, on the microfacet level
 float GeometrySmith(vec3 normal, vec3 viewDir, vec3 lightDir, float roughness) {
 	return GeometrySchlickGGX(max(dot(normal, viewDir), 0.0), roughness) * GeometrySchlickGGX(max(dot(normal, lightDir), 0.0), roughness);
@@ -259,18 +326,16 @@ float GeometrySchlickGGX(float cosTheta, float roughness) {
 	return numerator / max(denominator, 0.001);
 }
 
-
-// Calculates the amount of specular light. Since diffuse(refraction) and specular(reflection) are mutually exclusive, 
+// Calculates the amount of specular light. Since diffuse(refraction) 
+// and specular(reflection) are mutually exclusive, 
 // we can also use this to determine the amount of diffuse light
 // Taken from UE4's implementation which is faster and basically identical to the usual Fresnel calculations: https://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
 vec3 FresnelSchlick(float cosTheta, vec3 baseReflectivity) {
 	return max(baseReflectivity + (1.0 - baseReflectivity) * pow(2, (-5.55473 * cosTheta - 6.98316) * cosTheta), 0.0);
 }
 
-
-float CalculateShadow(vec3 normal, vec3 fragPos, vec3 fragToLight) {
-	vec4 fragPosLightClipSpace = lightSpaceViewProjectionMatrix * vec4(fragPos, 1.0);
-	vec3 ndcCoords = fragPosLightClipSpace.xyz / fragPosLightClipSpace.w;
+float CalculateShadow(vec3 normal, vec3 fragToLight) {
+	vec3 ndcCoords = FragPosLightClipSpace.xyz / FragPosLightClipSpace.w;
 	vec3 depthmapCoords = ndcCoords * 0.5 + 0.5;
 
 	float shadow = 0.0;
@@ -295,14 +360,53 @@ float CalculateShadow(vec3 normal, vec3 fragPos, vec3 fragToLight) {
 	return shadow;
 }
 
-vec3 WorldPosFromDepth() {
-	float z = 2.0 * texture(depthTexture, TexCoords).r - 1.0; // [-1, 1]
-	vec4 clipSpacePos = vec4(TexCoords * 2.0 - 1.0 , z, 1.0);
-	vec4 viewSpacePos = projectionInverse * clipSpacePos;
 
-	viewSpacePos /= viewSpacePos.w; // Perspective division
+// Unpacks the normal from the texture and returns the normal in tangent space
+vec3 UnpackNormal(vec3 textureNormal) {
+	return normalize(textureNormal * 2.0 - 1.0);
+}
 
-	vec4 worldSpacePos = viewInverse * viewSpacePos;
 
-	return worldSpacePos.xyz;
+
+vec2 ParallaxMapping(vec2 texCoords, vec3 viewDirTangentSpace){
+	// Figure out the LoD we should sample from while raymarching the heightfield in tangent space.
+	//Required to fix an artifacting issue
+	vec2 lodInfo = textureQueryLod(material.texture_displacement, texCoords);
+	float lodToSample = lodInfo.x;
+	float expectedLod = lodInfo.y; // Even if mip mapping isn't enabled this will still give us a mip level
+
+	const float minSteps = minMaxDisplacementSteps.x;
+	const float maxSteps = minMaxDisplacementSteps.y;
+	float numSteps = mix(maxSteps, minSteps, clamp(expectedLod * 0.4, 0, 1)); // More steps are required at lower mip levels since the camera is closer to the surface
+
+	float layerDepth = 1.0 / numSteps;
+	float currentLayerDepth = 0.0;
+
+	// Calculate the direction and the amount we should raymarch each iteration
+	vec2 p = viewDirTangentSpace.xy * parallaxStrength;
+	vec2 deltaTexCoords = p / numSteps;
+
+	// Get the initial values
+	vec2 currentTexCoords = texCoords;
+	float currentSampledDepth = textureLod(material.texture_displacement, currentTexCoords, lodToSample).r;
+
+	// Keep ray marching along vector p by the texture coordinate delta,
+	// until the raymarching depth catches up to the sampled depth
+	// (ie the -view vector intersects the surface)
+	while (currentLayerDepth < currentSampledDepth) {
+		currentTexCoords -= deltaTexCoords;
+		currentSampledDepth = textureLod(material.texture_displacement, currentTexCoords, lodToSample).r;
+		currentLayerDepth += layerDepth;
+	}
+
+	// Now we need to get the previous step and the current step,
+	// and interpolate between the two texture coordinates
+	vec2 prevTexCoords = currentTexCoords + deltaTexCoords;
+
+	float afterDepth = currentSampledDepth - currentLayerDepth;
+	float beforeDepth = textureLod(material.texture_displacement, prevTexCoords, lodToSample).r - currentLayerDepth + layerDepth;
+	float weight = afterDepth / (afterDepth - beforeDepth);
+	vec2 finalTexCoords = mix(currentTexCoords, prevTexCoords, weight);
+
+	return finalTexCoords;
 }
