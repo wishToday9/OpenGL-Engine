@@ -8,7 +8,7 @@ namespace OpenGL_Engine {
 	{	}
 	// TODO: Assert that the shader is bound in debug
 	void PointLight::setupUniforms(Shader *shader, int currentLightIndex) {
-		shader->setUniform3f(("pointLights[" + std::to_string(currentLightIndex) + "].position").c_str(), m_Position);
-		shader->setUniform3f(("pointLights[" + std::to_string(currentLightIndex) + "].lightColor").c_str(), m_LightColor);
+		shader->setUniform(("pointLights[" + std::to_string(currentLightIndex) + "].position").c_str(), m_Position);
+		shader->setUniform(("pointLights[" + std::to_string(currentLightIndex) + "].lightColor").c_str(), m_LightColor);
 	}
 } 

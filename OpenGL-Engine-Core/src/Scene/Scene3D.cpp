@@ -45,9 +45,9 @@ namespace OpenGL_Engine {
 
 
 		// Temp code until I rewrite the model loader
-		Model* pbrBarrett = new OpenGL_Engine::Model("res/3D_Models/contra-returns-jx-4-barrett/source/JX-4Barrett.obj");
-		m_RenderableModels.push_back(new RenderableModel(glm::vec3(110.0f, 70.0f, 120.0f), glm::vec3(20.0f, 20.0f, 20.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::radians(-180.0f), pbrBarrett, nullptr, true, false));
-		pbrBarrett->getMeshes()[0].getMaterial().setAlbedoMap(TextureLoader::load2DTexture(std::string("res/3D_Models/contra-returns-jx-4-barrett/textures/Tex_0024_0.jpg"), &srgbTextureSettings));
+		//Model* pbrBarrett = new OpenGL_Engine::Model("res/3D_Models/contra-returns-jx-4-barrett/source/JX-4Barrett.obj");
+		//m_RenderableModels.push_back(new RenderableModel(glm::vec3(110.0f, 70.0f, 120.0f), glm::vec3(20.0f, 20.0f, 20.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::radians(-180.0f), pbrBarrett, nullptr, true, false));
+		//pbrBarrett->getMeshes()[0].getMaterial().setAlbedoMap(TextureLoader::load2DTexture(std::string("res/3D_Models/contra-returns-jx-4-barrett/textures/Tex_0024_0.jpg"), &srgbTextureSettings));
 
 		
 		//Model* pbrSexyWoman = new OpenGL_Engine::Model("res/3D_Models/sung-a-kim-glamourous-tan/source/Sung-A Kim GT.fbx");
@@ -78,6 +78,8 @@ namespace OpenGL_Engine {
 		skyboxFilePaths.push_back("res/skybox/back.png");
 		skyboxFilePaths.push_back("res/skybox/front.png");
 		m_Skybox = new Skybox(skyboxFilePaths);
+
+		m_SceneCamera.setPosition(glm::vec3(90.0f, 80.0f, 180.0f));
 	}
 
 	void Scene3D::onUpdate(float deltaTime) {

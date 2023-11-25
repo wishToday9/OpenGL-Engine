@@ -16,7 +16,7 @@ namespace OpenGL_Engine {
 		void init();
 	private:
 		//0 RGBA8  -> albedo.r albedo.g albedo.b  albedo.a
-		//1 RGB16F -> normal.x normal.y normal.y
+		//1 RGB32F -> normal.x normal.y normal.y
 		//2 RGBA8  -> metallic roughness ambientOcclusion
 		std::array<Texture, 3> m_GBufferRenderTargets;
 

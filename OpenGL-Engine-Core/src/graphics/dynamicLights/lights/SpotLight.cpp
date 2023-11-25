@@ -9,10 +9,10 @@ namespace OpenGL_Engine {
 	// TODO: Add in multiple spotlight support
 	// TODO: Assert that the shader is bound in debug
 	void SpotLight::setupUniforms(Shader *shader, int currentLightIndex) {
-		shader->setUniform3f(("spotLights[" + std::to_string(currentLightIndex) + "].position").c_str(), m_Position);
-		shader->setUniform3f(("spotLights[" + std::to_string(currentLightIndex) + "].direction").c_str(), m_Direction);
-		shader->setUniform3f(("spotLights[" + std::to_string(currentLightIndex) + "].lightColor").c_str(), m_LightColor);
-		shader->setUniform1f(("spotLights[" + std::to_string(currentLightIndex) + "].cutOff").c_str(), m_CutOff);
-		shader->setUniform1f(("spotLights[" + std::to_string(currentLightIndex) + "].outerCutOff").c_str(), m_OuterCutOff);
+		shader->setUniform(("spotLights[" + std::to_string(currentLightIndex) + "].position").c_str(), m_Position);
+		shader->setUniform(("spotLights[" + std::to_string(currentLightIndex) + "].direction").c_str(), m_Direction);
+		shader->setUniform(("spotLights[" + std::to_string(currentLightIndex) + "].lightColor").c_str(), m_LightColor);
+		shader->setUniform(("spotLights[" + std::to_string(currentLightIndex) + "].cutOff").c_str(), m_CutOff);
+		shader->setUniform(("spotLights[" + std::to_string(currentLightIndex) + "].outerCutOff").c_str(), m_OuterCutOff);
 	}
 } 

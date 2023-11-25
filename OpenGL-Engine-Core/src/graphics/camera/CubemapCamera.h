@@ -14,6 +14,9 @@ namespace OpenGL_Engine {
 		void setCenterPosition(glm::vec3& newPosition) {
 			m_CenterPosition = newPosition;
 		}
+		virtual void setPosition(const glm::vec3& position) override {
+			m_CenterPosition = position;
+		}
 
 		virtual glm::mat4 getViewMatrix() override;
 		virtual glm::mat4 getProjectionMatrix() override;

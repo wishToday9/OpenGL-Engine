@@ -72,7 +72,7 @@
     <LibraryPath>$(SolutionDir)Dependencies\GLFW\lib-vc2013;$(SolutionDir)Dependencies\GLEW\lib;$(SolutionDir)Dependencies\SOIL\lib;$(SolutionDir)Dependencies\Assimp\lib;$(SolutionDir)Dependencies\FreeType\lib;$(SolutionDir)Dependencies\FreeType-GL\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)GLAD\include;$(SolutionDir)ImGui;D:\C++project\OpenGLEngine\OpenGL-Engine\stbi_image;$(SolutionDir)ThirdParties\FreeType-GL\include;$(SolutionDir)ThirdParties\FreeType\include;$(SolutionDir)ThirdParties\Assimp\include;$(SolutionDir)ThirdParties\GLM\include;$(SolutionDir)GLFW\include;$(SolutionDir)OpenGL-Engine-Core;$(SolutionDir)OpenGL-Engine-Core\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)GLAD\include;$(SolutionDir)ImGui;$(SolutionDir)stbi_image;$(SolutionDir)ThirdParties\FreeType-GL\include;$(SolutionDir)ThirdParties\FreeType\include;$(SolutionDir)ThirdParties\Assimp\include;$(SolutionDir)ThirdParties\GLM\include;$(SolutionDir)GLFW\include;$(SolutionDir)OpenGL-Engine-Core;$(SolutionDir)OpenGL-Engine-Core\src;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)ThirdParties\Assimp\lib;$(SolutionDir)ThirdParties\FreeType\lib;$(SolutionDir)GLFW\lib-vc2019;$(SolutionDir)ThirdParties\FreeType-GL\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

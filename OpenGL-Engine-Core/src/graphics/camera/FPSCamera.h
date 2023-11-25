@@ -50,8 +50,6 @@ namespace OpenGL_Engine {
 
 		virtual glm::mat4 getProjectionMatrix() override;
 
-
-
 		void processInput(float deltaTime);
 
 		// Getters
@@ -64,6 +62,10 @@ namespace OpenGL_Engine {
 		inline virtual const glm::vec3& getPosition() const override{ return m_Position; }
 		inline virtual const glm::vec3& getFront() const { return m_Front; }
 		inline virtual const glm::vec3& getUp() const { return m_Up; }
+
+		virtual void setPosition(const glm::vec3& position) override {
+			m_Position = position;
+		}
 	private:
 
 		void updateCameraVectors();

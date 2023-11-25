@@ -35,7 +35,7 @@ namespace OpenGL_Engine {
 		if (s_SsaoSampleRadius != nullptr)
 			ImGui::SliderFloat("SSAO Radius", s_SsaoSampleRadius, 1.0f, 3.0f, "%.2f");
 		if (s_SsaoStrength != nullptr)
-			ImGui::SliderFloat("SSAO Strength", s_SsaoStrength, 1.0f, 5.0f, "%.2f");
+			ImGui::SliderFloat("SSAO Power", s_SsaoStrength, 1.0f, 5.0f, "%.2f");
 #if DEBUG_ENABLED
 		ImGui::Text("Hit \"P\" to show/hide the cursor");
 		ImGui::Checkbox("Wireframe mode", &s_WireframeMode);

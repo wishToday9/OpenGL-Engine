@@ -59,9 +59,9 @@ namespace OpenGL_Engine {
 		// Models
 		m_GLCache->switchShader(m_ModelShader);
 		(lightManager->*lightBindFuncion)(m_ModelShader);
-		m_ModelShader->setUniform3f("viewPos", camera->getPosition());
-		m_ModelShader->setUniformMat4("view", camera->getViewMatrix());
-		m_ModelShader->setUniformMat4("projection", camera->getProjectionMatrix());
+		m_ModelShader->setUniform("viewPos", camera->getPosition());
+		m_ModelShader->setUniform("view", camera->getViewMatrix());
+		m_ModelShader->setUniform("projection", camera->getProjectionMatrix());
 		
 		/*
 		lightManager->setSpotLightDirection(Camera->getFront());
@@ -72,11 +72,11 @@ namespace OpenGL_Engine {
 
 		// IBL code
 		if (useIBL) {
-			m_ModelShader->setUniform1i("computeIBL", 1);
+			m_ModelShader->setUniform("computeIBL", 1);
 			probeManager->bindProbes(glm::vec3(0.0, 0.0, 0.0), m_ModelShader);
 		}
 		else {
-			m_ModelShader->setUniform1i("computeIBL", 0);
+			m_ModelShader->setUniform("computeIBL", 0);
 		}
 
 		//setup model renderer
@@ -101,10 +101,10 @@ namespace OpenGL_Engine {
 		m_GLCache->switchShader(m_TerrainShader->getShaderID());
 
 		(lightManager->*lightBindFuncion)(m_TerrainShader);
-		m_TerrainShader->setUniform3f("viewPos", camera->getPosition());
+		m_TerrainShader->setUniform("viewPos", camera->getPosition());
 
-		m_TerrainShader->setUniformMat4("view", camera->getViewMatrix());
-		m_TerrainShader->setUniformMat4("projection", camera->getProjectionMatrix());
+		m_TerrainShader->setUniform("view", camera->getViewMatrix());
+		m_TerrainShader->setUniform("projection", camera->getProjectionMatrix());
 		
 		bindShadowmap(m_TerrainShader, shadowmapData);
 		terrain->Draw(m_TerrainShader, RenderPassType::MaterialRequired);
@@ -129,8 +129,8 @@ namespace OpenGL_Engine {
 	void ForwardLightingPass::bindShadowmap(Shader* shader, ShadowmapPassOutput& shadowmapData)
 	{
 		shadowmapData.shadowmapFramebuffer->getDepthStencilTexture()->bind();
-		shader->setUniform1i("shadowmap", 0);
-		shader->setUniformMat4("lightSpaceViewProjectionMatrix", shadowmapData.directionalLightViewProjMatrix);
+		shader->setUniform("shadowmap", 0);
+		shader->setUniform("lightSpaceViewProjectionMatrix", shadowmapData.directionalLightViewProjMatrix);
 
 	}
 
