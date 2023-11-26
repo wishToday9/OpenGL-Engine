@@ -1,1 +1,10 @@
-(src/shaders/ssao.frag): error unknown
+(src/shaders/post_process/fxaa/FXAA.glsl): 0(16) : error C1503: undefined variable "color_texture"
+0(20) : error C1503: undefined variable "color_texture"
+0(21) : error C1503: undefined variable "color_texture"
+0(22) : error C1503: undefined variable "color_texture"
+0(23) : error C1503: undefined variable "color_texture"
+0(42) : error C1503: undefined variable "color_texture"
+0(42) : error C1503: undefined variable "color_texture"
+0(43) : error C1503: undefined variable "color_texture"
+0(43) : error C1503: undefined variable "color_texture"
+

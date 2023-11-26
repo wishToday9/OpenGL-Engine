@@ -30,12 +30,12 @@ namespace OpenGL_Engine
 		// Shadow map pass
 #if DEBUG_ENABLED
 		glFinish();
-		m_Timer.reset();
+		m_ProfilingTimer.reset();
 #endif
 		ShadowmapPassOutput shadowmapOutput = m_ShadowmapPass.generateShadowmaps(m_ActiveScene->getCamera(), false);
 #if DEBUG_ENABLED
 		glFinish();
-		RuntimePane::setShadowmapTimer((float)m_Timer.elapsed());
+		RuntimePane::setShadowmapTimer((float)m_ProfilingTimer.elapsed());
 #endif
 		// Lighting Pass
 		LightingPassOutput lightingOutput = m_ForwardLightingPass.executeLightingPass(shadowmapOutput, m_ActiveScene->getCamera(), false,true);
@@ -47,12 +47,12 @@ namespace OpenGL_Engine
 #else
 #if DEBUG_ENABLED
 		glFinish();
-		m_Timer.reset();
+		m_ProfilingTimer.reset();
 #endif
 		ShadowmapPassOutput shadowmapOutput = m_ShadowmapPass.generateShadowmaps(m_ActiveScene->getCamera(), false);
 #if DEBUG_ENABLED
 		glFinish();
-		RuntimePane::setShadowmapTimer((float)m_Timer.elapsed());
+		RuntimePane::setShadowmapTimer((float)m_ProfilingTimer.elapsed());
 #endif
 
 

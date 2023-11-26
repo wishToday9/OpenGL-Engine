@@ -2,7 +2,7 @@
 #include "Light.h"
 
 namespace OpenGL_Engine {  
-	Light::Light(glm::vec3& lightColor)
-		: m_LightColor(lightColor), m_IsStatic(false) {}
+	Light::Light(float intensity, glm::vec3& lightColor)
+		: m_Intensity(intensity), m_LightColor(lightColor), m_IsStatic(false) {}
 
 } 

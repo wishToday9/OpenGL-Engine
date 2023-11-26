@@ -16,24 +16,25 @@ void main() {
 
 struct DirLight {
 	vec3 direction;
-
+	float intensity;
 	vec3 lightColor;
 };
 
 struct PointLight {
 	vec3 position;
-
+	float intensity;
 	vec3 lightColor;
+	float attenuationRadius;
 };
 
 struct SpotLight {
 	vec3 position;
 	vec3 direction;
-
+	float intensity;
+	vec3 lightColor;
+	float attenuationRadius;
 	float cutOff;
 	float outerCutOff;
-
-	vec3 lightColor;
 };
 
 #define MAX_DIR_LIGHTS 5
@@ -139,7 +140,7 @@ vec3 CalculateDirectionalLightRadiance(vec3 albedo, vec3 normal, float metallic,
 	for (int i = 0; i < numDirPointSpotLights.x; ++i) {
 		vec3 lightDir = normalize(-dirLights[i].direction);
 		vec3 halfway = normalize(lightDir + fragToView);
-		vec3 radiance = dirLights[i].lightColor;
+		vec3 radiance = dirLights[i].lightColor * dirLights[i].intensity;
 
 		// Cook-Torrance Specular BRDF calculations
 		float normalDistribution = NormalDistributionGGX(normal, halfway, roughness);
@@ -174,8 +175,14 @@ vec3 CalculatePointLightRadiance(vec3 albedo, vec3 normal, float metallic, float
 		vec3 fragToLight = normalize(pointLights[i].position - fragPos);
 		vec3 halfway = normalize(fragToView + fragToLight);
 		float fragToLightDistance = length(pointLights[i].position - fragPos);
-		float attenuation = 1.0 / (fragToLightDistance * fragToLightDistance);
-		vec3 radiance = pointLights[i].lightColor * attenuation;
+
+		// Attenuation calculation (based on Epic's UE4 falloff model)
+		float d = fragToLightDistance / pointLights[i].attenuationRadius;
+		float d2 = d * d;
+		float d4 = d2 * d2;
+		float falloffNumerator = clamp(1.0 - d4, 0.0, 1.0);
+		float attenuation = (falloffNumerator * falloffNumerator) / ((fragToLightDistance * fragToLightDistance) + 1.0);
+		vec3 radiance = pointLights[i].intensity * pointLights[i].lightColor * attenuation;
 
 		// Cook-Torrance Specular BRDF calculations
 		float normalDistribution = NormalDistributionGGX(normal, halfway, roughness);
@@ -211,12 +218,19 @@ vec3 CalculateSpotLightRadiance(vec3 albedo, vec3 normal, float metallic, float 
 		vec3 halfway = normalize(fragToView + fragToLight);
 		float fragToLightDistance = length(spotLights[i].position - fragPos);
 
+
+		// Attenuation calculation (based on Epic's UE4 falloff model)
+		float d = fragToLightDistance / spotLights[i].attenuationRadius;
+		float d2 = d * d;
+		float d4 = d2 * d2;
+		float falloffNumerator = clamp(1.0 - d4, 0.0, 1.0);
+
 		// Check if it is in the spotlight's circle
 		float theta = dot(normalize(spotLights[i].direction), -fragToLight);
 		float difference = spotLights[i].cutOff - spotLights[i].outerCutOff;
 		float intensity = clamp((theta - spotLights[i].outerCutOff) / difference, 0.0, 1.0);
-		float attenuation = intensity * (1.0 / (fragToLightDistance * fragToLightDistance));
-		vec3 radiance = spotLights[i].lightColor * attenuation;
+		float attenuation = intensity * (falloffNumerator * falloffNumerator) / ((fragToLightDistance * fragToLightDistance) + 1.0);
+		vec3 radiance = spotLights[i].intensity * spotLights[i].lightColor * attenuation;
 
 		// Cook-Torrance Specular BRDF calculations
 		float normalDistribution = NormalDistributionGGX(normal, halfway, roughness);

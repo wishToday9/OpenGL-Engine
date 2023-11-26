@@ -8,9 +8,7 @@ namespace OpenGL_Engine {
 	class DirectionalLight : public Light {
 		friend DynamicLightManager;
 	public:
-		DirectionalLight();
-
-		DirectionalLight(glm::vec3 &lightColor, glm::vec3 &dir);
+		DirectionalLight(float lightIntensity, glm::vec3& lightColour, glm::vec3& dir);
 
 		virtual void setupUniforms(Shader *shader, int currentLightIndex) override;
 
