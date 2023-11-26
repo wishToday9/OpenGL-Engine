@@ -28,13 +28,13 @@ namespace OpenGL_Engine {
 		glm::vec3 m_Position, m_Front, m_Up, m_Right, m_WorldUp;
 
 		// Euler Angles
-		float m_Yaw;
-		float m_Pitch;
+		float m_CurrentYaw;
+		float m_CurrentPitch;
 
 		// Camera Options
-		float m_MovementSpeed;
-		float m_MouseSensitivity;
-		float m_FOV;
+		float m_CurrentMovementSpeed;
+		float m_CurrentMouseSensitivity;
+		float m_CurrentFOV;
 	public:
 		
 		FPSCamera(glm::vec3& position, glm::vec3& up, float yaw, float pitch);
@@ -50,20 +50,21 @@ namespace OpenGL_Engine {
 
 		void processInput(float deltaTime);
 
-		// Getters
-		inline float getYaw() const { return m_Yaw; }
-		inline float getPitch() const { return m_Pitch; }
-		inline float getMovementSpeed() const { return m_MovementSpeed; }
-		inline float getMouseSensitivity() const { return m_MouseSensitivity; }
-		inline float getFOV() const { return m_FOV; }
-
-		inline virtual const glm::vec3& getPosition() const override{ return m_Position; }
-		inline virtual const glm::vec3& getFront() const { return m_Front; }
-		inline virtual const glm::vec3& getUp() const { return m_Up; }
-
 		virtual void setPosition(const glm::vec3& position) override {
 			m_Position = position;
 		}
+		virtual void invertPitch() override;
+		// Getters
+		inline float getYaw() const { return m_CurrentYaw; }
+		inline float getPitch() const { return m_CurrentPitch; }
+		inline float getMovementSpeed() const { return m_CurrentMovementSpeed; }
+		inline float getMouseSensitivity() const { return m_CurrentMouseSensitivity; }
+		inline float getFOV() const { return m_CurrentFOV; }
+
+		inline virtual const glm::vec3& getPosition() const override{ return m_Position; }
+		inline virtual const glm::vec3& getFront() const override { return m_Front; }
+		inline virtual const glm::vec3& getUp() const override { return m_Up; }
+
 	private:
 
 		void updateCameraVectors();

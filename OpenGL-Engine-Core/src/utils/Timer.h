@@ -3,22 +3,17 @@
 
 namespace OpenGL_Engine {
 
+
 	class Timer {
-	private:
-		double startTime;
 	public:
-		/**
-		* Constructs an object that acts as a timer
-		*/
 		Timer();
 
-		/**
-		* Resets the timers starting time
-		*/
 		void reset();
+		void rewind(double time);
 
-		// Getter
-		inline double elapsed() const { return glfwGetTime() - startTime; }
+		double elapsed() const;
+	private:
+		double m_StartTime;
 	};
 
 } 

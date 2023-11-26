@@ -170,6 +170,7 @@
     <ClCompile Include="src\graphics\renderer\renderpass\PostProcessPass.cpp" />
     <ClCompile Include="src\graphics\renderer\renderpass\RenderPass.cpp" />
     <ClCompile Include="src\graphics\renderer\renderpass\ShadowmapPass.cpp" />
+    <ClCompile Include="src\graphics\renderer\renderpass\WaterPass.cpp" />
     <ClCompile Include="src\input\InputManager.cpp" />
     <ClCompile Include="src\input\JoystickInputData.cpp" />
     <ClCompile Include="src\input\JoystickManager.cpp" />
@@ -234,6 +235,7 @@
     <ClInclude Include="src\graphics\renderer\renderpass\RenderPass.h" />
     <ClInclude Include="src\graphics\renderer\renderpass\RenderPassType.h" />
     <ClInclude Include="src\graphics\renderer\renderpass\ShadowmapPass.h" />
+    <ClInclude Include="src\graphics\renderer\renderpass\WaterPass.h" />
     <ClInclude Include="src\input\InputManager.h" />
     <ClInclude Include="src\input\JoystickInputData.h" />
     <ClInclude Include="src\input\JoystickManager.h" />
@@ -294,6 +296,7 @@
     <None Include="src\shaders\forward\PBR_Terrain.glsl" />
     <None Include="src\shaders\post_process\ssao\SSAO.glsl" />
     <None Include="src\shaders\post_process\ssao\SSAO_Blur.glsl" />
+    <None Include="src\shaders\Water.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\awesomeface.png" />

@@ -6,25 +6,25 @@
 namespace OpenGL_Engine {	 
 
 	FPSCamera::FPSCamera(glm::vec3& position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3& up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = -90.0f, float pitch = 0.0f)
-		: m_Front(glm::vec3(0.0f, 0.0f, -1.0f)), m_MovementSpeed(FPSCAMERA_MAX_SPEED), m_MouseSensitivity(FPSCAMERA_ROTATION_SENSITIVITY), m_FOV(FPSCAMERA_MAX_FOV)
+		: m_Front(glm::vec3(0.0f, 0.0f, -1.0f)), m_CurrentMovementSpeed(FPSCAMERA_MAX_SPEED), m_CurrentMouseSensitivity(FPSCAMERA_ROTATION_SENSITIVITY), m_CurrentFOV(FPSCAMERA_MAX_FOV)
 	{
 		m_Position = position;
 		m_WorldUp = up;
 		m_Up = up;
-		m_Yaw = yaw;
-		m_Pitch = pitch;
+		m_CurrentYaw = yaw;
+		m_CurrentPitch = pitch;
 		updateCameraVectors();
 
 		DebugPane::bindCameraPositionValue(&m_Position);
 	}
 
 	FPSCamera::FPSCamera(float xPos, float yPos, float zPos, float xUp, float yUp, float zUp, float yaw = -90.0f, float pitch = 0.0f)
-		: m_Front(glm::vec3(0.0f, 0.0f, -1.0f)), m_MovementSpeed(FPSCAMERA_MAX_SPEED), m_FOV(FPSCAMERA_MAX_FOV)
+		: m_Front(glm::vec3(0.0f, 0.0f, -1.0f)), m_CurrentMovementSpeed(FPSCAMERA_MAX_SPEED), m_CurrentFOV(FPSCAMERA_MAX_FOV)
 	{
 		m_Position = glm::vec3(xPos, yPos, zPos);
 		m_WorldUp = glm::vec3(xUp, yUp, zUp);
-		m_Yaw = yaw;
-		m_Pitch = pitch;
+		m_CurrentYaw = yaw;
+		m_CurrentPitch = pitch;
 		updateCameraVectors();
 	}
 
@@ -33,7 +33,7 @@ namespace OpenGL_Engine {
 	}
 
 	glm::mat4 FPSCamera::getProjectionMatrix() {
-		return glm::perspective(glm::radians(m_FOV), (float)Window::getWidth() / (float)Window::getHeight(), NEAR_PLANE, FAR_PLANE);
+		return glm::perspective(glm::radians(m_CurrentFOV), (float)Window::getWidth() / (float)Window::getHeight(), NEAR_PLANE, FAR_PLANE);
 	}
 
 	void FPSCamera::processInput(float deltaTime) {
@@ -51,11 +51,11 @@ namespace OpenGL_Engine {
 		if (InputManager::isKeyPressed(GLFW_KEY_LEFT_CONTROL))
 			processKeyboard(OpenGL_Engine::DOWNWARDS, deltaTime);
 		if (InputManager::isKeyPressed(GLFW_KEY_LEFT_SHIFT))
-			m_MovementSpeed = FPSCAMERA_MAX_SPEED * 4.0f;
+			m_CurrentMovementSpeed = FPSCAMERA_MAX_SPEED * 4.0f;
 		else if (InputManager::isKeyPressed(GLFW_KEY_LEFT_ALT))
-			m_MovementSpeed = FPSCAMERA_MAX_SPEED / 4.0f;
+			m_CurrentMovementSpeed = FPSCAMERA_MAX_SPEED / 4.0f;
 		else
-			m_MovementSpeed = FPSCAMERA_MAX_SPEED;
+			m_CurrentMovementSpeed = FPSCAMERA_MAX_SPEED;
 
 		// Mouse scrolling
 		processMouseScroll(InputManager::getScrollY() * 6.0);
@@ -64,8 +64,14 @@ namespace OpenGL_Engine {
 		processMouseMovement(InputManager::getMouseXDelta(), -InputManager::getMouseYDelta(), true);
 	}
 
+	void FPSCamera::invertPitch()
+	{
+		m_CurrentPitch = -m_CurrentPitch;
+		updateCameraVectors();
+	}
+
 	void FPSCamera::processKeyboard(Camera_Movement direction, float deltaTime) {
-		float velocity = m_MovementSpeed * deltaTime;
+		float velocity = m_CurrentMovementSpeed * deltaTime;
 		switch (direction) {
 		case FORWARD:
 			m_Position += m_Front * velocity;
@@ -94,19 +100,19 @@ namespace OpenGL_Engine {
 		if (!Window::getHideCursor())
 			return;
 
-		xOffset *= m_MouseSensitivity;
-		yOffset *= m_MouseSensitivity;
+		xOffset *= m_CurrentMouseSensitivity;
+		yOffset *= m_CurrentMouseSensitivity;
 
-		m_Yaw += (float)xOffset;
-		m_Pitch += (float)yOffset;
+		m_CurrentYaw += (float)xOffset;
+		m_CurrentPitch += (float)yOffset;
 
 		// Constrain the pitch
 		if (constrainPitch) {
-			if (m_Pitch > 89.0f) {
-				m_Pitch = 89.0f;
+			if (m_CurrentPitch > 89.0f) {
+				m_CurrentPitch = 89.0f;
 			}
-			else if (m_Pitch < -89.0f) {
-				m_Pitch = -89.0f;
+			else if (m_CurrentPitch < -89.0f) {
+				m_CurrentPitch = -89.0f;
 			}
 		}
 
@@ -114,22 +120,22 @@ namespace OpenGL_Engine {
 	}
 
 	void FPSCamera::processMouseScroll(double offset) {
-		if (offset != 0 && m_FOV >= 1.0 && m_FOV <= FPSCAMERA_MAX_FOV) {
-			m_FOV -= (float)offset;
+		if (offset != 0 && m_CurrentFOV >= 1.0 && m_CurrentFOV <= FPSCAMERA_MAX_FOV) {
+			m_CurrentFOV -= (float)offset;
 		}
-		if (m_FOV < 1.0f) {
-			m_FOV = 1.0f;
+		if (m_CurrentFOV < 1.0f) {
+			m_CurrentFOV = 1.0f;
 		}
-		else if (m_FOV > FPSCAMERA_MAX_FOV) {
-			m_FOV = FPSCAMERA_MAX_FOV;
+		else if (m_CurrentFOV > FPSCAMERA_MAX_FOV) {
+			m_CurrentFOV = FPSCAMERA_MAX_FOV;
 		}
 	}
 
 	void FPSCamera::updateCameraVectors() {
 		glm::vec3 front;
-		front.x = cos(glm::radians(m_Yaw)) * cos(glm::radians(m_Pitch));
-		front.y = sin(glm::radians(m_Pitch));
-		front.z = sin(glm::radians(m_Yaw)) * cos(glm::radians(m_Pitch));
+		front.x = cos(glm::radians(m_CurrentYaw)) * cos(glm::radians(m_CurrentPitch));
+		front.y = sin(glm::radians(m_CurrentPitch));
+		front.z = sin(glm::radians(m_CurrentYaw)) * cos(glm::radians(m_CurrentPitch));
 		m_Front = glm::normalize(front);
 
 		// Recalculate Vectors

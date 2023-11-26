@@ -27,4 +27,8 @@ namespace OpenGL_Engine {
 	struct PreLightingPassOutput {
 		Texture* ssaoTexture;
 	};
+
+	struct WaterPassOutput {
+		Framebuffer* outputFramebuffer;
+	};
 }

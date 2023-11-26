@@ -9,7 +9,8 @@
 namespace OpenGL_Engine {
 
 	Scene3D::Scene3D(Window* window)
-		: m_SceneCamera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f), m_ModelRenderer(getCamera()), m_Terrain(glm::vec3(0.0f, -20.0f, 0.0f)), m_ProbeManager(m_SceneProbeBlendSetting)
+		: m_SceneCamera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f), m_ModelRenderer(getCamera()), 
+		m_Terrain(glm::vec3(0.0f, -20.0f, 0.0f)), m_ProbeManager(m_SceneProbeBlendSetting)
 	{
 		m_GLCache = GLCache::getInstance();
 
@@ -28,14 +29,14 @@ namespace OpenGL_Engine {
 		srgbTextureSettings.IsSRGB = true;
 
 		Model* window = new OpenGL_Engine::Model(Quad());
-		m_RenderableModels.push_back(new RenderableModel(glm::vec3(150.0f, 60.0f, 150.0f), glm::vec3(25.0f, 25.0f, 25.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::radians(-90.0f), window, nullptr, true, false));
+		m_RenderableModels.push_back(new RenderableModel(glm::vec3(150.0f, 240.0f, 150.0f), glm::vec3(25.0f, 25.0f, 25.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::radians(-90.0f), window, nullptr, true, false));
 		window->getMeshes()[0].getMaterial().setAlbedoMap(TextureLoader::load2DTexture(std::string("res/textures/bricks2.jpg"), &srgbTextureSettings));
 		window->getMeshes()[0].getMaterial().setNormalMap(TextureLoader::load2DTexture(std::string("res/textures/bricks2_normal.jpg")));
 		window->getMeshes()[0].getMaterial().setRoughnessMap(TextureLoader::getWhiteTexture());
 		window->getMeshes()[0].getMaterial().setDisplacementMap(TextureLoader::load2DTexture(std::string("res/textures/bricks2_disp.jpg")));
 
 		Model* window2 = new OpenGL_Engine::Model(Quad());
-		m_RenderableModels.push_back(new RenderableModel(glm::vec3(150.0f, 60.0f, 205.0f), glm::vec3(25.0f, 25.0f, 25.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::radians(-90.0f), window2, nullptr, true, true));
+		m_RenderableModels.push_back(new RenderableModel(glm::vec3(150.0f, 240.0f, 205.0f), glm::vec3(25.0f, 25.0f, 25.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::radians(-90.0f), window2, nullptr, true, true));
 		window2->getMeshes()[0].getMaterial().setAlbedoMap(TextureLoader::load2DTexture(std::string("res/textures/Pebles_001_COLOR.png"), &srgbTextureSettings));
 		window2->getMeshes()[0].getMaterial().setMetallicMap(TextureLoader::load2DTexture(std::string("res/textures/Pebles_001_SPEC.png")));
 		window2->getMeshes()[0].getMaterial().setNormalMap(TextureLoader::load2DTexture(std::string("res/textures/Pebles_001_NRM.png")));
@@ -44,13 +45,13 @@ namespace OpenGL_Engine {
 		window2->getMeshes()[0].getMaterial().setDisplacementMap(TextureLoader::load2DTexture(std::string("res/textures/Pebles_Displace.png")));
 
 		Model* tunnel = new OpenGL_Engine::Model(Cube());
-		m_RenderableModels.push_back(new RenderableModel(glm::vec3(50.0f, 20.0f, 50.0f), glm::vec3(-100.0f, -10.0f, -10.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, tunnel, nullptr, true, true));
+		m_RenderableModels.push_back(new RenderableModel(glm::vec3(50.0f, 200.0f, 50.0f), glm::vec3(-100.0f, -10.0f, -10.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, tunnel, nullptr, true, true));
 		tunnel->getMeshes()[0].getMaterial().setAlbedoMap(TextureLoader::load2DTexture(std::string("res/textures/bricks2.jpg"), &srgbTextureSettings));
 		tunnel->getMeshes()[0].getMaterial().setNormalMap(TextureLoader::load2DTexture(std::string("res/textures/bricks2_normal.jpg")));
 		tunnel->getMeshes()[0].getMaterial().setRoughnessMap(TextureLoader::getWhiteTexture());
 
 		Model *pbrGun = new OpenGL_Engine::Model("res/3D_Models/Cerberus_Gun/Cerberus_LP.FBX");
-		m_RenderableModels.push_back(new RenderableModel(glm::vec3(120.0f, 75.0f, 120.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::radians(-90.0f), pbrGun, nullptr, true, false));
+		m_RenderableModels.push_back(new RenderableModel(glm::vec3(120.0f, 250.0f, 120.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::radians(-90.0f), pbrGun, nullptr, true, false));
 		//pbrGun->getMeshes()[0].getMaterial().setAlbedoMap(TextureLoader::load2DTexture(std::string("res/3D_Models/Cerberus_Gun/Textures/Cerberus_A.tga"), &srgbTextureSettings));
 		//pbrGun->getMeshes()[0].getMaterial().setNormalMap(TextureLoader::load2DTexture(std::string("res/3D_Models/Cerberus_Gun/Textures/Cerberus_N.tga")));
 		//pbrGun->getMeshes()[0].getMaterial().setMetallicMap(TextureLoader::load2DTexture(std::string("res/3D_Models/Cerberus_Gun/Textures/Cerberus_M.tga")));
@@ -78,7 +79,7 @@ namespace OpenGL_Engine {
 		skyboxFilePaths.push_back("res/skybox/front.png");
 		m_Skybox = new Skybox(skyboxFilePaths);
 
-		m_SceneCamera.setPosition(glm::vec3(90.0f, 80.0f, 180.0f));
+		m_SceneCamera.setPosition(glm::vec3(90.0f, 280.0f, 180.0f));
 	}
 
 	void Scene3D::onUpdate(float deltaTime) {
