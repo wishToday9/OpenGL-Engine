@@ -69,6 +69,52 @@ namespace OpenGL_Engine {
 		}
 
 		m_GLCache->setUsesClipPlane(false);
-	}
 
+		//finally  render the water geometry and shade it
+		m_GLCache->switchShader(m_WaterShader);
+		postTransprarency.outputFramebuffer->bind();
+		glViewport(0, 0, postTransprarency.outputFramebuffer->getWidth(), postTransprarency.outputFramebuffer->getHeight());
+		if (postTransprarency.outputFramebuffer->isMultisampled()) {
+			m_GLCache->setMultisample(true);
+		}
+		else {
+			m_GLCache->setMultisample(false);
+		}
+		m_GLCache->setDepthTest(true);
+		m_GLCache->setBlend(false);
+		m_GLCache->setFaceCull(true);
+		m_GLCache->setCullFace(GL_BACK);
+
+
+		glm::mat4 model(1);
+		glm::mat4 translate = glm::translate(glm::mat4(1.0f), m_WaterPos);
+		glm::mat4 rotate = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(m_WaterScale, m_WaterScale, m_WaterScale));
+		model = translate * rotate * scale;
+		m_WaveMoveFactor = (float)m_Timer.elapsed() * m_WaveSpeed;
+		m_WaveMoveFactor = std::fmod((double)m_WaveMoveFactor, 1.0);
+
+		m_WaterShader->setUniform("clearWater", m_EnableClearWater);
+		m_WaterShader->setUniform("viewPos", camera->getPosition());
+		m_WaterShader->setUniform("waterAlbedo", m_WaterAlbedo);
+		m_WaterShader->setUniform("albedoPower", m_AlbedoPower);
+		m_WaterShader->setUniform("model", model);
+		m_WaterShader->setUniform("view", camera->getViewMatrix());
+		m_WaterShader->setUniform("projection", camera->getProjectionMatrix());
+		m_WaterShader->setUniform("waveTiling", m_WaterScale * 0.01f);
+		m_WaterShader->setUniform("waveMoveFactor", m_WaveMoveFactor);
+		m_WaterShader->setUniform("reflectionTexture", 0);
+		m_SceneReflectionFramebuffer.getColourTexture()->bind(0);
+		m_WaterShader->setUniform("refractionTexture", 1);
+		m_SceneRefractionFramebuffer.getColourTexture()->bind(1);
+		m_WaterShader->setUniform("dudvWaveTexture", 2);
+		m_WaveTexture->bind(2);
+		m_WaterShader->setUniform("normalMap", 3);
+		m_WaterNormalMap->bind(3);
+
+		m_WaterPlane.Draw();
+
+		passOutput.outputFramebuffer = postTransprarency.outputFramebuffer;
+		return passOutput;
+	}
 }
