@@ -33,6 +33,13 @@ namespace OpenGL_Engine {
 			lightBindFunction = &DynamicLightManager::bindStaticLightingUniforms;
 		}
 		m_GLCache->switchShader(m_ModelShader);
+		if (m_GLCache->getUsesClipPlane()) {
+			m_ModelShader->setUniform("usesClipPlane", true);
+			m_ModelShader->setUniform("clipPlane", m_GLCache->getActiveClipPlane());
+		}
+		else {
+			m_ModelShader->setUniform("usesClipPlane", false);
+		}
 		(lightManager->*lightBindFunction) (m_ModelShader);
 		m_ModelShader->setUniform("viewPos", camera->getPosition());
 		m_ModelShader->setUniform("view", camera->getViewMatrix());

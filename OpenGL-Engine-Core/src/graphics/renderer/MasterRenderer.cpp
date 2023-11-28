@@ -9,7 +9,7 @@ namespace OpenGL_Engine
 
 	MasterRenderer::MasterRenderer(Scene3D* scene) : m_ActiveScene(scene),
 		m_ShadowmapPass(scene), m_PostProcessPass(scene), m_ForwardLightingPass(scene, true), m_EnvironmentProbePass(scene),
-		m_DeferredGeometryPass(scene), m_DeferredLightingPass(scene), m_PostGBufferForwardPass(scene)
+		m_DeferredGeometryPass(scene), m_DeferredLightingPass(scene), m_PostGBufferForwardPass(scene), m_WaterPass(m_ActiveScene)
 	
 	{
 		m_GLCache = GLCache::getInstance();
@@ -60,8 +60,8 @@ namespace OpenGL_Engine
 		PreLightingPassOutput preLightingOutput = m_PostProcessPass.executePreLightingPass(geometryOutput, m_ActiveScene->getCamera());
 		LightingPassOutput deferredLightingOutput = m_DeferredLightingPass.executeLightingPass(shadowmapOutput, geometryOutput, preLightingOutput, m_ActiveScene->getCamera(), true);
 		LightingPassOutput postGBufferForward = m_PostGBufferForwardPass.executeLightingPass(shadowmapOutput, deferredLightingOutput, m_ActiveScene->getCamera(), false, true);
-
-		m_PostProcessPass.executePostProcessPass(postGBufferForward.outputFramebuffer);
+		WaterPassOutput waterOutput = m_WaterPass.executeWaterPass(postGBufferForward, m_ActiveScene->getCamera());
+		m_PostProcessPass.executePostProcessPass(waterOutput.outputFramebuffer);
 #endif
 	}
 

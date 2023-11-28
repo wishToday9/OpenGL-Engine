@@ -34,7 +34,6 @@ namespace OpenGL_Engine {
 		glViewport(0, 0, m_Framebuffer->getWidth(), m_Framebuffer->getHeight());
 		m_Framebuffer->bind();
 		m_Framebuffer->clear();
-		
 		if (m_Framebuffer->isMultisampled()) {
 			m_GLCache->setMultisample(true);
 		}
@@ -42,38 +41,38 @@ namespace OpenGL_Engine {
 			m_GLCache->setMultisample(false);
 		}
 
-		//set up
+		// Setup
 		ModelRenderer* modelRenderer = m_ActiveScene->getModelRenderer();
 		Terrain* terrain = m_ActiveScene->getTerrain();
 		DynamicLightManager* lightManager = m_ActiveScene->getDynamicLightManager();
 		Skybox* skybox = m_ActiveScene->getSkybox();
 		ProbeManager* probeManager = m_ActiveScene->getProbeManager();
 
-		// view setup + lighting setup
-		auto lightBindFuncion = &DynamicLightManager::bindLightingUniforms;
-		if (renderOnlyStatic) {
-			lightBindFuncion = &DynamicLightManager::bindStaticLightingUniforms;
-		}
+		// View setup + lighting setup
+		auto lightBindFunction = &DynamicLightManager::bindLightingUniforms;
+		if (renderOnlyStatic)
+			lightBindFunction = &DynamicLightManager::bindStaticLightingUniforms;
 
-
-		// Models
 		m_GLCache->switchShader(m_ModelShader);
-		(lightManager->*lightBindFuncion)(m_ModelShader);
+		if (m_GLCache->getUsesClipPlane()) {
+			m_ModelShader->setUniform("usesClipPlane", true);
+			m_ModelShader->setUniform("clipPlane", m_GLCache->getActiveClipPlane());
+		}
+		else {
+			m_ModelShader->setUniform("usesClipPlane", false);
+		}
+		(lightManager->*lightBindFunction) (m_ModelShader);
 		m_ModelShader->setUniform("viewPos", camera->getPosition());
 		m_ModelShader->setUniform("view", camera->getViewMatrix());
 		m_ModelShader->setUniform("projection", camera->getProjectionMatrix());
-		
-		/*
-		lightManager->setSpotLightDirection(Camera->getFront());
-		lightManager->setSpotLightPosition(Camera->getPosition());
-		*/
-		// Shadow map code
+
+		// Shadowmap code
 		bindShadowmap(m_ModelShader, shadowmapData);
 
 		// IBL Binding
 		probeManager->bindProbes(glm::vec3(0.0f, 0.0f, 0.0f), m_ModelShader);
 
-		//setup model renderer
+		// Setup model renderer
 		if (renderOnlyStatic) {
 			m_ActiveScene->addStaticModelsToRenderer();
 		}
@@ -88,20 +87,25 @@ namespace OpenGL_Engine {
 		else {
 			m_ModelShader->setUniform("computeIBL", 0);
 		}
-
-		// Opaque objects
 		modelRenderer->setupOpaqueRenderState();
-		modelRenderer->flushOpaque(m_ModelShader, RenderPassType::MaterialRequired);
+		modelRenderer->flushOpaque(m_ModelShader, MaterialRequired);
 
 		// Terrain
 		m_GLCache->switchShader(m_TerrainShader->getShaderID());
+		if (m_GLCache->getUsesClipPlane()) {
+			m_TerrainShader->setUniform("usesClipPlane", true);
+			m_TerrainShader->setUniform("clipPlane", m_GLCache->getActiveClipPlane());
+		}
+		else {
+			m_TerrainShader->setUniform("usesClipPlane", false);
+		}
 
-		(lightManager->*lightBindFuncion)(m_TerrainShader);
+		(lightManager->*lightBindFunction)(m_TerrainShader);
 		m_TerrainShader->setUniform("viewPos", camera->getPosition());
 
 		m_TerrainShader->setUniform("view", camera->getViewMatrix());
 		m_TerrainShader->setUniform("projection", camera->getProjectionMatrix());
-		
+
 		bindShadowmap(m_TerrainShader, shadowmapData);
 		terrain->Draw(m_TerrainShader, RenderPassType::MaterialRequired);
 
@@ -110,6 +114,14 @@ namespace OpenGL_Engine {
 
 		//render Transparent objects
 		m_GLCache->switchShader(m_ModelShader->getShaderID());
+		if (m_GLCache->getUsesClipPlane()) {
+			m_ModelShader->setUniform("usesClipPlane", true);
+			m_ModelShader->setUniform("clipPlane", m_GLCache->getActiveClipPlane());
+		}
+		else {
+			m_ModelShader->setUniform("usesClipPlane", false);
+		}
+
 		if (useIBL) {
 			probeManager->bindProbes(glm::vec3(0.0f, 0.0f, 0.0f), m_ModelShader);
 		}

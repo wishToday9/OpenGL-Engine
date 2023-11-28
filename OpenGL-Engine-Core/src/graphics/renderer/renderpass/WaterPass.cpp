@@ -6,14 +6,11 @@
 #include <graphics/renderer/renderpass/forward/ForwardLightingPass.h>
 #include <graphics/renderer/renderpass/ShadowmapPass.h>
 
-namespace OpenGL_Engine {
-	
-	WaterPass::WaterPass(Scene3D* scene) : RenderPass(scene), m_WaterEnabled(true), 
-		m_SceneShadowFramebuffer(WATER_REFLECTION_SHADOW_RESOLUTION, WATER_REFLECTION_SHADOW_RESOLUTION, false),
-		m_SceneReflectionFramebuffer(WATER_REFLECTION_RESOLUTION_WIDTH, WATER_REFLECTION_RESOLUTION_HEIGHT, false),
-		m_SceneRefractionFramebuffer(WATER_REFRACTION_RESOLUTION_WIDTH, WATER_REFRACTION_RESOLUTION_HEIGHT, false),
-		m_WaterPos(1095.0f, 83.0f, 730.0f), m_WaterScale(600.0f), m_EnableClearWater(false), m_WaveMoveFactor(0.0f), 
-		m_WaveSpeed(0.05f), m_WaterAlbedo(0.1f, 0.9f, 0.9f), m_AlbedoPower(0.1f)
+namespace OpenGL_Engine
+{
+	WaterPass::WaterPass(Scene3D* scene) : RenderPass(scene), m_WaterEnabled(true), m_SceneShadowFramebuffer(WATER_REFLECTION_SHADOW_RESOLUTION, WATER_REFLECTION_SHADOW_RESOLUTION, false),
+		m_SceneReflectionFramebuffer(WATER_REFLECTION_RESOLUTION_WIDTH, WATER_REFLECTION_RESOLUTION_HEIGHT, false), m_SceneRefractionFramebuffer(WATER_REFRACTION_RESOLUTION_WIDTH, WATER_REFRACTION_RESOLUTION_HEIGHT, false),
+		m_WaterPos(1095.0f, 83.0f, 730.0f), m_WaterScale(600.0f), m_EnableClearWater(false), m_WaveMoveFactor(0.0f), m_WaveSpeed(0.05f), m_WaterAlbedo(0.1f, 0.9f, 0.9f), m_AlbedoPower(0.1f)
 	{
 		m_WaterShader = ShaderLoader::loadShader("src/shaders/Water.glsl");
 
@@ -28,20 +25,23 @@ namespace OpenGL_Engine {
 	}
 
 	WaterPass::~WaterPass()
-	{	}
+	{
 
-	OpenGL_Engine::WaterPassOutput WaterPass::executeWaterPass(LightingPassOutput& postTransprarency, ICamera* camera)
+	}
+
+	WaterPassOutput WaterPass::executeWaterPass(LightingPassOutput& postTransparency, ICamera* camera)
 	{
 		WaterPassOutput passOutput;
-		if (!m_WaterEnabled) {
-			passOutput.outputFramebuffer = postTransprarency.outputFramebuffer;
+		if (!m_WaterEnabled)
+		{
+			passOutput.outputFramebuffer = postTransparency.outputFramebuffer;
 			return passOutput;
 		}
 
 		ModelRenderer* modelRenderer = m_ActiveScene->getModelRenderer();
 		m_GLCache->setUsesClipPlane(true);
-		
-		//generate reflection framebuffer and render to it
+
+		// Generate Reflection framebuffer and render to it
 		{
 			m_GLCache->setClipPlane(glm::vec4(0.0f, 1.0f, 0.0f, -m_WaterPos.y));
 			float distance = 2 * (camera->getPosition().y - m_WaterPos.y);
@@ -57,7 +57,8 @@ namespace OpenGL_Engine {
 			camera->setPosition(camera->getPosition() + glm::vec3(0.0f, distance, 0.0f));
 			camera->invertPitch();
 		}
-		//generate refraction framebuffer and render to it
+
+		// Generate Refraction framebuffer and render to it
 		{
 			m_GLCache->setClipPlane(glm::vec4(0.0f, -1.0f, 0.0f, m_WaterPos.y));
 
@@ -70,11 +71,11 @@ namespace OpenGL_Engine {
 
 		m_GLCache->setUsesClipPlane(false);
 
-		//finally  render the water geometry and shade it
+		// Finally render the water geometry and shade it
 		m_GLCache->switchShader(m_WaterShader);
-		postTransprarency.outputFramebuffer->bind();
-		glViewport(0, 0, postTransprarency.outputFramebuffer->getWidth(), postTransprarency.outputFramebuffer->getHeight());
-		if (postTransprarency.outputFramebuffer->isMultisampled()) {
+		postTransparency.outputFramebuffer->bind();
+		glViewport(0, 0, postTransparency.outputFramebuffer->getWidth(), postTransparency.outputFramebuffer->getHeight());
+		if (postTransparency.outputFramebuffer->isMultisampled()) {
 			m_GLCache->setMultisample(true);
 		}
 		else {
@@ -84,7 +85,6 @@ namespace OpenGL_Engine {
 		m_GLCache->setBlend(false);
 		m_GLCache->setFaceCull(true);
 		m_GLCache->setCullFace(GL_BACK);
-
 
 		glm::mat4 model(1);
 		glm::mat4 translate = glm::translate(glm::mat4(1.0f), m_WaterPos);
@@ -114,7 +114,7 @@ namespace OpenGL_Engine {
 
 		m_WaterPlane.Draw();
 
-		passOutput.outputFramebuffer = postTransprarency.outputFramebuffer;
+		passOutput.outputFramebuffer = postTransparency.outputFramebuffer;
 		return passOutput;
 	}
 }

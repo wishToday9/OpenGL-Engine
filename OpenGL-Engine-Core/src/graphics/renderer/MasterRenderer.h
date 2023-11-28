@@ -6,6 +6,8 @@
 #include <graphics/renderer/renderpass/forward/ForwardProbePass.h>
 #include <graphics/renderer/renderpass/PostProcessPass.h>
 #include <graphics/renderer/renderpass/ShadowmapPass.h>
+#include <graphics/renderer/renderpass/WaterPass.h>
+
 #include <scene/Scene3D.h>
 #include <utils/Timer.h>
 
@@ -32,6 +34,7 @@ namespace OpenGL_Engine {
 		DeferredGeometryPass m_DeferredGeometryPass;
 		DeferredLightingPass m_DeferredLightingPass;
 		PostGBufferForward m_PostGBufferForwardPass;
+		WaterPass m_WaterPass;
 
 		Timer m_ProfilingTimer;
 	};

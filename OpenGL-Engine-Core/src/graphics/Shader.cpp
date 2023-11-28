@@ -9,10 +9,16 @@ namespace OpenGL_Engine {
 		compile(shaderSources);
 	}
 
-	
+	Shader::~Shader() {
+		glDeleteProgram(m_ShaderID);
+	}
 
-	int Shader::getUniformLocation(const char* name) {
-		return glGetUniformLocation(m_ShaderID, name);
+	void Shader::enable() const {
+		glUseProgram(m_ShaderID);
+	}
+
+	void Shader::disable() const {
+		glUseProgram(0);
 	}
 
 	void Shader::setUniform(const char* name, float value) {
@@ -87,12 +93,8 @@ namespace OpenGL_Engine {
 		glUniform4iv(glGetUniformLocation(m_ShaderID, name), arraySize, glm::value_ptr(*value));
 	}
 
-	void Shader::enable() const {
-		glUseProgram(m_ShaderID);
-	}
-
-	void Shader::disable() const {
-		glUseProgram(0);
+	int Shader::getUniformLocation(const char* name) {
+		return glGetUniformLocation(m_ShaderID, name);
 	}
 
 	GLenum Shader::shaderTypeFromString(const std::string& type) {
@@ -182,4 +184,5 @@ namespace OpenGL_Engine {
 		glLinkProgram(m_ShaderID);
 		glValidateProgram(m_ShaderID);
 	}
+
 }
