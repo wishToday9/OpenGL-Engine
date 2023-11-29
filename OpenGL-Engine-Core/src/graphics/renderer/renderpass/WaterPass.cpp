@@ -8,9 +8,12 @@
 
 namespace OpenGL_Engine
 {
-	WaterPass::WaterPass(Scene3D* scene) : RenderPass(scene), m_WaterEnabled(true), m_SceneShadowFramebuffer(WATER_REFLECTION_SHADOW_RESOLUTION, WATER_REFLECTION_SHADOW_RESOLUTION, false),
-		m_SceneReflectionFramebuffer(WATER_REFLECTION_RESOLUTION_WIDTH, WATER_REFLECTION_RESOLUTION_HEIGHT, false), m_SceneRefractionFramebuffer(WATER_REFRACTION_RESOLUTION_WIDTH, WATER_REFRACTION_RESOLUTION_HEIGHT, false),
-		m_WaterPos(1095.0f, 83.0f, 730.0f), m_WaterScale(600.0f), m_EnableClearWater(false), m_WaveMoveFactor(0.0f), m_WaveSpeed(0.05f), m_WaterAlbedo(0.1f, 0.9f, 0.9f), m_AlbedoPower(0.1f)
+	WaterPass::WaterPass(Scene3D* scene) : RenderPass(scene), m_WaterEnabled(true), 
+		m_SceneShadowFramebuffer(WATER_REFLECTION_SHADOW_RESOLUTION, WATER_REFLECTION_SHADOW_RESOLUTION, false),
+		m_SceneReflectionFramebuffer(WATER_REFLECTION_RESOLUTION_WIDTH, WATER_REFLECTION_RESOLUTION_HEIGHT, false),
+		m_SceneRefractionFramebuffer(WATER_REFRACTION_RESOLUTION_WIDTH, WATER_REFRACTION_RESOLUTION_HEIGHT, false),
+		m_WaterPos(1095.0f, 83.0f, 730.0f), m_WaterScale(600.0f), m_EnableClearWater(false),
+		m_WaveMoveFactor(0.0f), m_WaveSpeed(0.05f), m_WaterAlbedo(0.1f, 0.9f, 0.9f), m_AlbedoPower(0.1f)
 	{
 		m_WaterShader = ShaderLoader::loadShader("src/shaders/Water.glsl");
 
