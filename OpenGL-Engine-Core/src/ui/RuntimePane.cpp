@@ -6,6 +6,7 @@ namespace OpenGL_Engine {
 	float RuntimePane::s_ShadowmapTimer = 0.0f;
 	float RuntimePane::s_SsaoTimer = 0.0f;
 	float RuntimePane::s_FxaaTimer = 0.0f;
+	float RuntimePane::s_WaterTimer = 0.0f;
 
 	RuntimePane::RuntimePane(glm::vec2& panePosition) : 
 		Pane(std::string("Runtime Analytics"), panePosition), m_ValueOffset(0), 
@@ -31,6 +32,7 @@ namespace OpenGL_Engine {
 		ImGui::Text("Shadowmap Generation: %.6f ms", 1000.0f * s_ShadowmapTimer);
 		ImGui::Text("SSAO Generation: %.6f ms", 1000.0f * s_SsaoTimer);
 		ImGui::Text("FXAA: %.6f ms", 1000.0f * s_FxaaTimer);
+		ImGui::Text("Water Profiling: %.6f ms", 1000.0f * s_WaterTimer);
 #endif
 	}
 		

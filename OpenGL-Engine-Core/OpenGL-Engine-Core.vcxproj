@@ -200,6 +200,7 @@
     <ClCompile Include="src\platform\OpenGL\VertexArray.cpp" />
     <ClCompile Include="src\Scene\Scene3D.cpp" />
     <ClCompile Include="src\terrain\Terrain.cpp" />
+    <ClCompile Include="src\ui\WaterPane.cpp" />
     <ClCompile Include="src\utils\FileUtils.cpp" />
     <ClCompile Include="src\utils\loaders\ShaderLoader.cpp" />
     <ClCompile Include="src\utils\loaders\TextureLoader.cpp" />
@@ -261,6 +262,7 @@
     <ClInclude Include="src\platform\OpenGL\VertexArray.h" />
     <ClInclude Include="src\Scene\Scene3D.h" />
     <ClInclude Include="src\terrain\Terrain.h" />
+    <ClInclude Include="src\ui\WaterPane.h" />
     <ClInclude Include="src\utils\FileUtils.h" />
     <ClInclude Include="src\utils\loaders\ShaderLoader.h" />
     <ClInclude Include="src\utils\loaders\TextureLoader.h" />

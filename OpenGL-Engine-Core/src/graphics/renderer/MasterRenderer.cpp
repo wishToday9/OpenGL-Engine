@@ -59,7 +59,7 @@ namespace OpenGL_Engine
 		PreLightingPassOutput preLightingOutput = m_PostProcessPass.executePreLightingPass(geometryOutput, m_ActiveScene->getCamera());
 		LightingPassOutput deferredLightingOutput = m_DeferredLightingPass.executeLightingPass(shadowmapOutput, geometryOutput, preLightingOutput, m_ActiveScene->getCamera(), true);
 		LightingPassOutput postGBufferForward = m_PostGBufferForwardPass.executeLightingPass(shadowmapOutput, deferredLightingOutput, m_ActiveScene->getCamera(), false, true);
-		WaterPassOutput waterOutput = m_WaterPass.executeWaterPass(postGBufferForward, m_ActiveScene->getCamera());
+		WaterPassOutput waterOutput = m_WaterPass.executeWaterPass(shadowmapOutput, postGBufferForward, m_ActiveScene->getCamera());
 		m_PostProcessPass.executePostProcessPass(waterOutput.outputFramebuffer);
 #endif
 	}

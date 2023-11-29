@@ -5,6 +5,7 @@
 #include <scene/Scene3D.h>
 #include <ui/DebugPane.h>
 #include <ui/RuntimePane.h>
+#include <ui/WaterPane.h>
 #include <utils/Time.h>
 
 
@@ -21,6 +22,7 @@ int main() {
 	// Prepare the UI
 	OpenGL_Engine::RuntimePane runtimePane(glm::vec2(270.0f, 175.0f));
 	OpenGL_Engine::DebugPane debugPane(glm::vec2(270.0f, 230.0f));
+	OpenGL_Engine::WaterPane waterPane(glm::vec2(270.0f, 400.0f));
 
 	// Initialize the renderer
 	renderer.init();
@@ -51,10 +53,13 @@ int main() {
 		renderer.render();
 
 		// Display panes
-		OpenGL_Engine::Window::bind();
-
-		runtimePane.render();
-		debugPane.render();
+		if (!OpenGL_Engine::Window::getHideUI())
+		{
+			OpenGL_Engine::Window::bind();
+			runtimePane.render();
+			debugPane.render();
+			waterPane.render();
+		}
 
 		ImGui::Render();
 		ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());

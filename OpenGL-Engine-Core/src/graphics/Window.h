@@ -31,6 +31,7 @@ namespace OpenGL_Engine {
 
 
 		static inline bool getHideCursor() { return s_HideCursor; }
+		static inline bool getHideUI() { return s_HideUI; }
 		static inline int getWidth() { return s_Width; }
 		static inline int getHeight() { return s_Height; }
 		static inline int getRenderResolutionWidth() { return (int)(s_Width * SUPERSAMPLING_FACTOR); }
@@ -56,7 +57,7 @@ namespace OpenGL_Engine {
 		const char* m_Title;
 		GLFWwindow* m_Window;
 		static bool s_HideCursor;
-
+		static bool s_HideUI;
 		static int s_Width, s_Height;
 	};
 
