@@ -19,7 +19,7 @@ namespace OpenGL_Engine
 
 		m_SceneShadowFramebuffer.addDepthStencilTexture(NormalizedDepthOnly).createFramebuffer();
 		m_SceneReflectionFramebuffer.addColorTexture(FloatingPoint16).addDepthStencilRBO(NormalizedDepthOnly).createFramebuffer();
-		m_SceneRefractionFramebuffer.addColorTexture(FloatingPoint16).addDepthStencilRBO(NormalizedDepthOnly).createFramebuffer();
+		m_SceneRefractionFramebuffer.addColorTexture(FloatingPoint16).addDepthStencilTexture(NormalizedDepthOnly).createFramebuffer();
 
 		m_WaveTexture = TextureLoader::load2DTexture(std::string("res/water/dudv.png"));
 		m_WaterNormalMap = TextureLoader::load2DTexture(std::string("res/water/normals.png"));
@@ -42,11 +42,13 @@ namespace OpenGL_Engine
 		}
 
 		ModelRenderer* modelRenderer = m_ActiveScene->getModelRenderer();
+		DynamicLightManager* lightManager = m_ActiveScene->getDynamicLightManager();
 		m_GLCache->setUsesClipPlane(true);
 
 		// Generate Reflection framebuffer and render to it
+		const float waterEpsilon = 0.0f;
 		{
-			m_GLCache->setClipPlane(glm::vec4(0.0f, 1.0f, 0.0f, -m_WaterPos.y));
+			m_GLCache->setClipPlane(glm::vec4(0.0f, 1.0f, 0.0f, -m_WaterPos.y + waterEpsilon));
 			float distance = 2 * (camera->getPosition().y - m_WaterPos.y);
 			camera->setPosition(camera->getPosition() - glm::vec3(0.0f, distance, 0.0f));
 			camera->invertPitch();
@@ -85,7 +87,9 @@ namespace OpenGL_Engine
 			m_GLCache->setMultisample(false);
 		}
 		m_GLCache->setDepthTest(true);
-		m_GLCache->setBlend(false);
+		m_GLCache->setBlend(true);
+		m_GLCache->setBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 		m_GLCache->setFaceCull(true);
 		m_GLCache->setCullFace(GL_BACK);
 
@@ -94,9 +98,10 @@ namespace OpenGL_Engine
 		glm::mat4 rotate = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(m_WaterScale, m_WaterScale, m_WaterScale));
 		model = translate * rotate * scale;
-		m_WaveMoveFactor = (float)m_Timer.elapsed() * m_WaveSpeed;
-		m_WaveMoveFactor = std::fmod((double)m_WaveMoveFactor, 1.0);
+		m_WaveMoveFactor = static_cast<float>(m_Timer.elapsed() * m_WaveSpeed);
+		m_WaveMoveFactor = static_cast<float>(std::fmod((double)m_WaveMoveFactor, 1.0));
 
+		lightManager->bindLightingUniforms(m_WaterShader);
 		m_WaterShader->setUniform("clearWater", m_EnableClearWater);
 		m_WaterShader->setUniform("viewPos", camera->getPosition());
 		m_WaterShader->setUniform("waterAlbedo", m_WaterAlbedo);
@@ -106,6 +111,7 @@ namespace OpenGL_Engine
 		m_WaterShader->setUniform("projection", camera->getProjectionMatrix());
 		m_WaterShader->setUniform("waveTiling", m_WaterScale * 0.01f);
 		m_WaterShader->setUniform("waveMoveFactor", m_WaveMoveFactor);
+		m_WaterShader->setUniform("nearFarPlaneValues", glm::vec2(NEAR_PLANE, FAR_PLANE));
 		m_WaterShader->setUniform("reflectionTexture", 0);
 		m_SceneReflectionFramebuffer.getColourTexture()->bind(0);
 		m_WaterShader->setUniform("refractionTexture", 1);
@@ -114,6 +120,8 @@ namespace OpenGL_Engine
 		m_WaveTexture->bind(2);
 		m_WaterShader->setUniform("normalMap", 3);
 		m_WaterNormalMap->bind(3);
+		m_WaterShader->setUniform("refractionDepthTexture", 4);
+		m_SceneRefractionFramebuffer.getDepthStencilTexture()->bind(4);
 
 		m_WaterPlane.Draw();
 

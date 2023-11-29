@@ -52,6 +52,10 @@ namespace OpenGL_Engine {
 
 		Model *pbrGun = new OpenGL_Engine::Model("res/3D_Models/Cerberus_Gun/Cerberus_LP.FBX");
 		m_RenderableModels.push_back(new RenderableModel(glm::vec3(120.0f, 250.0f, 120.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::radians(-90.0f), pbrGun, nullptr, true, false));
+		
+		m_RenderableModels.push_back(new RenderableModel(glm::vec3(946.9f, 165.5f, 859.0f), glm::vec3(100.0f, 100.0f, 100.0f), glm::vec3(1.0f, 0.0f, 0.0f),
+			glm::radians(-90.0f), new Model(Cube()), nullptr, true, false));
+
 		//pbrGun->getMeshes()[0].getMaterial().setAlbedoMap(TextureLoader::load2DTexture(std::string("res/3D_Models/Cerberus_Gun/Textures/Cerberus_A.tga"), &srgbTextureSettings));
 		//pbrGun->getMeshes()[0].getMaterial().setNormalMap(TextureLoader::load2DTexture(std::string("res/3D_Models/Cerberus_Gun/Textures/Cerberus_N.tga")));
 		//pbrGun->getMeshes()[0].getMaterial().setMetallicMap(TextureLoader::load2DTexture(std::string("res/3D_Models/Cerberus_Gun/Textures/Cerberus_M.tga")));

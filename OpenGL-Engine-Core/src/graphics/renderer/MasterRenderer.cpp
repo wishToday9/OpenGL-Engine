@@ -8,9 +8,9 @@ namespace OpenGL_Engine
 {
 
 	MasterRenderer::MasterRenderer(Scene3D* scene) : m_ActiveScene(scene),
-		m_ShadowmapPass(scene), m_PostProcessPass(scene), m_ForwardLightingPass(scene, true), m_EnvironmentProbePass(scene),
-		m_DeferredGeometryPass(scene), m_DeferredLightingPass(scene), m_PostGBufferForwardPass(scene), m_WaterPass(m_ActiveScene)
-	
+		m_ShadowmapPass(scene), m_PostProcessPass(scene), m_ForwardLightingPass(scene, true),
+		m_EnvironmentProbePass(scene), m_DeferredGeometryPass(scene), m_DeferredLightingPass(scene),
+		m_PostGBufferForwardPass(scene), m_WaterPass(m_ActiveScene)
 	{
 		m_GLCache = GLCache::getInstance();
 	}
@@ -37,11 +37,10 @@ namespace OpenGL_Engine
 		glFinish();
 		RuntimePane::setShadowmapTimer((float)m_ProfilingTimer.elapsed());
 #endif
-		// Lighting Pass
-		LightingPassOutput lightingOutput = m_ForwardLightingPass.executeLightingPass(shadowmapOutput, m_ActiveScene->getCamera(), false,true);
+		LightingPassOutput lightingOutput = m_ForwardLightingPass.executeLightingPass(shadowmapOutput, m_ActiveScene->getCamera(), false, true);
+		WaterPassOutput waterOutput = m_WaterPass.executeWaterPass(lightingOutput, m_ActiveScene->getCamera());
+		m_PostProcessPass.executePostProcessPass(waterOutput.outputFramebuffer);
 
-		// Post Process Pass
-		m_PostProcessPass.executePreProcessPass(lightingOutput.outputFramebuffer);
 
 		/* Deferred Rendering */
 #else

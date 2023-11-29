@@ -10,7 +10,7 @@
 #define FULLSCREEN_MODE 0 // If set, window resolution is maximized to your screen resolution
 
 // render settings
-#define FORWARD_RENDER 0
+#define FORWARD_RENDER 1
 
 // AA Settings
 #define SUPERSAMPLING_FACTOR 1 //Should be a multiple of 2 (1 means window resolution will be the render resolution)
@@ -50,8 +50,8 @@
 #define PARALLAX_MAX_STEPS 20
 
 //Water Options
-#define WATER_REFLECTION_RESOLUTION_WIDTH 320
-#define WATER_REFLECTION_RESOLUTION_HEIGHT 180
+#define WATER_REFLECTION_RESOLUTION_WIDTH 640
+#define WATER_REFLECTION_RESOLUTION_HEIGHT 360
 #define WATER_REFLECTION_SHADOW_RESOLUTION 512
 #define WATER_REFRACTION_RESOLUTION_WIDTH 1280
 #define WATER_REFRACTION_RESOLUTION_HEIGHT 720
