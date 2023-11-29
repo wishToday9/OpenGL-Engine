@@ -12,7 +12,7 @@ namespace OpenGL_Engine {
 			ifs.close();
 		}
 		else {
-			Logger::getInstance().warning("logged_files/error.txt", "Could Not Read File", filepath);
+			ARC_LOG_WARN("Failed to read file: {0}", "Could Not Read File", filepath);
 		}
 
 		return result;

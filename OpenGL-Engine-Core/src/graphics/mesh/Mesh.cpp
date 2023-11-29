@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Mesh.h"
 
-namespace OpenGL_Engine {  
+namespace OpenGL_Engine {
 
 	Mesh::Mesh() : m_VAO(0), m_VBO(0), m_IBO(0) {}
 
@@ -16,6 +16,7 @@ namespace OpenGL_Engine {
 
 	Mesh::Mesh(std::vector<glm::vec3>& positions, std::vector<glm::vec2>& uvs, std::vector<glm::vec3>& normals, std::vector<glm::vec3>& tangents, std::vector<glm::vec3>& bitangents, std::vector<unsigned int>& indices)
 		: m_Positions(positions), m_UVs(uvs), m_Normals(normals), m_Tangents(tangents), m_Bitangents(bitangents), m_Indices(indices), m_VAO(0), m_VBO(0), m_IBO(0) {}
+
 
 	void Mesh::Draw() const {
 		glBindVertexArray(m_VAO);
@@ -36,16 +37,16 @@ namespace OpenGL_Engine {
 			unsigned int vertexCount = m_Positions.size();
 
 			if (vertexCount == 0)
-				Logger::getInstance().error("logged_files/mesh_creation.txt", "Mesh Creation", "Mesh doesn't contain any vertices");
+				ARC_LOG_WARN("Mesh doesn't contain any vertices");
 
 			if (m_UVs.size() != 0 && m_UVs.size() != vertexCount)
-				Logger::getInstance().error("logged_files/mesh_creation.txt", "Mesh Creation", "Mesh UV count doesn't match the vertex count");
+				ARC_LOG_WARN("Mesh UV count doesn't match the vertex count");
 			if (m_Normals.size() != 0 && m_Normals.size() != vertexCount)
-				Logger::getInstance().error("logged_files/mesh_creation.txt", "Mesh Creation", "Mesh Normal count doesn't match the vertex count");
+				ARC_LOG_WARN("Mesh Normal count doesn't match the vertex count");
 			if (m_Tangents.size() != 0 && m_Tangents.size() != vertexCount)
-				Logger::getInstance().error("logged_files/mesh_creation.txt", "Mesh Creation", "Mesh Tangent count doesn't match the vertex count");
+				ARC_LOG_WARN("Mesh Tangent count doesn't match the vertex count");
 			if (m_Bitangents.size() != 0 && m_Bitangents.size() != vertexCount)
-				Logger::getInstance().error("logged_files/mesh_creation.txt", "Mesh Creation", "Mesh Bitangent count doesn't match the vertex count");
+				ARC_LOG_WARN("Mesh Bitangent count doesn't match the vertex count");
 		}
 
 		// Preprocess the mesh data in the format that was specified
@@ -190,4 +191,4 @@ namespace OpenGL_Engine {
 		glBindVertexArray(0);
 	}
 
-} 
+}

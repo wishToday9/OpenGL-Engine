@@ -58,7 +58,7 @@ namespace OpenGL_Engine {
 			m_CurrentMovementSpeed = FPSCAMERA_MAX_SPEED;
 
 		// Mouse scrolling
-		processMouseScroll(InputManager::getScrollY() * 6.0);
+		processMouseScroll(InputManager::getScrollYDelta() * 6.0);
 
 		// Mouse movement
 		processMouseMovement(InputManager::getMouseXDelta(), -InputManager::getMouseYDelta(), true);

@@ -18,7 +18,7 @@ namespace OpenGL_Engine {
 	void RuntimePane::setupPaneObjects() {
 		float frametime = 1000.0f / ImGui::GetIO().Framerate;
 		ImGui::Text("Frametime: %.3f ms (FPS %.1f)", frametime, ImGui::GetIO().Framerate);
-#if DEBUG_ENABLED
+#if DEBUG_PROFILING
 		if (frametime > m_MaxFrametime) {
 			m_MaxFrametime = frametime;
 		}

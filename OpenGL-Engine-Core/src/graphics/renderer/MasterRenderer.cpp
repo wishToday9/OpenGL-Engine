@@ -28,12 +28,12 @@ namespace OpenGL_Engine
 	void MasterRenderer::render() {
 #if FORWARD_RENDER
 		// Shadow map pass
-#if DEBUG_ENABLED
+#if DEBUG_PROFILING
 		glFinish();
 		m_ProfilingTimer.reset();
 #endif
 		ShadowmapPassOutput shadowmapOutput = m_ShadowmapPass.generateShadowmaps(m_ActiveScene->getCamera(), false);
-#if DEBUG_ENABLED
+#if DEBUG_PROFILING
 		glFinish();
 		RuntimePane::setShadowmapTimer((float)m_ProfilingTimer.elapsed());
 #endif
@@ -44,12 +44,12 @@ namespace OpenGL_Engine
 
 		/* Deferred Rendering */
 #else
-#if DEBUG_ENABLED
+#if DEBUG_PROFILING
 		glFinish();
 		m_ProfilingTimer.reset();
 #endif
 		ShadowmapPassOutput shadowmapOutput = m_ShadowmapPass.generateShadowmaps(m_ActiveScene->getCamera(), false);
-#if DEBUG_ENABLED
+#if DEBUG_PROFILING
 		glFinish();
 		RuntimePane::setShadowmapTimer((float)m_ProfilingTimer.elapsed());
 #endif

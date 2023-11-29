@@ -103,7 +103,7 @@ namespace OpenGL_Engine {
 	// Generates the AO of the scene using SSAO and stores it in a single channel texture
 	PreLightingPassOutput PostProcessPass::executePreLightingPass(GeometryPassOutput& geometryData, ICamera* camera)
 	{
-#if DEBUG_ENABLED
+#if DEBUG_PROFILING
 		glFinish();
 		m_ProfilingTimer.reset();
 #endif
@@ -163,7 +163,7 @@ namespace OpenGL_Engine {
 		// Reset unusual state
 		m_GLCache->setDepthTest(true);
 
-#if DEBUG_ENABLED
+#if DEBUG_PROFILING
 		glFinish();
 		RuntimePane::setSsaoTimer((float)m_ProfilingTimer.elapsed());
 #endif
@@ -197,7 +197,7 @@ namespace OpenGL_Engine {
 			inputFramebuffer = &m_ScreenRenderTarget;
 		}
 
-#if DEBUG_ENABLED
+#if DEBUG_PROFILING
 		if (DebugPane::getWireframeMode())
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 #endif
@@ -251,7 +251,7 @@ namespace OpenGL_Engine {
 		}
 
 		// Finally render the scene to the window's framebuffer
-#if DEBUG_ENABLED
+#if DEBUG_PROFILING
 		glFinish();
 		m_ProfilingTimer.reset();
 #endif
@@ -267,7 +267,7 @@ namespace OpenGL_Engine {
 			inputFramebuffer = framebufferToRenderTo;
 		}
 		
-#if DEBUG_ENABLED
+#if DEBUG_PROFILING
 		glFinish();
 		RuntimePane::setFxaaTimer((float)m_ProfilingTimer.elapsed());
 #endif

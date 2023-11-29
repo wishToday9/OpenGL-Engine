@@ -55,7 +55,7 @@ namespace OpenGL_Engine
 	WaterPassOutput WaterPass::executeWaterPass(ShadowmapPassOutput& shadowmapData,
 		LightingPassOutput& postTransparency, ICamera* camera)
 	{
-#if DEBUG_ENABLED
+#if DEBUG_PROFILING
 		glFinish();
 		m_ProfilingTimer.reset();
 #endif
@@ -160,7 +160,7 @@ namespace OpenGL_Engine
 		m_SceneRefractionFramebuffer.getDepthStencilTexture()->bind(4);
 
 		m_WaterPlane.Draw();
-#if DEBUG_ENABLED
+#if DEBUG_PROFILING
 		glFinish();
 		RuntimePane::setWaterTimer((float)m_ProfilingTimer.elapsed());
 #endif

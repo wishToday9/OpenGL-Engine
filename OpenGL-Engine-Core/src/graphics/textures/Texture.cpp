@@ -35,7 +35,7 @@ namespace OpenGL_Engine {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, m_TextureSettings.TextureMinificationFilterMode);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, m_TextureSettings.TextureMagnificationFilterMode);
 
-		// Mip mapping
+		// Mipmapping
 		if (m_TextureSettings.HasMips) {
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, m_TextureSettings.MipBias);
@@ -44,7 +44,7 @@ namespace OpenGL_Engine {
 		// Anisotropic filtering (TODO: Move the anistropyAmount calculation to Defs.h to avoid querying the OpenGL driver everytime)
 		float maxAnisotropy;
 		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
-		float anistropyAmount = glm::min(maxAnisotropy, m_TextureSettings.TextureAnisotropyLevel);
+		float anistropyAmount = glm::min<float>(maxAnisotropy, m_TextureSettings.TextureAnisotropyLevel);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, anistropyAmount);
 	}
 
@@ -156,9 +156,11 @@ namespace OpenGL_Engine {
 	}
 
 	void Texture::setTextureMagFilter(GLenum textureFilterMode) {
+#if ARC_DEBUG
 		// If mag filter mode exceeds GL_Linear (bilinear) report an error because it is useless to perform more expensive filtering with magnification
 		if (textureFilterMode > GL_LINEAR)
-			Logger::getInstance().warning("logged_files/textures.txt", "Texture Filter Tuning", "Texture's magnification filter exceeded bilinear filtering which won't result in any visual improvements and will just cost more");
+			ARC_LOG_WARN("Texture's magnification filter exceeded bilinear filtering which won't result in any visual improvements and will just cost more");
+#endif
 
 		if (m_TextureSettings.TextureMagnificationFilterMode == textureFilterMode)
 			return;
@@ -177,7 +179,7 @@ namespace OpenGL_Engine {
 		if (isGenerated()) {
 			float maxAnisotropy;
 			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
-			float anistropyAmount = glm::min(maxAnisotropy, m_TextureSettings.TextureAnisotropyLevel);
+			float anistropyAmount = glm::min<float>(maxAnisotropy, m_TextureSettings.TextureAnisotropyLevel);
 			glTexParameterf(m_TextureTarget, GL_TEXTURE_MAX_ANISOTROPY_EXT, anistropyAmount);
 		}
 	}

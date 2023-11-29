@@ -3,38 +3,36 @@
 
 #include "Mesh.h"
 
-namespace OpenGL_Engine {  
+namespace OpenGL_Engine {
 
-	std::vector<Texture> Model::m_LoadedTextures;
-
-	Model::Model(const char *path) {
+	Model::Model(const char* path) {
 		loadModel(path);
 	}
 
-	Model::Model(const Mesh& mesh)
-	{
+	Model::Model(const Mesh& mesh) {
 		m_Meshes.push_back(mesh);
 	}
 
-	Model::Model(const std::vector<Mesh> &meshes) {
+	Model::Model(const std::vector<Mesh>& meshes) {
 		m_Meshes = meshes;
 	}
 
-	void Model::Draw(Shader *shader, RenderPassType pass) const {
+	void Model::Draw(Shader* shader, RenderPassType pass) const {
 		for (unsigned int i = 0; i < m_Meshes.size(); ++i) {
-			if (pass == RenderPassType::MaterialRequired) {
+			// Avoid binding material inforomation when it isn't needed
+			if (pass == MaterialRequired) {
 				m_Meshes[i].m_Material.BindMaterialInformation(shader);
 			}
 			m_Meshes[i].Draw();
 		}
 	}
 
-	void Model::loadModel(const std::string &path) {
+	void Model::loadModel(const std::string& path) {
 		Assimp::Importer import;
-		const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals| aiProcess_CalcTangentSpace);
+		const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-			Logger::getInstance().error("logged_files/model_loading.txt", "model initialization", import.GetErrorString());
+			ARC_LOG_ERROR("failed to load model - {0}", import.GetErrorString());
 			return;
 		}
 
@@ -43,11 +41,11 @@ namespace OpenGL_Engine {
 		processNode(scene->mRootNode, scene);
 	}
 
-	void Model::processNode(aiNode *node, const aiScene *scene) {
+	void Model::processNode(aiNode* node, const aiScene* scene) {
 		// Process all of the node's meshes (if any)
 		for (unsigned int i = 0; i < node->mNumMeshes; ++i) {
 			// Each node has an array of mesh indices, use these indices to get the meshes from the scene
-			aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
+			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 			m_Meshes.push_back(processMesh(mesh, scene));
 		}
 		// Process all of the node's children
@@ -56,7 +54,7 @@ namespace OpenGL_Engine {
 		}
 	}
 
-	Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
+	Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene) {
 		std::vector<glm::vec3> positions;
 		std::vector<glm::vec2> uvs;
 		std::vector<glm::vec3> normals;
@@ -90,7 +88,6 @@ namespace OpenGL_Engine {
 			normals.push_back(glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z));
 			tangents.push_back(glm::vec3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z));
 			bitangents.push_back(glm::vec3(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z));
-		
 		}
 
 		// Process Indices
@@ -107,8 +104,10 @@ namespace OpenGL_Engine {
 
 		// Process Materials (textures in this case)
 		if (mesh->mMaterialIndex >= 0) {
-			aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
-			// Only color data for the renderer is considered sRGB, all other type of non-color texture data shouldn't be corrected by the hardware
+			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+
+			// Attempt to load the materials if they can be found. However PBR materials will need to be manually configured since Assimp doesn't support them
+			// Only colour data for the renderer is considered sRGB, all other type of non-colour texture data shouldn't be corrected by the hardware
 			newMesh.m_Material.setAlbedoMap(loadMaterialTexture(material, aiTextureType_DIFFUSE, true));
 			newMesh.m_Material.setNormalMap(loadMaterialTexture(material, aiTextureType_NORMALS, false));
 			newMesh.m_Material.setAmbientOcclusionMap(loadMaterialTexture(material, aiTextureType_AMBIENT, false));
@@ -118,22 +117,19 @@ namespace OpenGL_Engine {
 		return newMesh;
 	}
 
-
 	Texture* Model::loadMaterialTexture(aiMaterial* mat, aiTextureType type, bool isSRGB) {
 		// Log material constraints are being violated (1 texture per type for the standard shader)
-		if (mat->GetTextureCount(type) > 1) {
-			Logger::getInstance().error("logged_files/material_creation.txt", "Mesh Loading", 
-				"Mesh's default material contains more than 1 texture for the same type, which currently isn't supported by the standard shader");
-		}
-
+		if (mat->GetTextureCount(type) > 1)
+			ARC_LOG_WARN("Mesh's default material contains more than 1 texture for the same type, which isn't currently supported by the standard shaders");
 
 		// Load the texture of a certain type, assuming there is one
 		if (mat->GetTextureCount(type) > 0) {
 			aiString str;
 			mat->GetTexture(type, 0, &str); // Grab only the first texture (standard shader only supports one texture of each type, it doesn't know how you want to do special blending)
 
-// Assumption made: material stuff is located in the same directory as the model object
+			// Assumption made: material stuff is located in the same directory as the model object
 			std::string fileToSearch = (m_Directory + "/" + std::string(str.C_Str())).c_str();
+
 			TextureSettings textureSettings;
 			textureSettings.IsSRGB = isSRGB;
 			return TextureLoader::load2DTexture(fileToSearch, &textureSettings);
@@ -141,4 +137,5 @@ namespace OpenGL_Engine {
 
 		return nullptr;
 	}
-} 
+
+}

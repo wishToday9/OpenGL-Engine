@@ -1,63 +1,33 @@
 #include "pch.h"
-
 #include "Logger.h"
 
-namespace OpenGL_Engine {  
-	Logger::Logger() {
-		file = "logged_files/log.txt";
+#include "spdlog/sinks/stdout_color_sinks.h"
+
+namespace OpenGL_Engine
+{
+	std::shared_ptr<spdlog::logger> Logger::s_EngineLogger;
+
+	Logger::Logger()
+	{
+		Init();
 	}
 
-	Logger& Logger::getInstance() {
+	Logger::~Logger()
+	{
+
+	}
+
+	Logger& Logger::GetInstance()
+	{
 		static Logger logger;
 		return logger;
 	}
 
-	void Logger::setOutputFile(const std::string &filename) {
-		file = filename;
+	void Logger::Init()
+	{
+		spdlog::set_pattern("%^[%T] %n: %v%$");
 
-		// clear the file if it hasn't been written to yet
-		if (std::find(filePaths.begin(), filePaths.end(), filename) == filePaths.end()) {
-			filePaths.insert(filename);
-			clearFileContents();
-		}
+		s_EngineLogger = spdlog::stdout_color_mt("Arcane");
+		s_EngineLogger->set_level(spdlog::level::trace);
 	}
-
-	void Logger::debug(const std::string &filePath, std::string &module, const std::string &message) {
-		setOutputFile(filePath);
-		logMessage(DEBUG, module, message);
-	}
-
-	void Logger::info(const std::string &filePath, const std::string &module, const std::string &message) {
-		setOutputFile(filePath);
-		logMessage(INFO, module, message);
-	}
-
-	void Logger::warning(const std::string &filePath, const std::string &module, const std::string &message) {
-		setOutputFile(filePath);
-		logMessage(WARNING, module, message);
-	}
-
-	void Logger::error(const std::string &filePath, const std::string &module, const std::string &message) {
-		setOutputFile(filePath);
-		logMessage(ERROR, module, message);
-	}
-
-	void Logger::logMessage(const int &priority, const std::string &module, const std::string &message) {
-		std::cout << module.c_str() << " : " << message.c_str() << std::endl;
-		filestream.open(file, std::ofstream::app);
-		if (!filestream) {
-			std::cout << "Error: Logger Can't Log To: " << file.c_str() << std::endl;
-		}
-		filestream << "(" << module.c_str() << "): " << message.c_str() << std::endl;
-		filestream.close();
-	}
-
-	// TODO: This function will clear the same file multiple times
-	void Logger::clearFileContents() {
-		filestream.open(file, std::ofstream::out);
-		if (!filestream) {
-			error(file, "Logger Dtor", std::string("Could not empty the contents of file: ") + file);
-		}
-		filestream.close();
-	}
-} 
+}

@@ -59,7 +59,7 @@ namespace OpenGL_Engine {
 			ImGui::Checkbox("Film Grain Enabled", s_FilmGrainEnabled);
 		if (s_FilmGrainIntensity != nullptr)
 			ImGui::SliderFloat("Film Grain Intensity", s_FilmGrainIntensity, 0.0f, 1.0f, "%.2f");
-#if DEBUG_ENABLED
+#if DEBUG_PROFILING
 		ImGui::Text("Hit \"P\" to show/hide the cursor");
 		ImGui::Checkbox("Wireframe mode", &s_WireframeMode);
 #endif

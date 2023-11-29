@@ -3,74 +3,37 @@
 
 #include "Singleton.h"
 
+#include "spdlog/spdlog.h"
+#include "spdlog/fmt/ostr.h"
+
 namespace OpenGL_Engine {  
 
-	class Logger : public Singleton {
+	class Logger : public Singleton
+	{
 	private:
 		Logger();
+		~Logger();
 	public:
-		static Logger& getInstance();
-
-		/**
-		* Logs an debug message
-		*
-		* @param module The module the debug information is assosciated with
-		* @param message The debug message that will be logged
-		*/
-		void debug(const std::string &filePath, std::string &module, const std::string &message);
-
-		/**
-		* Logs an information message
-		*
-		* @param module The module the info is assosciated with
-		* @param message The info message that will be logged
-		*/
-		void info(const std::string &filePath, const std::string &module, const std::string &message);
-
-		/**
-		* Logs an warning message
-		*
-		* @param module The module the warning is assosciated with
-		* @param message The warning message that will be logged
-		*/
-		void warning(const std::string &filePath, const std::string &module, const std::string &message);
-
-		/**
-		* Logs an error message
-		*
-		* @param module The module the error is assosciated with
-		* @param message The error message that will be logged
-		*/
-		void error(const std::string &filePath, const std::string &module, const std::string &message);
+		static Logger& GetInstance();
+		inline static std::shared_ptr<spdlog::logger> GetEngineLogger() { return GetInstance().s_EngineLogger; }
 	private:
-		/**
-		* Logs a message
-		*
-		* @param priority The level of priority that the message is given (higher = more important)
-		* @param module The module the message is assosciated with
-		* @param message The message that will be logged
-		*/
-		void logMessage(const int &priority, const std::string &module, const std::string &message);
-
-		/**
-		* Clears out the contents all of the different files that have been assigned to
-		*/
-		void clearFileContents();
-
-		/**
-		* Sets the output file
-		*
-		* @param filename The file that you want to set the logger to output to
-		*/
-		void setOutputFile(const std::string &filename);
-
-		enum {
-			DEBUG, INFO, WARNING, ERROR
-		};
-		std::set<std::string> filePaths;
-
-		std::ofstream filestream;
-		std::string file; // Default value set to: "logged_files/log.txt"
+		static void Init();
+	private:
+		static std::shared_ptr<spdlog::logger> s_EngineLogger;
 	};
-
 } 
+
+// Engine Log Macros
+#ifdef ARC_FINAL
+#define ARC_LOG_FATAL
+#define ARC_LOG_ERROR
+#define ARC_LOG_WARN
+#define ARC_LOG_INFO
+#define ARC_LOG_TRACE
+#else
+#define ARC_LOG_FATAL(...) OpenGL_Engine::Logger::GetEngineLogger()->critical(__VA_ARGS__)
+#define ARC_LOG_ERROR(...) OpenGL_Engine::Logger::GetEngineLogger()->error(__VA_ARGS__)
+#define ARC_LOG_WARN(...)  OpenGL_Engine::Logger::GetEngineLogger()->warn(__VA_ARGS__)
+#define ARC_LOG_INFO(...)  OpenGL_Engine::Logger::GetEngineLogger()->info(__VA_ARGS__)
+#define ARC_LOG_TRACE(...) OpenGL_Engine::Logger::GetEngineLogger()->trace(__VA_ARGS__)
+#endif

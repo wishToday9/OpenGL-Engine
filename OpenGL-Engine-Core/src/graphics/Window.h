@@ -5,18 +5,18 @@
 
 #include <input/InputManager.h>
 
-namespace OpenGL_Engine {  
+namespace OpenGL_Engine {
 
 	static InputManager g_InputManager;
 
 	class Window {
 	public:
 
-		Window(const char *title, int width, int height);
+		Window(const char* title, int width, int height);
 		~Window();
 
 
-		GLFWwindow* getNativeWindow() const{
+		GLFWwindow* getNativeWindow() const {
 			return m_Window;
 		}
 
@@ -45,7 +45,7 @@ namespace OpenGL_Engine {
 		static friend void error_callback(int error, const char* description);
 		static friend void window_resize_callback(GLFWwindow* window, int width, int height);
 		static friend void framebuffer_resize_callback(GLFWwindow* window, int width, int height);
-		static friend void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
+		static friend void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 		static friend void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 		static friend void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 		static friend void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
@@ -61,4 +61,4 @@ namespace OpenGL_Engine {
 		static int s_Width, s_Height;
 	};
 
-} 
+}

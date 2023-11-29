@@ -2,13 +2,13 @@
 #include "Window.h"
 
 
-namespace OpenGL_Engine {  
+namespace OpenGL_Engine {
 
 	// Static declarations
 	bool Window::s_HideCursor, Window::s_HideUI;
 	int Window::s_Width; int Window::s_Height;
 
-	Window::Window(const char *title, int width, int height) {
+	Window::Window(const char* title, int width, int height) {
 		m_Title = title;
 		s_Width = width;
 		s_Height = height;
@@ -16,7 +16,7 @@ namespace OpenGL_Engine {
 		s_HideUI = false;
 
 		if (!init()) {
-			Logger::getInstance().error("logged_files/window_creation.txt", "Window Initialization", "Could not initialize window class");
+			ARC_LOG_FATAL("Failed to initialize window");
 			glfwDestroyWindow(m_Window);
 			glfwTerminate();
 		}
@@ -33,7 +33,7 @@ namespace OpenGL_Engine {
 
 		if (!glfwInit()) {
 			std::cout << "GLFW Failed To Initialize" << std::endl;
-			Logger::getInstance().error("logged_files/window_creation.txt", "Window Initialization", "Could not initialize the GLFW window");
+			ARC_LOG_FATAL("Failed to initialize GLFW window");
 			return false;
 		}
 
@@ -57,9 +57,9 @@ namespace OpenGL_Engine {
 		else {
 			m_Window = glfwCreateWindow(s_Width, s_Height, m_Title, NULL, NULL);
 		}
-		
+
 		if (!m_Window) {
-			Logger::getInstance().error("logged_files/window_creation.txt", "Window Initialization", "Could not create the GLFW window");
+			ARC_LOG_FATAL("Failed to initialize GLFW window");
 			std::cout << "GLFW Window Couldn't Be Created" << std::endl;
 			return false;
 		}
@@ -93,7 +93,7 @@ namespace OpenGL_Engine {
 		else {
 			glfwSwapInterval(0);
 		}
-		
+
 
 		// Initialize GLEW (allows us to use newer versions of OpenGL)
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -115,7 +115,7 @@ namespace OpenGL_Engine {
 
 
 		// Error callback setup
-#if DEBUG_ENABLED
+#if DEBUG_PROFILING
 		glEnable(GL_DEBUG_OUTPUT);
 		glDebugMessageCallback(DebugMessageCallback, 0);
 		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
@@ -123,7 +123,7 @@ namespace OpenGL_Engine {
 		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_MEDIUM, 0, nullptr, GL_TRUE);
 		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_HIGH, 0, nullptr, GL_TRUE);
 #endif
-		
+
 		// Everything was successful so return true
 		return 1;
 	}
@@ -134,7 +134,7 @@ namespace OpenGL_Engine {
 			std::cout << "OpenGL Error: " << error << std::endl;
 		}
 		// Input handling
-		g_InputManager.Update();
+		g_InputManager.update();
 
 		// Handle Window updating
 		glfwSwapBuffers(m_Window);
@@ -155,7 +155,7 @@ namespace OpenGL_Engine {
 
 	// Sets the Window's Size to the Primary Monitor's Resolution
 	void Window::setFullscreenResolution() {
-		const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		s_Width = mode->width;
 		s_Height = mode->height;
 	}
@@ -183,12 +183,12 @@ namespace OpenGL_Engine {
 		Window* win = (Window*)glfwGetWindowUserPointer(window);
 	}
 
-	static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {
+	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 		Window* win = (Window*)glfwGetWindowUserPointer(window);
 		g_InputManager.keyCallback(key, scancode, action, mods);
 		ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
 
-#if DEBUG_ENABLED
+#if DEBUG_PROFILING
 		if (key == GLFW_KEY_P && action == GLFW_RELEASE) {
 			win->s_HideCursor = !win->s_HideCursor;
 			GLenum cursorOption = win->s_HideCursor ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL;
@@ -209,7 +209,7 @@ namespace OpenGL_Engine {
 	static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
 		g_InputManager.cursorPositionCallback(xpos, ypos);
 	}
-	
+
 	static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 		g_InputManager.scrollCallback(xoffset, yoffset);
 	}
@@ -226,4 +226,4 @@ namespace OpenGL_Engine {
 			type, severity, message);
 	}
 
-} 
+}

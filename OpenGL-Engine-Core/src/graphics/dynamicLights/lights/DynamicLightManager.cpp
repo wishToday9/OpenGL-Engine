@@ -3,7 +3,6 @@
 
 namespace OpenGL_Engine {
 
-	// TODO: Add functionality so it can update with an entity's position and orientation
 	DynamicLightManager::DynamicLightManager() {
 		init();
 	}
@@ -28,20 +27,21 @@ namespace OpenGL_Engine {
 	}
 
 	void DynamicLightManager::bindLightingUniforms(Shader* shader) {
-		shader->setUniform("numDirPointSpotLights", glm::ivec4(m_DirectionalLights.size(),
-			m_PointLights.size(), m_SpotLights.size(), 0));
+		shader->setUniform("numDirPointSpotLights", glm::ivec4(m_DirectionalLights.size(), m_PointLights.size(), m_SpotLights.size(), 0));
 
 		int i = 0;
-		for (auto iter = m_DirectionalLights.begin(); iter != m_DirectionalLights.end(); iter++, i++) {
-			(*iter).setupUniforms(shader, i);
+		for (auto iter = m_DirectionalLights.begin(); iter != m_DirectionalLights.end(); iter++) {
+			iter->setupUniforms(shader, i++);
 		}
+
 		i = 0;
-		for (auto iter = m_PointLights.begin(); iter != m_PointLights.end(); iter++, i++) {
-			(*iter).setupUniforms(shader, i);
+		for (auto iter = m_PointLights.begin(); iter != m_PointLights.end(); iter++) {
+			iter->setupUniforms(shader, i++);
 		}
+
 		i = 0;
-		for (auto iter = m_SpotLights.begin(); iter != m_SpotLights.end(); iter++, i++) {
-			(*iter).setupUniforms(shader, i);
+		for (auto iter = m_SpotLights.begin(); iter != m_SpotLights.end(); iter++) {
+			iter->setupUniforms(shader, i++);
 		}
 	}
 
@@ -83,32 +83,32 @@ namespace OpenGL_Engine {
 
 	// Setters
 	void DynamicLightManager::setDirectionalLightDirection(unsigned int index, const glm::vec3& dir) {
-#if DEBUG_ENABLED
+#if ARC_DEBUG
 		if (m_DirectionalLights[index].m_IsStatic)
-			Logger::getInstance().warning("logged_files/warnings.txt", "DynamicLightManager Static Light Warning", "modifying directional light's direction, even though it is a static light");
+			ARC_LOG_WARN("Attempting to modify directional light at index {0}, even though it is set as a static light", index);
 #endif
 		m_DirectionalLights[index].m_Direction = dir;
 	}
 
 	void DynamicLightManager::setPointLightPosition(unsigned int index, const glm::vec3& pos) {
-#if DEBUG_ENABLED
+#if ARC_DEBUG
 		if (m_PointLights[index].m_IsStatic)
-			Logger::getInstance().warning("logged_files/warnings.txt", "DynamicLightManager Static Light Warning", "modifying point light's position, even though it is a static light");
+			ARC_LOG_WARN("Attempting to modify point light position at index {0}, even though it is set as a static light", index);
 #endif
 		m_PointLights[index].m_Position = pos;
 	}
 
 	void DynamicLightManager::setSpotLightPosition(unsigned int index, const glm::vec3& pos) {
-#if DEBUG_ENABLED
+#if ARC_DEBUG
 		if (m_PointLights[index].m_IsStatic)
-			Logger::getInstance().warning("logged_files/warnings.txt", "DynamicLightManager Static Light Warning", "modifying spot light's position, even though it is a static light");
+			ARC_LOG_WARN("Attempting to modify spot light position at index {0}, even though it is set as a static light", index);
 #endif
 		m_SpotLights[index].m_Position = pos;
 	}
 	void DynamicLightManager::setSpotLightDirection(unsigned int index, const glm::vec3& dir) {
-#if DEBUG_ENABLED
+#if ARC_DEBUG
 		if (m_PointLights[index].m_IsStatic)
-			Logger::getInstance().warning("logged_files/warnings.txt", "DynamicLightManager Static Light Warning", "modifying spot light's direction, even though it is a static light");
+			ARC_LOG_WARN("Attempting to modify spot light direction at index {0}, even though it is set as a static light", index);
 #endif
 		m_SpotLights[index].m_Direction = dir;
 	}

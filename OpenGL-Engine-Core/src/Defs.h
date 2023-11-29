@@ -1,7 +1,7 @@
 #pragma once
 
 // Debug Options
-#define DEBUG_ENABLED 1
+#define DEBUG_PROFILING 1
 
 // Windows Settings
 #define WINDOW_X_RESOLUTION 1920

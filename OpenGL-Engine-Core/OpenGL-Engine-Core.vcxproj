@@ -72,8 +72,10 @@
     <LibraryPath>$(SolutionDir)Dependencies\GLFW\lib-vc2013;$(SolutionDir)Dependencies\GLEW\lib;$(SolutionDir)Dependencies\SOIL\lib;$(SolutionDir)Dependencies\Assimp\lib;$(SolutionDir)Dependencies\FreeType\lib;$(SolutionDir)Dependencies\FreeType-GL\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)GLAD\include;$(SolutionDir)ImGui;$(SolutionDir)stbi_image;$(SolutionDir)ThirdParties\FreeType-GL\include;$(SolutionDir)ThirdParties\FreeType\include;$(SolutionDir)ThirdParties\Assimp\include;$(SolutionDir)ThirdParties\GLM\include;$(SolutionDir)GLFW\include;$(SolutionDir)OpenGL-Engine-Core;$(SolutionDir)OpenGL-Engine-Core\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)GLAD\include;$(SolutionDir)ImGui;$(SolutionDir)stbi_image;$(SolutionDir)ThirdParties\FreeType-GL\include;$(SolutionDir)ThirdParties\FreeType\include;$(SolutionDir)ThirdParties\Assimp\include;$(SolutionDir)ThirdParties\spdlog\include;$(SolutionDir)ThirdParties\GLM\include;$(SolutionDir)GLFW\include;$(SolutionDir)OpenGL-Engine-Core;$(SolutionDir)OpenGL-Engine-Core\src;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)ThirdParties\Assimp\lib;$(SolutionDir)ThirdParties\FreeType\lib;$(SolutionDir)GLFW\lib-vc2019;$(SolutionDir)ThirdParties\FreeType-GL\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)\bin\$(Platform)-$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)\bin-int\$(Platform)-$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\SOIL\include;$(SolutionDir)Dependencies\GLM\include;$(SolutionDir)Dependencies\Assimp\include;$(SolutionDir)Dependencies\FreeType\include;$(SolutionDir)Dependencies\FreeType-GL\include;$(IncludePath)</IncludePath>
@@ -82,6 +84,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\include;$(SolutionDir)Dependencies\SOIL\include;$(SolutionDir)Dependencies\GLM\include;$(SolutionDir)Dependencies\Assimp\include;$(SolutionDir)Dependencies\FreeType\include;$(SolutionDir)Dependencies\FreeType-GL\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Dependencies\GLFW\lib-vc2013;$(SolutionDir)Dependencies\GLEW\lib;$(SolutionDir)Dependencies\SOIL\lib;$(SolutionDir)Dependencies\Assimp\lib;$(SolutionDir)Dependencies\FreeType\lib;$(SolutionDir)Dependencies\FreeType-GL\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)\bin\$(Platform)-$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)\bin-int\$(Platform)-$(Configuration)\$(ProjectName)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -101,7 +105,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>ARC_PLATFORM_WINDOWS;ARC_DEBUG;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -147,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\Layer.cpp" />
     <ClCompile Include="src\graphics\camera\CubemapCamera.cpp" />
     <ClCompile Include="src\graphics\IBL\LightProbe.cpp" />
     <ClCompile Include="src\graphics\IBL\ProbeManager.cpp" />
@@ -209,6 +214,9 @@
     <ClCompile Include="src\utils\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\core\Assert.h" />
+    <ClInclude Include="src\core\Base.h" />
+    <ClInclude Include="src\core\Layer.h" />
     <ClInclude Include="src\graphics\camera\CubemapCamera.h" />
     <ClInclude Include="src\graphics\camera\ICamera.h" />
     <ClInclude Include="src\graphics\IBL\LightProbe.h" />

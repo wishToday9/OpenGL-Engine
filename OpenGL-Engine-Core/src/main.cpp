@@ -35,19 +35,19 @@ int main() {
 
 		deltaTime.update();
 
-#if DEBUG_ENABLED
+#if ARC_DEBUG
 		if (debugPane.getWireframeMode())
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		else
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-#endif
+#endif // ARC_DEBUG
 
 		OpenGL_Engine::Window::bind();
 		OpenGL_Engine::Window::clear();
 
 		ImGui_ImplGlfwGL3_NewFrame();
 
-		//manager.Update();
+		//manager.update();
 
 		scene.onUpdate((float)deltaTime.getDeltaTime());
 		renderer.render();
