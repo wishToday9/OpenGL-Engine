@@ -8,8 +8,6 @@
 #include <ui/WaterPane.h>
 #include <utils/Time.h>
 
-
-
 int main() {
 	// Prepare the engine
 	OpenGL_Engine::Window window("OpenGL_Engine Engine", WINDOW_X_RESOLUTION, WINDOW_Y_RESOLUTION);
