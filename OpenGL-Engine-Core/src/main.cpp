@@ -9,6 +9,9 @@
 #include <utils/Time.h>
 
 
+#include <memory>
+std::shared_ptr<int> ptr;
+
 
 int main() {
 	// Prepare the engine

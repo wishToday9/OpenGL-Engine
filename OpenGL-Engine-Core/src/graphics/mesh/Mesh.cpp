@@ -38,7 +38,6 @@ namespace OpenGL_Engine {
 
 			if (vertexCount == 0)
 				ARC_LOG_WARN("Mesh doesn't contain any vertices");
-
 			if (m_UVs.size() != 0 && m_UVs.size() != vertexCount)
 				ARC_LOG_WARN("Mesh UV count doesn't match the vertex count");
 			if (m_Normals.size() != 0 && m_Normals.size() != vertexCount)
